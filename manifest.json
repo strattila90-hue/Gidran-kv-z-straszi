@@ -1,1 +1,39 @@
-{"name":"Gidrán Milliomos","short_name":"Gidrán Kvíz","start_url":"./","scope":"./","display":"standalone","orientation":"portrait","background_color":"#0b1120","theme_color":"#0b1120","icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png"},{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}]}
+
+</header>
+
+<section class="card stack" aria-label="Telepítés">
+  <p class="state ok" id="installed" hidden>A kvíz már telepítve van ezen a telefonon.</p>
+  <div class="warn" id="inapp" hidden>
+    <b>Ez nem a Chrome böngésző.</b>
+    Messengerből, Facebookról vagy más appból megnyitva nem lehet telepíteni. Nyisd meg a három pont menüt, és válaszd a „Megnyitás böngészőben" (vagy „Megnyitás Chrome-ban") lehetőséget. Vagy másold ki a linket lent, és illeszd be a Chrome címsorába.
+  </div>
+  <button class="btn" id="installBtn" type="button" hidden>Telepítés a telefonra</button>
+  <a class="btn" id="openBtn" href="./">Kvíz megnyitása</a>
+  <p class="state" id="installNote"></p>
+</section>
+
+<section class="card" aria-label="Telepítés lépései">
+  <h2>Telepítés lépésről lépésre</h2>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tabA" aria-selected="true" aria-controls="panA" type="button">Android</button>
+    <button class="tab" role="tab" id="tabI" aria-selected="false" aria-controls="panI" type="button">iPhone</button>
+  </div>
+  <div id="panA" role="tabpanel" aria-labelledby="tabA">
+    <ol class="steps">
+      <li><span><b>Nyisd meg ezt az oldalt a Chrome-ban.</b> Ha linkről érkeztél és nem a Chrome nyílt meg, válaszd a „Megnyitás Chrome-ban" lehetőséget.</span></li>
+      <li><span><b>Nyomd meg a „Telepítés a telefonra" gombot</b> fent, vagy érintsd meg a három pontot <span class="kbd">⋮</span> jobb felül.</span></li>
+      <li><span><b>Válaszd a „Telepítés" (vagy „Alkalmazás telepítése") pontot,</b> és erősítsd meg. Ha csak a „Hozzáadás a kezdőképernyőhöz" van, az is jó.</span></li>
+      <li><span><b>Keresd a „Gidrán Kvíz" ikont a kezdőképernyőn.</b> Teljes képernyőn indul, az első betöltés után internet nélkül is megy.</span></li>
+    </ol>
+  </div>
+  <div id="panI" role="tabpanel" aria-labelledby="tabI" hidden>
+    <ol class="steps">
+      <li><span><b>Nyisd meg ezt az oldalt a Safariban.</b> Más böngészőből vagy appból megnyitva nem jelenik meg a lehetőség.</span></li>
+      <li><span><b>Érintsd meg a Megosztás ikont</b> (négyzet felfelé mutató nyíllal) az alsó sávban.</span></li>
+      <li><span><b>Görgess le, és válaszd a „Főképernyőhöz adás" pontot,</b> majd nyomd meg a „Hozzáadás" gombot.</span></li>
+      <li><span><b>Indítsd a kezdőképernyő ikonjáról.</b></span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="card share" aria-label="Megosztás">
