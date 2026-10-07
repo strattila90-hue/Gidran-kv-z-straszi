@@ -1,0 +1,25 @@
+# Gidrán Millionaire
+
+A "Who Wants to Be a Millionaire"-style quiz game for learning the Gidrán armored 4x4 vehicle: specifications, powertrain, protection, controls, driving and maintenance.
+
+> **Unofficial project.** A hobby / training aid. It is not affiliated with, endorsed by, or produced by any vehicle manufacturer or armed forces. Always check the official manual for authoritative data.
+
+## How to play
+
+- 15 multiple-choice questions (A / B / C), getting harder as you go.
+- The correct answer lights up **green**, a wrong answer lights up **red**.
+- Every correct answer earns points, from 100 up to 1 000 000.
+- Levels 5 and 10 are safe points. If you answer wrongly, you fall back to the last safe point.
+- You can stop at any time and keep your points.
+- Three lifelines, each usable once per game:
+  - **50:50** removes one wrong answer
+  - **Audience** shows a percentage vote
+  - **Phone** gives a hint from an expert (can be wrong, just like the audience)
+- After a wrong answer the game shows the correct answer and the topic to review.
+- Your best score, number of games and weakest topic are saved on your device.
+
+## Topics
+
+General safety, vehicle dimensions (width, length, height, weight), armor protection, engine, transmission and transfer case, differential locks, suspension and tire pressure system (CTIS), pneumatics, electrical system, auxiliary power unit (APU), doors and body, controls and instrument panels, starting and driving, off-road driving, emergency procedures, maintenance, mast system and vehicle configurations.
+
+The question bank contains about 120 questions. Each game draws a new random s
