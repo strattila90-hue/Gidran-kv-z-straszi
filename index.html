@@ -130,8 +130,76 @@ h1 span{color:var(--gold);white-space:nowrap}
 .review{text-align:left;margin:18px 0 0;padding:14px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);font-size:15px}
 .review .rq{font-weight:600;margin-bottom:6px}
 .review .rg{color:var(--ok)} .review .rb{color:var(--bad)}
+
+/* Sorrendbe állítás */
+.ordhint{font-size:14px;color:var(--muted);margin:-6px 0 4px}
+.ord{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;min-height:58px;padding:8px 8px 8px 12px;background:var(--panel2);border:1.5px solid var(--line);border-radius:14px;position:relative;user-select:none;-webkit-user-select:none}
+.ord .n{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;background:var(--gold);color:var(--gold-ink)}
+.ord .t{font-size:17px}
+.ord .ctl{display:flex;align-items:center;gap:4px}
+.ord .mv{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--panel);font-size:14px;line-height:1}
+.ord .hd{width:46px;height:46px;border-radius:12px;border:1px solid var(--line);background:var(--panel);display:grid;place-items:center;font-size:22px;color:var(--muted);touch-action:none;cursor:grab}
+.ord.drag{z-index:5;border-color:var(--gold);box-shadow:0 10px 26px rgba(0,0,0,.45);background:var(--sel-bg);transition:none}
+.ord.ok{background:var(--ok-bg);border-color:var(--ok)} .ord.ok .n{background:var(--ok);color:#fff}
+.ord.bad{background:var(--bad-bg);border-color:var(--bad)} .ord.bad .n{background:var(--bad);color:#fff}
+.ord.done .ctl{display:none}
+.ord.done{grid-template-columns:34px 1fr}
+.expl ol{margin:6px 0 0;padding-left:22px}
+/* Menü, verzió, megoldókulcs */
+.menu{display:grid;gap:8px;margin-top:12px}
+.menu .btn{font-size:15px;padding:12px;text-align:center}
+.ver{margin-top:16px;font-size:13px;color:var(--muted)}
+.ver b{color:var(--ink)}
+.upd{margin-top:8px;font-size:14px;min-height:1.4em;color:var(--muted)}
+.upd .btn{margin-top:8px;font-size:14px;padding:10px 16px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#000d;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;z-index:30;pointer-events:none;opacity:0;transition:opacity .25s;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+#key{max-width:760px;margin:0 auto}
+#key .kh{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+#key h2.kt{font-size:30px;margin:0}
+#key .kf{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:8px}
+@media(min-width:600px){#key .kf{grid-template-columns:1fr 1fr}}
+#key input,#key select{width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:inherit}
+#key .kc{color:var(--muted);font-size:13px;margin:0 0 8px}
+.kq{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.kq .kn{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.kq .kqt{font-weight:600;font-size:17px;margin:4px 0 8px}
+.kq .ko{padding:6px 10px;border-radius:8px;margin:3px 0;font-size:15px;background:var(--panel2)}
+.kq .ko.c{background:var(--ok-bg);border:1px solid var(--ok)}
+.kq .ke{margin-top:8px;font-size:15px}
+.kq .kr{margin-top:4px;font-size:13px;color:var(--muted)}
+
+/* Folyadék-feltöltés */
+.fillhint{font-size:14px;color:var(--muted);margin:-6px 0 4px}
+.fstep{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 0 6px}
+.fchips{display:grid;gap:8px;grid-template-columns:1fr 1fr}
+@media(max-width:420px){.fchips{grid-template-columns:1fr}}
+.fchip{display:flex;align-items:center;gap:10px;text-align:left;min-height:50px;padding:8px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--panel2);font-size:15px}
+.fchip i{flex:none;width:18px;height:18px;border-radius:50%;border:1px solid rgba(0,0,0,.35)}
+.fchip[aria-pressed="true"]{border-color:var(--gold);background:var(--sel-bg)}
+.fchip.ok{border-color:var(--ok);background:var(--ok-bg)} .fchip.bad{border-color:var(--bad);background:var(--bad-bg)}
+.fchip[disabled]{cursor:default}
+.tanks{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:6px 0}
+.tank{flex:0 1 160px;text-align:center;border:2px solid transparent;border-radius:16px;padding:6px 4px;cursor:pointer}
+.tank.act{border-color:var(--gold)}
+.tank svg{width:100%;height:auto;max-height:230px;display:block}
+.tank .body{fill:rgba(160,170,190,.12);stroke:#8e948c;stroke-width:3}
+.tank.ok .body{stroke:var(--ok)} .tank.bad .body{stroke:var(--bad)}
+.tank .rd{font-family:"Barlow Condensed",sans-serif;font-size:30px;font-weight:700;color:var(--gold);line-height:1.1}
+.tank .nm{font-size:13px;color:var(--muted)}
+.tank .st{fill:var(--liq,#d9a521)}
+@keyframes wv{from{transform:translateX(0)}to{transform:translateX(-48px)}}
+.tank .wave{animation:wv 1.6s linear infinite}
+@media(prefers-reduced-motion:reduce){.tank .wave{animation:none}}
+.fctl{display:grid;gap:8px;margin-top:8px}
+.hold{touch-action:none;user-select:none;-webkit-user-select:none;width:100%;border:0;border-radius:14px;padding:16px;font-size:18px;font-weight:700;background:var(--gold);color:var(--gold-ink)}
+.hold:disabled{opacity:.4}
+.hold.on{filter:brightness(1.15);transform:scale(.99)}
+.frow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.frow .hold{padding:12px 4px;font-size:15px;background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
+.ftol{font-size:13px;color:var(--muted);text-align:center}
 </style>
-<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0b1120"><link rel="apple-touch-icon" href="icon-192.png"><meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0b1120"><link rel="apple-touch-icon" href="icon-192.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
 <script>if("serviceWorker" in navigator&&location.protocol!=="file:")window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})</script>
 </head>
 <body>
@@ -140,15 +208,23 @@ h1 span{color:var(--gold);white-space:nowrap}
 <section id="start" class="card center">
   <span class="badge">Üzemeltetői tudásteszt</span>
   <h1>Legyen Ön is<br><span>Gidrán-milliomos!</span></h1>
-  <p class="sub">50 kérdés, egyre nehezebben. Feleletválasztós, A–B–C.</p>
+  <p class="sub">50 kérdés, egyre nehezebben. Feleletválasztós (A–B–C), sorrendbe állítós és folyadék-feltöltős feladatokkal.</p>
   <ul class="rules">
     <li><b>✔</b><span>A jó válasz <strong style="color:var(--ok)">zölden</strong>, a rossz <strong style="color:var(--bad)">pirosan</strong> világít.</span></li>
     <li><b>♥</b><span>Három életed van. Minden tévedés egy életbe kerül, és a játék a harmadik hibánál ér véget. A pontjaid megmaradnak.</span></li>
     <li><b>★</b><span>Minden helyes válasz pontot ér, a nehezebb többet. Hibánál megmutatjuk a magyarázatot és a kézikönyvi fejezetet.</span></li>
+    <li><b>⇅</b><span>Néhány feladatnál sorrendbe kell húzni az elemeket (hajtáslánc, common rail), másoknál animált tartályt kell feltölteni: tankolás, motorolaj, hűtőfolyadék. A megfelelő folyadékot és a megfelelő mennyiséget (±2%) kell eltalálni. Ezeknél a segítségek nem használhatók.</span></li>
     <li><b>⚑</b><span>Három segítség: Felezés, Közönség, Telefon. Bármikor megállhatsz, és viheted a pontjaidat.</span></li>
   </ul>
   <button class="btn" id="startBtn">Játék indítása</button>
+  <div class="menu">
+    <button class="btn ghost" id="keyBtn" type="button">📖 Kérdések és megoldókulcs</button>
+    <button class="btn ghost" id="shareBtn" type="button">🔗 Link megosztása</button>
+    <button class="btn ghost" id="updBtn" type="button">🔄 Frissítés keresése</button>
+  </div>
+  <div class="upd" id="updMsg" role="status" aria-live="polite"></div>
   <div class="stats" id="bestStats"></div>
+  <div class="ver">Verzió <b id="verTxt"></b> · <span id="qCount"></span> kérdés</div>
 </section>
 
 <section id="game" class="game hide">
@@ -174,6 +250,7 @@ h1 span{color:var(--gold);white-space:nowrap}
       <div class="verdict hide" id="verdict"></div>
       <div class="expl hide" id="expl"></div>
       <div class="actions">
+        <button class="btn hide" id="checkBtn">Ellenőrzés</button>
         <button class="btn hide" id="nextBtn">Következő kérdés</button>
         <button class="btn ghost small" id="stopBtn">Megállok, viszem a pontokat</button>
       </div>
@@ -214,9 +291,105 @@ h1 span{color:var(--gold);white-space:nowrap}
   <div class="stats" id="endStats"></div>
 </section>
 
+<section id="key" class="hide">
+  <div class="kh"><h2 class="kt">Kérdések és megoldókulcs</h2><button class="btn ghost small" id="keyBack" type="button">← Vissza</button></div>
+  <div class="kf"><input id="keySearch" type="search" placeholder="Keresés a kérdések között…" autocomplete="off"><select id="keyTopic" aria-label="Téma"></select></div>
+  <p class="kc" id="keyCount"></p>
+  <div id="keyList"></div>
+  <div class="actions"><button class="btn ghost small" id="keyShare" type="button">🔗 A megoldókulcs linkje</button></div>
+</section>
+
 </div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
+var APP_VERSION = "2.2.0", APP_DATE = "2026-10-09";
 var BANK = [{"q": "Mi a teendő diffzár vagy osztómű kapcsolása előtt?", "o": ["A harcjárművet le kell lassítani 20 km/h alá", "A harcjárművet teljesen meg kell állítani és a váltót „N” állásba kell tenni", "A motort le kell állítani, majd újra kell indítani"], "a": 1, "d": 2, "t": "Biztonság", "e": "Diffzár és osztómű kapcsolása csak álló járműnél, „N” váltóállásban szabad. Menet közbeni kapcsolás a hajtásláncot károsítja.", "r": "1. Általános biztonsági rendszabályok"}, {"q": "Mivel szabad tisztítani a harcjármű ablakait?", "o": ["Bármilyen ablaktisztító folyékony vegyszerrel", "Nem vegyszeres, nedves ruhával", "Fagyálló folyadékkal"], "a": 1, "d": 2, "t": "Biztonság", "e": "Az ablakok csak nem vegyszeres, nedves ruhával tisztíthatók. Az ablaktisztító vegyszer és a fagyálló nem engedélyezett (az ablakok belső felülete polikarbonát bevonatú).", "r": "1. Általános biztonsági rendszabályok"}, {"q": "Folyó vagy csöpögő tüzelőanyagból keletkezett tűz esetén milyen irányban kell oltani?", "o": ["Lentről felfelé", "Elölről hátrafelé", "Felülről lefelé"], "a": 2, "d": 2, "t": "Biztonság", "e": "Folyó vagy csöpögő tüzelőanyag tüzét felülről lefelé kell oltani.", "r": "1. Általános biztonsági rendszabályok"}, {"q": "Engedélyezett-e a harcjármű átalakítása?", "o": ["Igen, szabadon", "Csak gyári engedéllyel", "Szigorúan tilos"], "a": 2, "d": 1, "t": "Biztonság", "e": "A harcjármű átalakítása szigorúan tilos, mert a páncélvédelem, a biztonsági rendszerek és a gyári tanúsítás is sérülhet.", "r": "1. Általános biztonsági rendszabályok"}, {"q": "Mennyi a harcjármű tömege fegyverzet nélkül?", "o": ["15.200 kg", "16.800 kg", "18.500 kg"], "a": 0, "d": 1, "t": "Alapadatok", "e": "A jármű tömege fegyverzet nélkül 15.200 kg. A 16.800 kg a harci tömeg (fegyverzettel).", "r": "2. Harcjármű alapadatai"}, {"q": "Mennyi a harci tömeg (fegyverzettel együtt)?", "o": ["15.200 kg", "16.800 kg", "17.900 kg"], "a": 1, "d": 1, "t": "Alapadatok", "e": "A harci tömeg (fegyverzettel együtt) 16.800 kg. A 15.200 kg a fegyverzet nélküli tömeg.", "r": "2. Harcjármű alapadatai"}, {"q": "Hány fő katonát tud szállítani a Gidrán (a benne elhelyezett ülések száma alapján)?", "o": ["5 fő", "7 fő", "9 fő"], "a": 1, "d": 1, "t": "Alapadatok", "e": "A Gidránban 7 ülés van, ennyi katonát szállít.", "r": "2. Harcjármű alapadatai"}, {"q": "Milyen biztonsági öv van minden ülésen?", "o": ["3-pontos", "4-pontos", "5-pontos"], "a": 2, "d": 1, "t": "Alapadatok", "e": "Minden ülésen 5-pontos biztonsági öv van, nem 3- vagy 4-pontos.", "r": "2. Harcjármű alapadatai"}, {"q": "Mi található minden ülés alatt?", "o": ["Robbanáselnyelő anyag", "Tartalék akkumulátor", "Tűzoltó palack"], "a": 0, "d": 1, "t": "Alapadatok", "e": "Minden ülés alatt robbanáselnyelő anyag van (nem akkumulátor, nem tűzoltó palack).", "r": "2. Harcjármű alapadatai"}, {"q": "A STANAG 4569 szabvány szerint milyen szintű a körkörös ballisztikus védelem?", "o": ["2+", "4a", "2b"], "a": 0, "d": 1, "t": "Páncélvédelem", "e": "A körkörös ballisztikus védelem STANAG 4569 szerint 2+ szintű. A 4a és a 2b az aknavédelemhez tartozik (jármű alatt).", "r": "3. Páncélvédelem"}, {"q": "Mekkora robbanóanyag-mennyiségnek áll ellen a páncéltest alatti védelem (Stanag 4569, 2b szint)?", "o": ["10 kg TNT egyenérték", "6 kg TNT egyenérték", "3 kg TNT egyenérték"], "a": 1, "d": 3, "t": "Páncélvédelem", "e": "A páncéltest alatti védelem a STANAG 4569 2b szintje: 6 kg TNT egyenérték. A 10 kg TNT a 4a szint (kerekek alatt).", "r": "3. Páncélvédelem"}, {"q": "Milyen szabvány és szint védi az ablakok üvegfelületét?", "o": ["EN 1063 BR7", "Stanag 4569 4a", "ISO 11158"], "a": 0, "d": 1, "t": "Páncélvédelem", "e": "Az ablakok üvegfelülete EN 1063 BR7 szintű védelmet ad. A STANAG 4569 a páncélzatra vonatkozik, az ISO 11158 hidraulikaolaj-szabvány.", "r": "3. Páncélvédelem"}, {"q": "Milyen anyaggal van bevonva az ablakok belső felülete?", "o": ["Üveggyapot", "Polikarbonát", "Kerámia réteg"], "a": 1, "d": 3, "t": "Páncélvédelem", "e": "Az ablakok belső felülete polikarbonát bevonatú (szilánkfogó réteg).", "r": "3. Páncélvédelem"}, {"q": "Milyen típusú a Gidrán motorja?", "o": ["Benzines, szívó", "Common-rail Turbo-Diesel", "Hibrid elektromos"], "a": 1, "d": 1, "t": "Motor", "e": "A motor common-rail rendszerű, turbófeltöltésű dízel (Cummins ISL9E3 375).", "r": "4. Motor"}, {"q": "Mekkora a motor hengerűrtartalma?", "o": ["6,7 liter", "8,9 liter", "10,2 liter"], "a": 1, "d": 1, "t": "Motor", "e": "A Cummins ISL9E3 hengerűrtartalma 8,9 liter.", "r": "4. Motor"}, {"q": "Mekkora a motor maximális teljesítménye?", "o": ["220 kW (300 LE)", "276 kW (375 LE)", "320 kW (435 LE)"], "a": 1, "d": 1, "t": "Motor", "e": "A motor maximális teljesítménye 276 kW, ami 375 LE (innen a típusjel: 375).", "r": "4. Motor"}, {"q": "Milyen elrendezésű és hány hengeres a motor?", "o": ["Soros, 6 hengeres", "V alakú, 8 hengeres", "Boxer, 4 hengeres"], "a": 0, "d": 1, "t": "Motor", "e": "A motor soros elrendezésű, 6 hengeres.", "r": "4. Motor"}, {"q": "Mekkora az üzemanyagtartály összkapacitása?", "o": ["2×80 liter", "2×100 liter", "2×120 liter"], "a": 1, "d": 1, "t": "Motor", "e": "Az üzemanyagtartály összkapacitása 2×100 liter, vagyis két 100 literes tartály.", "r": "4. Motor"}, {"q": "Milyen típusú és márkájú a nyomatékváltó?", "o": ["Allison 3200 SP, automata", "ZF 8HP, manuális", "Cummins CT6, félautomata"], "a": 0, "d": 1, "t": "Erőátvitel", "e": "A nyomatékváltó Allison 3200 SP, automata.", "r": "5. Erőátvitel"}, {"q": "Hány előre- és hátramenet fokozattal rendelkezik a váltó?", "o": ["5 előre, 1 hátra", "6 előre, 1 hátra", "8 előre, 2 hátra"], "a": 1, "d": 1, "t": "Erőátvitel", "e": "Az Allison váltó 6 előre- és 1 hátrameneti fokozatú (6+1).", "r": "5. Erőátvitel"}, {"q": "Az osztómű „H” állásában mekkora a maximális sebesség?", "o": ["50 km/h", "90 km/h", "120 km/h"], "a": 2, "d": 3, "t": "Erőátvitel", "e": "Az osztómű „H” (gyors) állásában a maximális sebesség 120 km/h. Az „L” állás a terepi, nagy nyomatékú tartomány.", "r": "5. Erőátvitel"}, {"q": "Az osztómű „L” állásában mekkora a maximális nyomaték?", "o": ["1550 Nm", "2500 Nm", "3720 Nm"], "a": 2, "d": 3, "t": "Erőátvitel", "e": "Az osztómű „L” állásában a maximális nyomaték 3720 Nm. A motoré 1550 Nm, az „L” áttétel ezt szorozza meg.", "r": "5. Erőátvitel"}, {"q": "Mivel kell egyenesben lennie a kormánykeréknek, amikor a hátsó és/vagy mellső diffzár aktív?", "o": ["Csak vezetés közben, álló helyzetben nem szükséges", "Igen, egyenesben kell lennie, különben a hajtásrendszer sérülhet", "Nem számít, a zárak véd a sérüléstől"], "a": 1, "d": 2, "t": "Erőátvitel", "e": "Zárt diffnél a kormánynak egyenesben kell lennie, különben a kerekek eltérő útja miatt a hajtásrendszer feszül és sérülhet.", "r": "5. Erőátvitel"}, {"q": "Milyen sorrendben kell aktiválni a differenciálzárakat nehéz terepen?", "o": ["Mellső → hátsó → hossz", "Hossz → hátsó → mellső", "Hátsó → mellső → hossz"], "a": 1, "d": 2, "t": "Erőátvitel", "e": "A zárási sorrend: hossz → hátsó → mellső. Oldáskor fordítva.", "r": "5. Erőátvitel"}, {"q": "Mi az osztómű kapcsolási feltétele?", "o": ["A jármű álljon meg, váltó „N” állásban legyen", "A jármű haladjon 10 km/h alatt", "Nincs különösebb feltétel"], "a": 0, "d": 2, "t": "Erőátvitel", "e": "Az osztómű csak álló járműnél, „N” váltóállásban kapcsolható.", "r": "5. Erőátvitel"}, {"q": "Milyen felfüggesztési rendszerrel rendelkezik a Gidrán?", "o": ["Merev tengelyes", "Teljesen független kerékfelfüggesztés", "Légrugós, félig független"], "a": 1, "d": 1, "t": "Futómű, CTIS", "e": "A Gidrán teljesen független kerékfelfüggesztésű, nem merev tengelyes.", "r": "6. Felfüggesztés, fékek, kerekek, CTIS"}, {"q": "Defektes gumiabronccsal (Run-Flat gyűrűvel) legfeljebb milyen sebességgel és távolságra közlekedhet a jármű?", "o": ["Max. 50 km/h, max. 100 km", "Max. 30 km/h, max. 50 km", "Max. 20 km/h, max. 20 km"], "a": 1, "d": 3, "t": "Futómű, CTIS", "e": "Run-Flat gyűrűvel defektesen legfeljebb 30 km/h sebességgel és legfeljebb 50 km-t szabad menni.", "r": "6. Felfüggesztés, fékek, kerekek, CTIS"}, {"q": "Mi a CTIS rendszer feladata?", "o": ["Automatikusan állítja az abroncsnyomást az útviszonyoknak megfelelően", "Szabályozza a motor hűtését", "Vezérli a differenciálzárakat"], "a": 0, "d": 1, "t": "Futómű, CTIS", "e": "A CTIS (központi abroncsnyomás-szabályozó) automatikusan állítja az abroncsnyomást az útviszonyokhoz. A diffzárakat és a hűtést nem vezérli.", "r": "6. Felfüggesztés, fékek, kerekek, CTIS"}, {"q": "Mekkora az abroncsnyomás „HIGHWAY” (közúti) módban?", "o": ["36/2,5 bar", "65/4,5 bar", "94/6,5 bar"], "a": 2, "d": 3, "t": "Futómű, CTIS", "e": "HIGHWAY (közúti) módban az abroncsnyomás 94/6,5 (psi/bar). A kisebb értékek a terepi módokhoz tartoznak.", "r": "6. Felfüggesztés, fékek, kerekek, CTIS"}, {"q": "Mekkora a maximális sebesség „EMERGENCY” (vészhelyzet) CTIS módban?", "o": ["10 km/h", "20 km/h", "65 km/h"], "a": 0, "d": 3, "t": "Futómű, CTIS", "e": "EMERGENCY (vészhelyzet) CTIS módban a maximális sebesség 10 km/h.", "r": "6. Felfüggesztés, fékek, kerekek, CTIS"}, {"q": "Melyik tartály felelős a hátsó fékkörért?", "o": ["S1", "S2", "P"], "a": 0, "d": 3, "t": "Pneumatika", "e": "A hátsó fékkör tartálya az S1. Az S2 az első fékkör, a P a kézifék.", "r": "7. Pneumatikus rendszer"}, {"q": "Melyik tartály felelős a kézifékért?", "o": ["A", "P", "S2"], "a": 1, "d": 3, "t": "Pneumatika", "e": "A kézifék tartálya a P (parking). Az S1 és S2 a fékkörök tartályai, az A a segédrendszereké.", "r": "7. Pneumatikus rendszer"}, {"q": "Mi a minimális levegőnyomás, ami alatt tilos működtetni a gépjárművet az S1, S2, P és A tartályokban?", "o": ["4 bar", "6 bar", "8 bar"], "a": 1, "d": 2, "t": "Pneumatika", "e": "Az S1, S2, P és A tartályokban 6 bar alatt tilos működtetni a járművet, mert a fékek nem működnek megbízhatóan.", "r": "7. Pneumatikus rendszer"}, {"q": "Az „A” jelű tartály mely rendszereket látja el levegővel?", "o": ["Csak a kéziféket", "CTIS, terepváltó, diffzár kapcsolók, gurítószelep", "Csak a hátsó fékköröket"], "a": 1, "d": 3, "t": "Pneumatika", "e": "Az „A” tartály a segédrendszereket látja el: CTIS, terepváltó, diffzár-kapcsolók, gurítószelep. A féktartályok az S1, S2, P.", "r": "7. Pneumatikus rendszer"}, {"q": "Hány db indító akkumulátor van a harcjárműbe szerelve?", "o": ["1 db", "2 db", "4 db"], "a": 1, "d": 1, "t": "Fedélzeti rendszerek", "e": "A harcjárműbe 2 db indító akkumulátor van szerelve.", "r": "8. Elektromos rendszer, ABV, tűzoltás, csörlő"}, {"q": "Mennyi a generátor feszültsége?", "o": ["12 V", "24 V", "28 V"], "a": 2, "d": 2, "t": "Fedélzeti rendszerek", "e": "A generátor feszültsége 28 V (24 V-os rendszerhez).", "r": "8. Elektromos rendszer, ABV, tűzoltás, csörlő"}, {"q": "Mi történik, ha az áramtalanítót bekapcsolva hagyják, miközben a gyújtáskapcsolók ki vannak kapcsolva?", "o": ["A rendszerek azonnal kikapcsolnak", "A rendszerek 80 másodperc után automatikusan kikapcsolnak", "Semmi, a rendszerek folyamatosan üzemelnek"], "a": 1, "d": 2, "t": "Fedélzeti rendszerek", "e": "Áramtalanító bekapcsolva, gyújtás nélkül, a rendszerek 80 másodperc után automatikusan kikapcsolnak. Ez védi az akkumulátort.", "r": "8. Elektromos rendszer, ABV, tűzoltás, csörlő"}, {"q": "Melyik szűrőréteg NEM része az ABV szűrőegységnek?", "o": ["HEPA szűrőbetét", "Aktívszén-szűrőbetét", "Olajszűrő betét"], "a": 2, "d": 3, "t": "Fedélzeti rendszerek", "e": "Az ABV szűrőegység HEPA és aktívszén szűrőbetétet tartalmaz. Olajszűrő betét nincs benne.", "r": "8. Elektromos rendszer, ABV, tűzoltás, csörlő"}, {"q": "Milyen oltóanyagot tartalmaznak a küzdőtéri (kabin) tűzoltópalackok?", "o": ["Por", "CO₂ (gáz)", "Hab"], "a": 1, "d": 2, "t": "Fedélzeti rendszerek", "e": "A küzdőtéri (kabin) palackok CO₂ gázt tartalmaznak, mert az nem hagy maradványt és emberi környezetben használható.", "r": "8. Elektromos rendszer, ABV, tűzoltás, csörlő"}, {"q": "Milyen oltóanyagot tartalmaz a motortéri tűzoltópalack?", "o": ["CO₂ (gáz)", "Por", "Víz"], "a": 1, "d": 2, "t": "Fedélzeti rendszerek", "e": "A motortéri tűzoltópalack port tartalmaz. A kabinban CO₂ van.", "r": "8. Elektromos rendszer, ABV, tűzoltás, csörlő"}, {"q": "Mekkora az önmentő csörlő vonóereje egy kötélágon?", "o": ["40 kN", "70 kN", "100 kN"], "a": 1, "d": 3, "t": "Fedélzeti rendszerek", "e": "Az önmentő csörlő vonóereje egy kötélágon 70 kN.", "r": "8. Elektromos rendszer, ABV, tűzoltás, csörlő"}, {"q": "Milyen hosszú az önmentő csörlő kötelének hasznos hossza?", "o": ["15 méter", "25 méter", "40 méter"], "a": 1, "d": 3, "t": "Fedélzeti rendszerek", "e": "A csörlő kötelének hasznos hossza 25 méter.", "r": "8. Elektromos rendszer, ABV, tűzoltás, csörlő"}, {"q": "Hány oldalsó ajtó található a harcjárművön?", "o": ["2", "4", "6"], "a": 1, "d": 1, "t": "Karosszéria", "e": "A harcjárművön 4 oldalsó ajtó van.", "r": "9. Karosszéria és ajtók"}, {"q": "Milyen zár javítja az ajtók zárási biztonságát?", "o": ["Aknazár", "Központi csuklós zár", "Duplazár"], "a": 0, "d": 2, "t": "Karosszéria", "e": "Az ajtók zárási biztonságát az aknazár javítja.", "r": "9. Karosszéria és ajtók"}, {"q": "A hátsó ajtó hogyan nyitható?", "o": ["Csak manuálisan", "Manuálisan és távirányítással is", "Csak a küzdőtérből"], "a": 1, "d": 1, "t": "Karosszéria", "e": "A hátsó ajtó manuálisan és távirányítással is nyitható.", "r": "9. Karosszéria és ajtók"}, {"q": "Milyen kulccsal nyithatók a szerelőnyílások és karbantartó fedelek?", "o": ["Bármilyen csavarhúzóval", "Speciális (négyszög) kulccsal", "Nem igényelnek kulcsot"], "a": 1, "d": 2, "t": "Karosszéria", "e": "A szerelőnyílások és karbantartó fedelek speciális (négyszög) kulccsal nyithatók, így illetéktelen nem fér hozzá.", "r": "9. Karosszéria és ajtók"}, {"q": "Mi a „MODE” gomb funkciója az Allison váltó kezelőpaneljén?", "o": ["Átkapcsolás a váltó hibakódok között", "Fokozat korlátozása felfelé", "Motorfék bekapcsolása"], "a": 0, "d": 2, "t": "Kezelőszervek", "e": "Az Allison kezelőpanelén a „MODE” gomb a hibakódok közti átkapcsolásra szolgál (diagnosztika).", "r": "10. Kezelőszervek és műszerfal"}, {"q": "Mit jelez a világítás- és álcafény kapcsológomb „S2” állása?", "o": ["Teljes álcafény, minden lámpa kikapcsolva", "Mellső infravörös álcafény (első álcafények aktívak)", "Konvojlámpa és féklámpa álcafény"], "a": 1, "d": 3, "t": "Kezelőszervek", "e": "A világítás- és álcafény kapcsoló „S2” állása a mellső infravörös álcafényt jelenti (első álcafények aktívak).", "r": "10. Kezelőszervek és műszerfal"}, {"q": "Melyik kijelzőméret jellemzi a fő érintőképernyős kijelzőt?", "o": ["7 hüvelyk", "10.1 hüvelyk", "12.3 hüvelyk"], "a": 1, "d": 2, "t": "Kezelőszervek", "e": "A fő érintőképernyős kijelző mérete 10.1 hüvelyk.", "r": "10. Kezelőszervek és műszerfal"}, {"q": "Hány nyelvi lehetőség áll rendelkezésre a fő kijelzőn?", "o": ["3 nyelv", "6 nyelv", "9 nyelv"], "a": 2, "d": 3, "t": "Kezelőszervek", "e": "A fő kijelzőn 9 nyelv közül lehet választani.", "r": "10. Kezelőszervek és műszerfal"}, {"q": "Melyik panelen található a ködgránátvetők vezérlése?", "o": ["Fő kapcsolópanel (kormánytól balra)", "Kiegészítő műszerfal", "Áramelosztó egységen"], "a": 1, "d": 2, "t": "Kezelőszervek", "e": "A ködgránátvetők vezérlése a kiegészítő műszerfalon található.", "r": "10. Kezelőszervek és műszerfal"}, {"q": "Mit kell tenni az APU indítása előtt?", "o": ["Növelni a főmotor fordulatszámát", "Megállítani a harcjárművet és leállítani a főmotort", "Bekapcsolni a diffzárakat"], "a": 1, "d": 1, "t": "APU", "e": "Az APU indítása előtt meg kell állítani a harcjárművet és le kell állítani a főmotort.", "r": "11. Fedélzeti áramforrás (APU)"}, {"q": "Hány hengeres az APU motorja?", "o": ["1", "2", "4"], "a": 1, "d": 1, "t": "APU", "e": "Az APU motorja 2 hengeres.", "r": "11. Fedélzeti áramforrás (APU)"}, {"q": "Mekkora az APU folyamatosan leadható teljesítménye?", "o": ["4,5 kW / 3000 1/min", "8,1 kW / 3600 1/min", "12 kW / 4000 1/min"], "a": 1, "d": 3, "t": "APU", "e": "Az APU folyamatosan leadható teljesítménye 8,1 kW, 3600 1/min fordulatszámon.", "r": "11. Fedélzeti áramforrás (APU)"}, {"q": "Az APU indítási sorrendjében mi történik a főkapcsoló bekapcsolása után?", "o": ["Azonnal el kell indítani a gyújtáskapcsolót", "Várni kell, amíg az APU rendszer teszteli önmagát", "Azonnal le kell állítani az APU-t"], "a": 1, "d": 3, "t": "APU", "e": "A főkapcsoló bekapcsolása után várni kell, amíg az APU rendszer teszteli önmagát, és csak utána szabad indítani.", "r": "11. Fedélzeti áramforrás (APU)"}, {"q": "Melyik kulcs szükséges a központi zár külső szükségnyitásához?", "o": ["Négyszögkulcs", "Y kulcs", "T-imbuszkulcs"], "a": 1, "d": 2, "t": "Kulcsok", "e": "A központi zár külső szükségnyitásához az Y kulcs kell.", "r": "12. Indítókulcsok"}, {"q": "Mivel nyitható az aknazár kívülről?", "o": ["Aknazár négyszögkulccsal (+ lapos csavarhúzó)", "Csak távirányítóval", "Csak Y kulccsal"], "a": 0, "d": 2, "t": "Kulcsok", "e": "Az aknazár kívülről aknazár négyszögkulccsal (és lapos csavarhúzóval) nyitható, nem távirányítóval.", "r": "12. Indítókulcsok"}, {"q": "Mi az első lépés a motor leállításánál?", "o": ["Kéziféket behúzni", "Harcjárművet megállítani", "Sebességváltót N-be tenni"], "a": 1, "d": 1, "t": "Vezetés", "e": "A motor leállításának első lépése a harcjármű megállítása. Utána jön a kézifék, a váltó N-be tétele és a leállítás.", "r": "13. Motorindítás, leállítás, vezetés"}, {"q": "Motorindításkor mit kell tenni a nyomatékváltóval?", "o": ["D állásba kell tenni", "N (üres) állásba kell tenni", "R állásba kell tenni"], "a": 1, "d": 1, "t": "Vezetés", "e": "Motorindításkor a nyomatékváltót N (üres) állásba kell tenni.", "r": "13. Motorindítás, leállítás, vezetés"}, {"q": "Elinduláskor mi a helyes sorrend a fék- és gázpedál használatára?", "o": ["Fékpedált felengedni, gázpedált lenyomni", "Egyszerre lenyomni mindkettőt", "Gázpedált felengedni, fékpedált lenyomni"], "a": 0, "d": 1, "t": "Vezetés", "e": "Induláskor fékpedált felengedni, majd gázpedált lenyomni. A kettő egyszerre fékezne és hajtana.", "r": "13. Motorindítás, leállítás, vezetés"}, {"q": "Mit jelent a felemelt karral, ökölbe szorított kézzel adott kézjel?", "o": ["Előre!", "Hátra!", "Állj!"], "a": 2, "d": 1, "t": "Vezetés", "e": "A felemelt karral, ökölbe szorított kézzel adott kézjel jelentése: Állj!", "r": "13. Motorindítás, leállítás, vezetés"}, {"q": "Milyen CTIS módba kell állítani a rendszert nehéz terepen (kövek, sziklák)?", "o": ["HIGHWAY", "TERRAIN (nehéz terep)", "MUD & SNOW"], "a": 1, "d": 1, "t": "Terepvezetés", "e": "Nehéz terepen (kövek, sziklák) a CTIS-t TERRAIN módba kell állítani.", "r": "14. Vezetés terepen"}, {"q": "Milyen osztómű állást kell választani havas terepen?", "o": ["H", "N", "L"], "a": 2, "d": 1, "t": "Terepvezetés", "e": "Havas terepen az osztómű „L” állását kell választani. A „H” a gyors, közúti tartomány.", "r": "14. Vezetés terepen"}, {"q": "Mi a fő kockázat jeges terepen vezetéskor?", "o": ["A kerekek kipörgése", "A motor túlmelegedése", "Az akkumulátor lemerülése"], "a": 0, "d": 1, "t": "Terepvezetés", "e": "Jeges terepen a fő kockázat a kerekek kipörgése, mert a tapadás nagyon kicsi.", "r": "14. Vezetés terepen"}, {"q": "Homokos terepen mi a vezetés fő célja?", "o": ["Minél nagyobb sebesség elérése", "A kerekek ne akadjanak el", "A differenciálzárak kikapcsolása"], "a": 1, "d": 1, "t": "Terepvezetés", "e": "Homokos terepen a fő cél, hogy a kerekek ne akadjanak el.", "r": "14. Vezetés terepen"}, {"q": "Mekkora a jármű maximális gázlóképessége?", "o": ["0,5 m", "0,9 m", "1,1 m"], "a": 1, "d": 1, "t": "Terepvezetés", "e": "A maximális gázlóképesség 0,9 m.", "r": "14. Vezetés terepen"}, {"q": "Mekkora a jármű maximális árokáthidaló képessége?", "o": ["0,9 m", "1,1 m", "1,5 m"], "a": 1, "d": 3, "t": "Terepvezetés", "e": "A maximális árokáthidaló képesség 1,1 m.", "r": "14. Vezetés terepen"}, {"q": "Mekkora a maximálisan leküzdhető emelkedő?", "o": ["45%", "60%", "75%"], "a": 1, "d": 1, "t": "Terepvezetés", "e": "A maximálisan leküzdhető emelkedő 60%.", "r": "14. Vezetés terepen"}, {"q": "Milyen megközelítési szögben kell egy 60%-os emelkedőre ráhajtani?", "o": ["30%", "45%", "60%"], "a": 1, "d": 2, "t": "Terepvezetés", "e": "A 60%-os emelkedőre 45% (a leírás szerinti) megközelítési szögben kell ráhajtani.", "r": "14. Vezetés terepen"}, {"q": "Ha rögzítőfékkel indul 60%-os emelkedőn, hány fordulat/percnél kell kiengedni a féket?", "o": ["800 ford/perc", "1200 ford/perc", "2000 ford/perc"], "a": 1, "d": 3, "t": "Terepvezetés", "e": "Rögzítőfékkel induláskor 60%-os emelkedőn a féket 1200 ford/percnél kell kiengedni.", "r": "14. Vezetés terepen"}, {"q": "Mekkora a maximális oldaldőlés, amit a jármű leküzd?", "o": ["20%", "30%", "45%"], "a": 1, "d": 3, "t": "Terepvezetés", "e": "A maximális oldaldőlés, amit a jármű leküzd, 30%.", "r": "14. Vezetés terepen"}, {"q": "Milyen kapcsolót kell bekapcsolni, ha a hajtómotor nem indítható az akkumulátorok alacsony töltöttsége miatt?", "o": ["Áramtalanító kapcsolót", "Átváltó kapcsolót", "Főkapcsolót"], "a": 1, "d": 2, "t": "Szükséghelyzet", "e": "Ha az akkumulátorok töltöttsége miatt a hajtómotor nem indítható, az átváltó kapcsolót kell bekapcsolni.", "r": "15. Szükséghelyzeti eljárások"}, {"q": "Bikázásnál (külső akkumulátorról indítás) legfeljebb hány indítókábelt szabad csatlakoztatni?", "o": ["Egyet", "Kettőt", "Hármat"], "a": 1, "d": 2, "t": "Szükséghelyzet", "e": "Bikázásnál legfeljebb két indítókábelt szabad csatlakoztatni.", "r": "15. Szükséghelyzeti eljárások"}, {"q": "Bikázás után az utóbb beindított jármű motorját mennyi ideig kell alapjáraton járatni?", "o": ["1-2 percig", "5-10 percig", "20-30 percig"], "a": 1, "d": 3, "t": "Szükséghelyzet", "e": "Bikázás után az utóbb beindított jármű motorját 5-10 percig kell alapjáraton járatni.", "r": "15. Szükséghelyzeti eljárások"}, {"q": "Mekkora vastagságúra kopáskor kell kicserélni a fékbetéteket?", "o": ["Minimum 5,1 mm", "Minimum 2 mm", "Minimum 10 mm"], "a": 0, "d": 3, "t": "Szükséghelyzet", "e": "A fékbetétet minimum 5,1 mm vastagságnál kell cserélni.", "r": "15. Szükséghelyzeti eljárások"}, {"q": "Hogyan iktatható ki a rögzítőfék, ha nincs elég levegő a kézifék tartályban?", "o": ["A hátsó fékhengerek végén lévő csavarok betekerésével", "Az akkumulátor lekapcsolásával", "Nem lehet kiiktatni"], "a": 0, "d": 3, "t": "Szükséghelyzet", "e": "Ha a kézifék tartályban nincs levegő, a rögzítőfék a hátsó fékhengerek végén lévő csavarok betekerésével iktatható ki.", "r": "15. Szükséghelyzeti eljárások"}, {"q": "Kerékcserénél mit kell tenni az első lépésben?", "o": ["Meglazítani a kerékcsavarokat", "Kiékelni az egyik kereket és behúzni a kéziféket", "Leengedni a defektes kereket"], "a": 1, "d": 2, "t": "Szükséghelyzet", "e": "Kerékcserénél először ki kell ékelni az egyik kereket és be kell húzni a kéziféket, hogy a jármű ne mozduljon el.", "r": "15. Szükséghelyzeti eljárások"}, {"q": "Milyen körülmények között kell mérni a motorolajszintet?", "o": ["Meleg motornál, dőlt talajon", "Hideg motornál, vízszintes talajon", "Bármikor, tetszőleges talajon"], "a": 1, "d": 2, "t": "Karbantartás", "e": "A motorolajszintet hideg motornál, vízszintes talajon kell mérni, különben a mért érték hamis.", "r": "16. Üzemeltetői szintű karbantartás"}, {"q": "Milyen olajtípus és márka ajánlott a motorhoz?", "o": ["SAE 5W-30, Mobil", "SAE 15W-40, Shell Rimula", "SAE 20W-50, Castrol"], "a": 1, "d": 2, "t": "Karbantartás", "e": "A motorhoz SAE 15W-40 olaj ajánlott, Shell Rimula.", "r": "16. Üzemeltetői szintű karbantartás"}, {"q": "Mekkora a motorolaj csereintervalluma?", "o": ["3 hónap vagy 7500 km", "6 hónap vagy 15.000 km", "12 hónap vagy 30.000 km"], "a": 1, "d": 2, "t": "Karbantartás", "e": "A motorolaj csereintervalluma 6 hónap vagy 15.000 km, amelyik előbb eléri.", "r": "16. Üzemeltetői szintű karbantartás"}, {"q": "Milyen irányba kell elforgatni az osztómű nívópálcáját a kihúzáshoz?", "o": ["Az óramutató járásával megegyezően", "Az óramutató járásával ellentétesen", "Nem kell elforgatni, egyenesen kihúzható"], "a": 1, "d": 3, "t": "Karbantartás", "e": "Az osztómű nívópálcáját az óramutató járásával ellentétesen kell elforgatni a kihúzáshoz.", "r": "16. Üzemeltetői szintű karbantartás"}, {"q": "Mi a teendő, ha a hűtőfolyadék teljesen eltűnt a kiegyenlítő tartályból?", "o": ["Vizet kell tölteni és folytatni az üzemeltetést", "Nem szabad elindítani a motort, értesíteni kell a javítóműhelyt", "Azonnal indítani kell a motort a keringtetéshez"], "a": 1, "d": 2, "t": "Karbantartás", "e": "Ha a hűtőfolyadék teljesen eltűnt a kiegyenlítő tartályból, nem szabad elindítani a motort, mert azonnal túlmelegedhet. Értesíteni kell a javítóműhelyt.", "r": "16. Üzemeltetői szintű karbantartás"}, {"q": "Milyen gyakran kell ellenőrizni/újrazsírozni a zsírzási pontokat?", "o": ["Havonta", "3 havonta", "Évente"], "a": 1, "d": 3, "t": "Karbantartás", "e": "A zsírzási pontokat 3 havonta kell ellenőrizni és újrazsírozni.", "r": "16. Üzemeltetői szintű karbantartás"}, {"q": "Normál üzemi hidraulikanyomás mekkora tartományban van?", "o": ["0,05–0,15 bar", "0,30–0,40 bar", "0,50–0,70 bar"], "a": 1, "d": 3, "t": "Karbantartás", "e": "A normál üzemi hidraulikanyomás 0,30–0,40 bar.", "r": "16. Üzemeltetői szintű karbantartás"}, {"q": "Melyik Gidrán konfigurációhoz tartozik a MAST (árbóc) rendszer?", "o": ["R20", "R30", "R50"], "a": 0, "d": 2, "t": "MAST", "e": "A MAST (árbóc) rendszer az R20 konfigurációhoz tartozik.", "r": "17. MAST rendszer"}, {"q": "Mekkora a jármű magassága üzemközben (árbóc kiemelve)?", "o": ["3622 mm", "5050 mm", "8637 mm"], "a": 2, "d": 3, "t": "MAST", "e": "Üzemközben (árbóc kiemelve) a jármű magassága 8637 mm. Menethelyzetben 3622 mm.", "r": "17. MAST rendszer"}, {"q": "Mennyi az árbóc telepítési ideje?", "o": ["30 mp", "60 mp", "120 mp"], "a": 1, "d": 3, "t": "MAST", "e": "Az árbóc telepítési ideje 60 másodperc.", "r": "17. MAST rendszer"}, {"q": "Az árbóc kézi kiemelésénél milyen fokozatba kell állítani a csavarbehajtót?", "o": ["1-es fokozat", "2-es fokozat", "3-as fokozat"], "a": 0, "d": 3, "t": "MAST", "e": "Az árbóc kézi kiemelésénél a csavarbehajtót 1-es fokozatba kell állítani.", "r": "17. MAST rendszer"}, {"q": "Az árbóc kézi leengedésénél milyen fokozatba kell állítani a csavarbehajtót?", "o": ["1-es fokozat", "2-es fokozat", "Nincs jelentősége"], "a": 1, "d": 3, "t": "MAST", "e": "Az árbóc kézi leengedésénél a csavarbehajtót 2-es fokozatba kell állítani (kiemelésnél 1-es).", "r": "17. MAST rendszer"}, {"q": "Hány jármű alkotja a Gidrán Zászlóalj Parancsnoki Vezetési pontot (R40)?", "o": ["2 jármű", "4 jármű", "6 jármű"], "a": 1, "d": 3, "t": "Konfigurációk", "e": "A Zászlóalj Parancsnoki Vezetési pontot (R40) 4 jármű alkotja.", "r": "18. Konfigurációs változatok"}, {"q": "Az R30 konfigurációban hány jármű alkotja a Felderítő jármű alegységet?", "o": ["1 jármű", "4 jármű", "6 jármű"], "a": 2, "d": 3, "t": "Konfigurációk", "e": "Az R30 konfigurációban a Felderítő jármű alegység 6 járműből áll.", "r": "18. Konfigurációs változatok"}, {"q": "Melyik rövidítés jelöli az Összekötő tiszti járművet?", "o": ["ASCA", "APU", "CTIS"], "a": 0, "d": 2, "t": "Konfigurációk", "e": "Az Összekötő tiszti járművet az ASCA rövidítés jelöli. Az APU a fedélzeti áramforrás, a CTIS a gumiabroncs-szabályozó.", "r": "18. Konfigurációs változatok"}, {"q": "Mekkora a Gidrán szélessége a tükrök nélkül?", "o": ["2492 mm", "2702 mm", "2250 mm"], "a": 0, "d": 1, "t": "Méretek", "e": "A Gidrán szélessége a tükrök nélkül 2492 mm. A 2702 mm a tükrökkel együtt értendő.", "r": "2. Harcjármű alapadatai (méretek)"}, {"q": "Mekkora a Gidrán szélessége a tükrökkel együtt?", "o": ["2492 mm", "2702 mm", "2950 mm"], "a": 1, "d": 2, "t": "Méretek", "e": "A szélesség tükrökkel együtt 2702 mm. Tükrök nélkül 2492 mm.", "r": "2. Harcjármű alapadatai (méretek)"}, {"q": "Mekkora a jármű hossza a konfigurációtól függően?", "o": ["5567 mm vagy 6215 mm", "4800 mm vagy 5200 mm", "6800 mm vagy 7400 mm"], "a": 0, "d": 2, "t": "Méretek", "e": "A jármű hossza a konfigurációtól függően 5567 mm vagy 6215 mm.", "r": "2. Harcjármű alapadatai (méretek)"}, {"q": "Mekkora a jármű magassága a konfigurációtól függően?", "o": ["2000–2800 mm", "2500–3345 mm", "3000–4000 mm"], "a": 1, "d": 2, "t": "Méretek", "e": "A magasság a konfigurációtól függően 2500–3345 mm (a MAST-os R20 külön eset).", "r": "2. Harcjármű alapadatai (méretek)"}, {"q": "Mekkora a Gidrán tengelytávja?", "o": ["2955 mm", "3255 mm", "3555 mm"], "a": 1, "d": 2, "t": "Méretek", "e": "A tengelytáv 3255 mm.", "r": "2. Harcjármű alapadatai (méretek)"}, {"q": "Mekkora a jármű hasmagassága?", "o": ["373 mm", "473 mm", "573 mm"], "a": 1, "d": 2, "t": "Méretek", "e": "A hasmagasság 473 mm.", "r": "2. Harcjármű alapadatai (méretek)"}, {"q": "Mekkora az R20 (MAST-os) jármű magassága az árbóc nélkül?", "o": ["2472 mm", "3622 mm", "8637 mm"], "a": 0, "d": 3, "t": "Méretek", "e": "Az R20 (MAST-os) jármű magassága az árbóc nélkül 2472 mm. Menethelyzetben (árbóc összecsukva) 3622 mm, kitelepítve 8637 mm.", "r": "2. Harcjármű alapadatai (méretek)"}, {"q": "Mekkora a MAST-os jármű magassága menethelyzetben (árbóc összecsukva)?", "o": ["2472 mm", "3622 mm", "5050 mm"], "a": 1, "d": 3, "t": "Méretek", "e": "A MAST-os jármű menethelyzetben (árbóc összecsukva) 3622 mm magas. Árbóc nélkül 2472 mm, kiemelve 8637 mm.", "r": "2. Harcjármű alapadatai (méretek)"}, {"q": "Mekkora a motor legnagyobb nyomatéka?", "o": ["1150 Nm", "1550 Nm", "1850 Nm"], "a": 1, "d": 1, "t": "Motor", "e": "A motor legnagyobb nyomatéka 1550 Nm.", "r": "4. Motor"}, {"q": "Mekkora fordulatszámon adja le a motor a maximális teljesítményét (276 kW)?", "o": ["1400 1/min", "2100 1/min", "3000 1/min"], "a": 1, "d": 3, "t": "Motor", "e": "A motor maximális teljesítményét (276 kW) 2100 1/min fordulatszámon adja le. A maximális nyomaték 1100–1400 1/min között van.", "r": "4. Motor"}, {"q": "Milyen fordulatszám-tartományban érhető el a motor maximális nyomatéka?", "o": ["600–900 1/min", "1100–1400 1/min", "1800–2400 1/min"], "a": 1, "d": 3, "t": "Motor", "e": "A maximális nyomaték (1550 Nm) 1100–1400 1/min között érhető el. A maximális teljesítmény 2100 1/min-nél van.", "r": "4. Motor"}, {"q": "Hány ütemű a Gidrán motorja?", "o": ["2 ütemű", "4 ütemű", "6 ütemű"], "a": 1, "d": 1, "t": "Motor", "e": "A Gidrán motorja 4 ütemű dízelmotor.", "r": "4. Motor"}, {"q": "Melyik a motor típusjelzése?", "o": ["Cummins ISL9E3 375", "Caterpillar C9", "MAN D2066"], "a": 0, "d": 1, "t": "Motor", "e": "A motor típusjelzése Cummins ISL9E3 375.", "r": "4. Motor"}, {"q": "Mennyi motorolaj fér a motorba?", "o": ["12,5 liter", "22,5 liter", "38 liter"], "a": 1, "d": 2, "t": "Motor", "e": "A motorba 22,5 liter motorolaj fér.", "r": "4. Motor"}, {"q": "Mennyi a hűtőrendszer folyadéktérfogata?", "o": ["18 liter", "38 liter", "58 liter"], "a": 1, "d": 3, "t": "Motor", "e": "A hűtőrendszer folyadéktérfogata 38 liter.", "r": "4. Motor"}, {"q": "Mekkora a gumiabroncsok mérete?", "o": ["315/80 R22,5", "395/85 R20", "12.00 R20"], "a": 1, "d": 2, "t": "Futómű, CTIS", "e": "A gumiabroncsok mérete 395/85 R20.", "r": "6. Felfüggesztés, fékek, kerekek, CTIS"}, {"q": "Melyik nyomatékváltó olajat használja az Allison váltó?", "o": ["TES 295", "SAE 75W-90", "ISO 11158 HM"], "a": 0, "d": 3, "t": "Erőátvitel", "e": "Az Allison váltó TES 295 minősítésű olajat használ. Ez az automata váltók folyadéka, nem hajtóműolaj.", "r": "5. Erőátvitel"}, {"q": "Mekkora az Allison váltó olajtérfogata?", "o": ["9,6 liter", "19,6 liter", "29,6 liter"], "a": 1, "d": 3, "t": "Erőátvitel", "e": "Az Allison váltó olajtérfogata 19,6 liter.", "r": "5. Erőátvitel"}, {"q": "Milyen szinten védi a Stanag 4569 a járművet a kerekek alatt?", "o": ["2+ szint", "4a szint (10 kg TNT)", "2b szint (6 kg TNT)"], "a": 1, "d": 2, "t": "Páncélvédelem", "e": "A kerekek alatti védelem STANAG 4569 4a szintű (10 kg TNT). A páncéltest alatt 2b szint, 6 kg TNT.", "r": "3. Páncélvédelem"}, {"q": "Milyen lövedék ellen véd körkörösen a 2+ szintű védelem?", "o": ["7,62×39 mm API", "12,7×99 mm", "5,56×45 mm NATO"], "a": 0, "d": 2, "t": "Páncélvédelem", "e": "A 2+ szintű védelem körkörösen 7,62×39 mm API lövedék ellen véd.", "r": "3. Páncélvédelem"}, {"q": "Hol található a kézifékkar?", "o": ["A kormánytól balra, a fő kapcsolópanelen", "A kormánytól jobbra, a kiegészítő panelen", "A hátsó ajtónál"], "a": 1, "d": 2, "t": "Kezelőszervek", "e": "A kézifékkar a kormánytól jobbra, a kiegészítő panelen van.", "r": "10. Kezelőszervek és műszerfal"}, {"q": "Hol találhatók a gyújtáskapcsoló gombok és az indítógomb?", "o": ["A kormánytól balra, a fő kapcsolópanelen", "A kormánytól jobbra", "A tetőkonzolon"], "a": 0, "d": 2, "t": "Kezelőszervek", "e": "A gyújtáskapcsoló gombok és az indítógomb a kormánytól balra, a fő kapcsolópanelen vannak.", "r": "10. Kezelőszervek és műszerfal"}, {"q": "Hol találhatók a szivargyújtó aljzatok (12 V és 24 V)?", "o": ["A kormánytól balra", "A kormánytól jobbra, a kiegészítő panelen", "A hátsó ajtónál"], "a": 1, "d": 3, "t": "Kezelőszervek", "e": "A 12 V és 24 V szivargyújtó aljzatok a kormánytól jobbra, a kiegészítő panelen vannak.", "r": "10. Kezelőszervek és műszerfal"}, {"q": "Hol található a gurítószelep kapcsolója?", "o": ["A fő kapcsolópanelen (kormánytól balra)", "A kiegészítő műszerfalon", "A kézifékkaron"], "a": 0, "d": 3, "t": "Kezelőszervek", "e": "A gurítószelep kapcsolója a fő kapcsolópanelen van (kormánytól balra).", "r": "10. Kezelőszervek és műszerfal"}, {"q": "Hol található a CBRN (ABV) vezérlőpanel?", "o": ["A kiegészítő műszerfalon", "A fő kapcsolópanelen", "A hátsó ajtón"], "a": 0, "d": 2, "t": "Kezelőszervek", "e": "A CBRN (ABV) vezérlőpanel a kiegészítő műszerfalon található.", "r": "10. Kezelőszervek és műszerfal"}, {"q": "Hány elemből áll a kiegészítő műszerfal?", "o": ["6", "10", "14"], "a": 1, "d": 3, "t": "Kezelőszervek", "e": "A kiegészítő műszerfal 10 elemből áll.", "r": "10. Kezelőszervek és műszerfal"}, {"q": "Mire szolgál a többfunkciós kar?", "o": ["Jelzőkürt, irányjelző, ablaktörlő/mosó, fényszóró kezelése", "A váltó fokozatainak kapcsolása", "A csörlő működtetése"], "a": 0, "d": 2, "t": "Kezelőszervek", "e": "A többfunkciós kar a jelzőkürtöt, az irányjelzőt, az ablaktörlőt/mosót és a fényszórót kezeli, a váltót és a csörlőt nem.", "r": "10. Kezelőszervek és műszerfal"}, {"q": "Melyik panelen található az osztómű, a differenciálzárak és a nyomatékváltó vezérlése?", "o": ["A kiegészítő műszerfalon", "A fő kapcsolópanelen", "A kézifékkar mellett"], "a": 0, "d": 3, "t": "Kezelőszervek", "e": "Az osztómű, a differenciálzárak és a nyomatékváltó vezérlése a kiegészítő műszerfalon található.", "r": "10. Kezelőszervek és műszerfal"}, {"q": "Mekkora az osztómű olajtérfogata?", "o": ["4,2 liter", "8,2 liter", "16,4 liter"], "a": 1, "d": 3, "t": "Karbantartás", "e": "Az osztómű olajtérfogata 8,2 liter.", "r": "16. Üzemeltetői szintű karbantartás"}, {"q": "Mekkora a Gidrán legkisebb magassága a konfigurációtól függően?", "o": ["2500 mm", "2200 mm", "2800 mm"], "a": 0, "d": 2, "t": "Méretek", "e": "A magasság a konfigurációtól függően 2500–3345 mm. A legkisebb érték 2500 mm.", "r": "2. Harcjármű alapadatai (méretek)"}, {"q": "Mekkora a Gidrán legnagyobb magassága a konfigurációtól függően (MAST nélkül)?", "o": ["3045 mm", "3345 mm", "3645 mm"], "a": 1, "d": 2, "t": "Méretek", "e": "A magasság a konfigurációtól függően 2500–3345 mm. A legnagyobb érték 3345 mm.", "r": "2. Harcjármű alapadatai (méretek)"}, {"q": "Mekkora az árbóc (MAST) nyitási magassága?", "o": ["3622 mm", "8637 mm", "5050 mm"], "a": 2, "d": 3, "t": "Méretek", "e": "Az árbóc nyitási magassága 5050 mm. A teljes járműmagasság üzemközben 8637 mm, menethelyzetben 3622 mm.", "r": "2. Harcjármű alapadatai (méretek)"}, {"q": "Mekkora a Gidrán hossza az R20 (MAST-os) konfigurációban?", "o": ["5567 mm", "6215 mm", "5889 mm"], "a": 1, "d": 3, "t": "Méretek", "e": "Az R20 (MAST-os) jármű hossza 6215 mm. A másik megadott hossz 5567 mm.", "r": "2. Harcjármű alapadatai (méretek)"}, {"q": "Melyik motorolajat kell használni -5 °C vagy az alatti hőmérsékleten?", "o": ["SAE 5W-30", "SAE 15W-40", "SAE 10W-60"], "a": 0, "d": 3, "t": "Olajok, folyadékok", "e": "A kenőanyag-táblázat szerint a motorhoz ≤ -5 °C-on 5W-30, afelett 15W-40 olaj való.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Melyik motorolajat kell használni -5 °C felett?", "o": ["SAE 5W-30", "SAE 15W-40", "SAE 0W-20"], "a": 1, "d": 2, "t": "Olajok, folyadékok", "e": "A motorhoz -5 °C felett SAE 15W-40 (ajánlott márka: Shell Rimula) való. -5 °C vagy az alatt 5W-30.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Hány üzemóránként kell motorolajat cserélni (a 15.000 km / 6 hónap mellett)?", "o": ["250 üzemóra", "500 üzemóra", "1000 üzemóra"], "a": 1, "d": 3, "t": "Olajok, folyadékok", "e": "A motorolaj csereintervalluma: 15.000 km vagy 6 hónap (500 üzemóra).", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Mikor kell a folyadékszinteket (motorolaj, váltóolaj, hűtőfolyadék) ellenőrizni?", "o": ["Üzemeltetés előtt és után", "Csak havonta egyszer", "Csak csere előtt"], "a": 0, "d": 1, "t": "Olajok, folyadékok", "e": "A táblázat szerint a motor, a nyomatékváltó és a hűtőrendszer szintjét üzemeltetés előtt és után is ellenőrizni kell.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Mennyi az Allison váltóolaj cseréjének intervalluma?", "o": ["40.000 km vagy 24 hónap", "120.000 km vagy 36 hónap", "15.000 km vagy 6 hónap"], "a": 1, "d": 3, "t": "Olajok, folyadékok", "e": "Az Allison 3200 SP TES 295 olaját 120.000 km vagy 36 hónap (6000 üzemóra) után kell cserélni.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Milyen olajat használ az osztómű (GHM MTC60 420)?", "o": ["SAE 75W-90, API GL-5", "TES 295", "SAE 15W-40"], "a": 0, "d": 3, "t": "Olajok, folyadékok", "e": "Az osztómű SAE 75W-90 / API GL-5 / MIL-L-2105 D olajat kap, kb. 8,2 liter mennyiségben. A TES 295 az Allison váltóé.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Mikor van az osztómű első olajcseréje?", "o": ["4000 km után", "30.000 km után", "40.000 km után"], "a": 0, "d": 3, "t": "Olajok, folyadékok", "e": "Az osztómű első olajcseréje 4000 km-nél esedékes. A további csere 12 havonta vagy 30.000 km-enként.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Milyen gyakran kell az osztómű olajszintjét ellenőrizni?", "o": ["Minden 1000 km", "Minden 10.000 km", "Minden 50.000 km"], "a": 1, "d": 3, "t": "Olajok, folyadékok", "e": "Az osztómű olajszintjét minden 10.000 km-nél ellenőrizni kell.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Milyen API minőségi osztályú olajat használnak a differenciálművek?", "o": ["API GL-5", "API CF-4", "API SN"], "a": 0, "d": 3, "t": "Olajok, folyadékok", "e": "A differenciálművek és a kerékhajtások olaja API GL-5 minőségű (SAE 80W-90, SAE-J2360 szerint). A CF-4 dízelmotorolaj-jelzés.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Mennyi olaj fér az első vagy a hátsó tengely differenciálművébe?", "o": ["4,5 liter", "8,5 liter", "12,5 liter"], "a": 1, "d": 3, "t": "Olajok, folyadékok", "e": "Az első és a hátsó tengely differenciálművébe is kb. 8,5 liter olaj kerül.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Mennyi olaj fér egy tengely két kerékhajtásába összesen (jobb + bal)?", "o": ["2,4 liter (1,2 + 1,2)", "4,0 liter", "8,5 liter"], "a": 0, "d": 3, "t": "Olajok, folyadékok", "e": "Az első és a hátsó kerékhajtás (jobb-bal) olajtérfogata egyaránt 1,2 + 1,2 = 2,4 liter.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Mikor van a differenciálművek és kerékhajtások első olajcseréje?", "o": ["4000 km (100 üzemóra)", "15.000 km", "40.000 km"], "a": 0, "d": 3, "t": "Olajok, folyadékok", "e": "Első csere 4000 km-nél (100 üzemóra), utána 40.000 km-enként (kb. 1250 üzemóra vagy 24 hónap). Ellenőrzés 8000 km-enként vagy 250 üzemóránként.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Milyen hűtőfolyadékot használ a főmotor hűtőrendszere?", "o": ["CES-1463", "ASTM D-6210", "PAG ISO 46"], "a": 0, "d": 3, "t": "Olajok, folyadékok", "e": "A hűtőrendszer folyadéka CES-1463 (38 liter). Az ASTM D-6210 az APU hűtőfolyadéka.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Mennyi a hűtőfolyadék cseréjének intervalluma?", "o": ["2000 üzemóra vagy 24 hónap", "500 üzemóra vagy 6 hónap", "10.000 km"], "a": 0, "d": 3, "t": "Olajok, folyadékok", "e": "A hűtőfolyadékot 2000 üzemóránként vagy 24 havonta kell cserélni. Szintellenőrzés üzemeltetés előtt és után.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Milyen szabványú hidraulikaolajat használ a hűtőventilátor-hajtás hidraulikája?", "o": ["ISO 11158 HM", "TES 295", "SAE 15W-40"], "a": 0, "d": 3, "t": "Olajok, folyadékok", "e": "A hidraulikarendszer ISO 11158 HM (DIN 55524-2 HLP 15) olajat használ. Cseréje, ha a szennyezettségre figyelmeztető lámpa felvillan, vagy 2000 üzemóránként/24 havonta.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Mekkora a hidraulikarendszer maximális nyomása a táblázat szerint?", "o": ["0,3 bar", "0,7 bar", "1,5 bar"], "a": 1, "d": 3, "t": "Olajok, folyadékok", "e": "A rendszernyomás értékei: minimális 0,1, normál 0,30–0,40, maximális 0,7 bar.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Milyen hűtőközeg van a klímarendszerben?", "o": ["R-134A", "R-12", "CO₂"], "a": 0, "d": 3, "t": "Olajok, folyadékok", "e": "A klíma gáza R-134A (első vezeték 1,4 kg, hátsó 1,25 kg), a kompresszor olaja PAG ISO 46.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Mennyi az APU motorolajának mennyisége?", "o": ["1,1 liter", "3,5 liter", "6,0 liter"], "a": 0, "d": 3, "t": "Olajok, folyadékok", "e": "Az APU motorolaja kb. 1,1 liter. Első csere 50 óra után, utána 75 óránként vagy évente.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Mikor kell az APU olajat először cserélni?", "o": ["50 üzemóra után", "250 üzemóra után", "500 üzemóra után"], "a": 0, "d": 3, "t": "Olajok, folyadékok", "e": "Az APU olajat az első 50 óra után cserélik, utána minden 75 óránként vagy 12 havonta egyszer.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Milyen zsírral kell zsírozni a felfüggesztést és a kardánkereszteket?", "o": ["MIL-PRF-10924", "SAE 80W-90", "ISO 11158 HM"], "a": 0, "d": 3, "t": "Olajok, folyadékok", "e": "Az olaj-zsír táblázat szerint a zsírzási pontok MIL-PRF-10924 zsírt kapnak.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Milyen gyakran kell a kerékfelfüggesztést és a kardánokat zsírozni?", "o": ["4800 km-enként vagy 3 havonta", "15.000 km-enként", "Évente egyszer"], "a": 0, "d": 2, "t": "Olajok, folyadékok", "e": "A felfüggesztés, a kardántengelyek, a kardánkeresztek és a csatolórudak 4800 km-enként vagy 3 havonta kapnak zsírt.", "r": "16. Üzemeltetői szintű karbantartás – Kenőanyagok és munkafolyadékok táblázata"}, {"q": "Melyik NEM zsírzógombos hely a karosszérián?", "o": ["Ajtók zsanérjai", "Pótkeréktartó állvány", "Hátsó fényszóró"], "a": 2, "d": 2, "t": "Karbantartás", "e": "Zsírzógomb van az ajtók zsanérjain, a pótkeréktartó állványon és a motor szerelőnyílás fedelének zsanérjain.", "r": "16. Üzemeltetői szintű karbantartás – Zsírzógombok"}, {"q": "Milyen típusú az üzemanyag, amit a Gidrán használ?", "o": ["Gázolaj", "Benzin", "Kerozin (JET)"], "a": 0, "d": 1, "t": "Motor", "e": "Az üzemanyag típusa gázolaj, a tartályok 2×100 literesek.", "r": "4. Motor"}, {"q": "Mi a vízleválasztó szűrő feladata az üzemanyagrendszerben?", "o": ["Automatikusan leválasztja az üzemanyagban lévő vizet", "Hűti az üzemanyagot", "Növeli az üzemanyag nyomását"], "a": 0, "d": 2, "t": "Motor", "e": "Az üzemanyagrendszer vízleválasztó szűrője automatikusan leválasztja az üzemanyagban található vizet.", "r": "4. Motor"}, {"q": "Hogyan hűtött a Gidrán motorja?", "o": ["Folyadékhűtésű", "Léghűtésű", "Olajhűtésű"], "a": 0, "d": 1, "t": "Motor", "e": "A motor 4 ütemű, közvetlen befecskendezésű, folyadékhűtésű.", "r": "4. Motor"}, {"q": "Mikor szabad a hűtőfolyadék kiegyenlítő tartályát kinyitni?", "o": ["Ha a motor már visszahűlt", "Üzemmeleg motornál, lassan", "Járó motornál"], "a": 0, "d": 2, "t": "Karbantartás", "e": "Üzemmeleg motornál nyomás van a kiegyenlítő tartályban, ezért meg kell várni, amíg a motor visszahűl. Forró gőz éghet.", "r": "16. Üzemeltetői szintű karbantartás – Hűtőfolyadékszint ellenőrzése"}, {"q": "Hány indító akkumulátor van, és mekkora egy akkumulátor névleges feszültsége?", "o": ["2 db, 12 V", "4 db, 6 V", "2 db, 24 V"], "a": 0, "d": 2, "t": "Fedélzeti rendszerek", "e": "Az indító akkumulátor 12 V-os, 120 Ah-s, kb. 40 kg tömegű, gondozásmentes. Két darab van belőlük, a rendszer 24 V-os.", "r": "8. Elektromos rendszer"}, {"q": "Mekkora egy indító akkumulátor kapacitása?", "o": ["60 Ah", "120 Ah", "180 Ah"], "a": 1, "d": 3, "t": "Fedélzeti rendszerek", "e": "Az akkumulátor névleges kapacitása 120 Ah, tömege 40 kg, működési hőmérséklete -40 °C és +80 °C.", "r": "8. Elektromos rendszer"}, {"q": "Mekkora a generátor áramerőssége?", "o": ["120 A", "220 A", "320 A"], "a": 1, "d": 3, "t": "Fedélzeti rendszerek", "e": "A generátor 28 V feszültségű, 220 A áramerősségű, 9,8 kg tömegű.", "r": "8. Elektromos rendszer"}, {"q": "Mekkora az inverter névleges feszültsége?", "o": ["24/230 V", "12/110 V", "28/400 V"], "a": 0, "d": 3, "t": "Fedélzeti rendszerek", "e": "Az inverter névleges feszültsége 24/230 V, kimeneti frekvenciája 50/60 Hz, töltőárama max. 60 A.", "r": "8. Elektromos rendszer"}, {"q": "Mikor kell az áramtalanítót bekapcsolt állásban tartani?", "o": ["Csak a jármű indításakor", "Mindig, amikor a jármű áll", "Csak bikázásnál"], "a": 0, "d": 2, "t": "Fedélzeti rendszerek", "e": "Az áramtalanítót mindig kikapcsolva kell tartani, kivéve ha a járművet indítani akarjuk. Különben egyes rendszerek (rádió stb.) lemerítik az akkumulátort.", "r": "8. Elektromos rendszer"}, {"q": "Mikor szabad az átváltó kapcsolót használni?", "o": ["Csak a hajtómotor indításához, utána vissza kell kapcsolni", "Menet közben a terepen", "Folyamatosan bekapcsolva"], "a": 0, "d": 2, "t": "Szükséghelyzet", "e": "Az átváltó kapcsoló a fedélzeti akkumulátorokból indítja a motort. Csak indításhoz szabad, indítás után vissza kell kapcsolni eredeti állásba.", "r": "15. Szükséghelyzeti eljárások"}, {"q": "Bikázásnál mi az első lépés?", "o": ["Mindkét jármű áramtalanítóját kikapcsolni", "A lemerült jármű motorját indítani", "A kábelt a motorhoz csatlakoztatni"], "a": 0, "d": 2, "t": "Szükséghelyzet", "e": "A bikázás első lépése: mindkét harcjármű áramtalanítóját kikapcsolt állásba állítani, utána a külső indítás csatlakozóit használni.", "r": "15. Szükséghelyzeti eljárások"}, {"q": "Bikázásnál melyik járművet indítjuk el elsőként?", "o": ["A bikázó (töltöttebb) járművet", "A lemerült akkumulátorú járművet", "Egyiket sem, csak az APU-t"], "a": 0, "d": 3, "t": "Szükséghelyzet", "e": "Előbb a bikázó harcjármű áramtalanítóját kapcsoljuk be és indítjuk el, utána a lemerült akkumulátorú járműét.", "r": "15. Szükséghelyzeti eljárások"}, {"q": "Milyen hosszú a külső indítókábel a szerszámzatban?", "o": ["3 méter", "6 méter", "10 méter"], "a": 1, "d": 3, "t": "Szükséghelyzet", "e": "A szerszámzatban lévő külső indítókábel 6 méteres.", "r": "16. Üzemeltetői szintű karbantartás – Szerszámzat"}, {"q": "Hány tonnás a szerszámzatban lévő hidraulikus emelő?", "o": ["6 tonnás", "12 tonnás", "20 tonnás"], "a": 1, "d": 3, "t": "Karbantartás", "e": "A szerszámzatban 12 tonnás hidraulikus emelő van, hidraulikus emelő toldattal.", "r": "16. Üzemeltetői szintű karbantartás – Szerszámzat"}, {"q": "Hány aknazárnyitó négyszögkulcs van a szerszámzatban?", "o": ["1", "2", "4"], "a": 1, "d": 3, "t": "Karbantartás", "e": "A szerszámzat listája szerint az aknazárnyitó négyszögkulcsból 2 darab van.", "r": "16. Üzemeltetői szintű karbantartás – Szerszámzat"}, {"q": "Mit kell tenni az üzemeltetői szintű karbantartás megkezdése előtt?", "o": ["Ismételje át a balesetvédelmi ismereteket", "Szerelje le az akkumulátorokat", "Töltse fel a hűtőfolyadékot"], "a": 0, "d": 1, "t": "Biztonság", "e": "A karbantartás előtt át kell ismételni a balesetvédelmi szabályokat, és védőfelszerelést kell viselni (védőszemüveg, füldugó, bakancs, kesztyű).", "r": "16. Üzemeltetői szintű karbantartás"}, {"q": "Hogyan szabad a belső ablakfelületek jegét eltávolítani?", "o": ["Kizárólag az ablakfűtéssel", "Kaparással", "Forró vízzel"], "a": 0, "d": 2, "t": "Páncélvédelem", "e": "A belső felületek jégtelenítése fizikai úton tilos, kizárólag az ablakfűtés használható.", "r": "3. Páncélvédelem"}, {"q": "Milyen lőszer ellen véd az EN 1063 BR7 szintű ablakvédelem?", "o": ["7,62×51 NATO", "12,7×99 mm", "5,56×45 mm"], "a": 0, "d": 3, "t": "Páncélvédelem", "e": "Az EN 1063 BR7 szint az üvegfelületeken 7,62×51 NATO lőszer ellen véd.", "r": "3. Páncélvédelem"}, {"q": "Hol található a pótkerékemelő csörlő?", "o": ["A bal hátsó részen lévő tároló rekeszben", "A jobb oldali szerszámosládában", "A motortérben"], "a": 0, "d": 3, "t": "Szükséghelyzet", "e": "A pótkerékemelő csörlő a gépjármű bal hátsó részén lévő tároló rekeszben van, a tetőpáncélon erre kialakított helyre rögzítik.", "r": "15. Szükséghelyzeti eljárások"}, {"q": "Honnan kap tápellátást a pótkerékemelő csörlő?", "o": ["Az akkumulátor csatlakozójáról", "Az APU-ról", "Elemről"], "a": 0, "d": 3, "t": "Szükséghelyzet", "e": "A pótkerékemelő csörlő tápellátása az akkumulátor csatlakozójáról biztosítható, távirányítóval vezérelhető.", "r": "15. Szükséghelyzeti eljárások"}, {"q": "Mikor oldható ki a rögzítőfék a gurítószeleppel?", "o": ["Ha az „A” tartályban van min. 6 bar levegő", "Ha az „S1” tartály üres", "Ha a motor nem jár"], "a": 0, "d": 3, "t": "Szükséghelyzet", "e": "Ha a kézifék tartályában nincs levegő, de az „A” tartályban van legalább 6 bar, a gurítószelep elfordításával és tartásával oldható a rögzítőfék.", "r": "15. Szükséghelyzeti eljárások"}, {"q": "Mekkora átmérőjű az önmentő csörlő kötele?", "o": ["8 mm", "13 mm", "20 mm"], "a": 1, "d": 3, "t": "Fedélzeti rendszerek", "e": "A csörlőkötél átmérője 13 mm, 6 pászmájú acélhuzal, hasznos hossza 25 m. A csörlő hidraulikus.", "r": "8. Elektromos rendszer, ABV, tűzoltás, csörlő"}, {"q": "Milyen működtetésű az önmentő csörlő?", "o": ["Hidraulikus", "Elektromos", "Pneumatikus"], "a": 0, "d": 2, "t": "Fedélzeti rendszerek", "e": "Az önmentő csörlő hidraulikus típusú, vonóereje egy kötélágon 70 kN (7000 kg).", "r": "8. Elektromos rendszer, ABV, tűzoltás, csörlő"}, {"q": "Mely rendszereket látja el a hidraulika?", "o": ["Szervokormány, hűtőventilátor-hajtás, csörlő", "Fék, CTIS, diffzár", "Ajtók, ablaktörlő, ablakmosó"], "a": 0, "d": 2, "t": "Fedélzeti rendszerek", "e": "A hidraulikarendszer a szervokormányt, a motor hűtőventilátor-hajtását és a csörlőberendezést látja el.", "r": "8. Elektromos rendszer, ABV, tűzoltás, csörlő"}, {"q": "Mi a váltókar állása a hátramenethez?", "o": ["R", "N", "D"], "a": 0, "d": 1, "t": "Erőátvitel", "e": "Az Allison váltón: R hátramenet, N üres, D előremenet.", "r": "5. Erőátvitel"}, {"q": "Mekkora a maximális sebesség az osztómű „L” állásában?", "o": ["50 km/h", "90 km/h", "120 km/h"], "a": 0, "d": 2, "t": "Erőátvitel", "e": "Az „L” állás: max. 50 km/h és max. 3720 Nm. A „H” állás: max. 120 km/h és max. 1550 Nm.", "r": "5. Erőátvitel"}, {"q": "Mekkora a nyomaték az osztómű „H” állásában?", "o": ["1550 Nm", "3720 Nm", "2500 Nm"], "a": 0, "d": 3, "t": "Erőátvitel", "e": "A „H” (gyors) állásban a max. nyomaték 1550 Nm, a max. sebesség 120 km/h.", "r": "5. Erőátvitel"}, {"q": "Mi hajtja az osztómű áttételeit és a differenciálzár működtetését?", "o": ["Pneumatikus (levegős) rendszer", "Hidraulikus rendszer", "Elektromos motor"], "a": 0, "d": 3, "t": "Erőátvitel", "e": "Az áttételek kapcsolását és a differenciálzár működtetését pneumatikus rendszer végzi, ezért kell hozzá levegő (min. 6 bar).", "r": "5. Erőátvitel"}, {"q": "Mit csinálnak a differenciálművek a hajtáserővel?", "o": ["90°-kal elfordítják a hajtás irányát", "Növelik a fordulatszámot", "Hűtik a hajtást"], "a": 0, "d": 3, "t": "Erőátvitel", "e": "A kardántengelyek által hajtott differenciálművek 90°-kal elfordítják a hajtás irányát és továbbítják a nyomatékot a kerékagyak felé.", "r": "5. Erőátvitel"}, {"q": "Mi a hossz-differenciálzár feladata?", "o": ["Összezárja a mellső és hátsó tengelyt", "Csak a hátsó kerekeket zárja", "Csak az első kerekeket zárja"], "a": 0, "d": 2, "t": "Erőátvitel", "e": "A hossz-differenciálzár összezárja a mellső és a hátsó tengelyeket nehéz terepen. Ha ez kevés, jön a hátsó, majd a mellső zár.", "r": "5. Erőátvitel"}, {"q": "Melyik rendszer vezérlőpanelje NEM a kiegészítő műszerfalon van?", "o": ["Gyújtáskapcsolók és indítógomb", "CBRN (ABV) vezérlőpanel", "Ködgránátvetők vezérlőpanelje"], "a": 0, "d": 3, "t": "Kezelőszervek", "e": "A kiegészítő műszerfalon van: osztómű/diffzár/váltó panel, kapcsológombok, ködgránátvető, 2 USB, ABV, keresőlámpa, klíma/fűtés, 360°-os kamera monitor, CTIS, dokumentumtároló. A gyújtáskapcsolók a fő kapcsolópanelen vannak.", "r": "10. Kezelőszervek és műszerfal"}, {"q": "Hány 5 V-os USB aljzat van a kiegészítő műszerfalon?", "o": ["1", "2", "4"], "a": 1, "d": 3, "t": "Kezelőszervek", "e": "A kiegészítő műszerfalon 2 db 5 V-os USB csatlakozó aljzat van.", "r": "10. Kezelőszervek és műszerfal"}, {"q": "Mi található a kiegészítő műszerfal 10. elemeként?", "o": ["Dokumentumtároló rekesz", "Keresőlámpa panel", "Klímavezérlő"], "a": 0, "d": 3, "t": "Kezelőszervek", "e": "A kiegészítő műszerfal 10. eleme a dokumentumtároló rekesz.", "r": "10. Kezelőszervek és műszerfal"}, {"q": "Hol van a 360°-os kamerarendszer monitora?", "o": ["A kiegészítő műszerfalon", "A fő kapcsolópanelen", "A tetőn"], "a": 0, "d": 2, "t": "Kezelőszervek", "e": "A 360 fokos kamerarendszer monitora a kiegészítő műszerfal 8. eleme.", "r": "10. Kezelőszervek és műszerfal"}, {"q": "Melyik funkció a kapcsológombok panelén található?", "o": ["ABS kikapcsolás", "Osztómű kapcsolása", "CTIS üzemmód választás"], "a": 0, "d": 3, "t": "Kezelőszervek", "e": "A kapcsológombok panelén van többek között: ABS kikapcsolás, motorvédelem törlés, csörlő működtetése, ablakfűtés, belső szellőztetés, hátsó ajtó nyitás/zárás. Az osztómű és a CTIS külön panelen van.", "r": "10. Kezelőszervek és műszerfal"}, {"q": "Milyen működtetésű a motorfék?", "o": ["Elektromechanikus", "Pneumatikus", "Hidraulikus"], "a": 0, "d": 3, "t": "Futómű, CTIS", "e": "Az üzemi fék és a kézifék pneumatikus, a motorfék elektromechanikus (motor és nyomatékváltó), a gurítószelep pneumatikus.", "r": "6. Felfüggesztés, fékek, kerekek, CTIS"}, {"q": "Mekkora a keréktárcsa mérete?", "o": ["10 × 20", "8 × 22,5", "12 × 24"], "a": 0, "d": 3, "t": "Futómű, CTIS", "e": "A keréktárcsa 10×20-as, a gumiabroncs 395/85 R20, benne Run-Flat gyűrűvel.", "r": "6. Felfüggesztés, fékek, kerekek, CTIS"}, {"q": "Mi van a csavarrugók belsejében a felfüggesztésen?", "o": ["Lengéscsillapító", "Torziós rúd", "Stabilizátor"], "a": 0, "d": 2, "t": "Futómű, CTIS", "e": "A felfüggesztés csavarrugókból áll, a lengéscsillapítók a csavarrugók belsejében vannak.", "r": "6. Felfüggesztés, fékek, kerekek, CTIS"}, {"q": "Hogyan haladjunk homokon és melyik CTIS módot használjuk?", "o": ["„MUD & SNOW” mód, „L” osztómű", "„HIGHWAY” mód, „H” osztómű", "„EMERGENCY” mód, „N” osztómű"], "a": 0, "d": 2, "t": "Terepvezetés", "e": "Homokban a fő cél, hogy a kerekek ne akadjanak el: CTIS „MUD & SNOW”, osztómű „L”, kisebb sebesség, alacsonyabb fokozat, egyenletes haladás. A motort nem szabad túlterhelni.", "r": "14. Vezetés terepen"}, {"q": "Jeges terepen mit kapcsolunk be először a differenciálzárak közül?", "o": ["A középső (hossz) zárat", "A mellső zárat", "A hátsó zárat"], "a": 0, "d": 2, "t": "Terepvezetés", "e": "Jégen először a középső (hossz) differenciálzárat kapcsoljuk, ha ez kevés, jön a hátsó, végül a mellső. A csúszós lejtőket kerüljük.", "r": "14. Vezetés terepen"}, {"q": "Mekkora a maximális lépcsőmászó képesség?", "o": ["0,3 m", "0,5 m", "0,9 m"], "a": 1, "d": 2, "t": "Terepvezetés", "e": "A leküzdhető akadályok: gázló 0,9 m, lépcsőmászás 0,5 m, árok 1,1 m, oldaldőlés 30%, emelkedő 60%.", "r": "14. Vezetés terepen"}, {"q": "Mekkora az árbóc (MAST) látószöge?", "o": ["90°", "180°", "360°"], "a": 2, "d": 2, "t": "MAST", "e": "A MAST rendszer látószöge 360°, telepítési ideje 60 másodperc.", "r": "17. MAST rendszer"}, {"q": "Hány Felderítő járművet tartalmaz az R20 konfiguráció?", "o": ["1", "7", "6"], "a": 1, "d": 3, "t": "Konfigurációk", "e": "R20: 7 Felderítő jármű és 1 Akusztikus Tűzfelderítő jármű.", "r": "18. Konfigurációs változatok"}, {"q": "Hány Tűzfelderítő jármű van az R30 konfigurációban?", "o": ["1", "6", "7"], "a": 1, "d": 3, "t": "Konfigurációk", "e": "R30: Tűzfelderítő 6, Felderítő 6, Szakaszparancsnoki 6 és Előretolt Megfigyelő 1 jármű.", "r": "18. Konfigurációs változatok"}, {"q": "Hány járműből áll az R40 konfiguráció Összekötő tiszti (ASCA) alegysége?", "o": ["2", "4", "6"], "a": 0, "d": 3, "t": "Konfigurációk", "e": "R40: Összekötő tiszti jármű (ASCA) 2 jármű, Zászlóalj Parancsnoki Vezetési pont 4 jármű, Rádióállomás 1, Híradó Szakasz Parancsnoki 1 jármű.", "r": "18. Konfigurációs változatok"}, {"q": "Hány járműből áll a Parancsnoki Vezetési pont az R50 konfigurációban?", "o": ["2", "4", "6"], "a": 0, "d": 3, "t": "Konfigurációk", "e": "R50: Parancsnoki Vezetési pont 2 jármű, Rádióállomás 1 és 2 járműves változatban.", "r": "18. Konfigurációs változatok"}, {"q": "Mikor kell az ablakmosófolyadék szintjét ellenőrizni?", "o": ["Használat előtt", "Csak télen", "Csak csere előtt"], "a": 0, "d": 1, "t": "Karbantartás", "e": "Az ablakmosófolyadék szintje használat közben csökken, ezért használat előtt ellenőrizni, szükség esetén pótolni kell.", "r": "16. Üzemeltetői szintű karbantartás"}, {"q": "Mit kell tenni, ha a hidraulikaolaj szintje alacsony?", "o": ["Ellenőrizni a hidraulikaolaj-tartály szintjét vízszintes felületen", "Azonnal kicserélni az egész olajat", "Figyelmen kívül hagyni"], "a": 0, "d": 2, "t": "Karbantartás", "e": "Alacsony szintnél figyelmeztető lámpa villan a műszerfalon. A tartály szintjét vízszintes felületen kell ellenőrizni, és szükség esetén megfelelő olajjal feltölteni.", "r": "16. Üzemeltetői szintű karbantartás"}, {"q": "Mekkora olajhőmérsékleten kell az Allison váltóolajszintet melegen mérni?", "o": ["71–93 °C", "30–50 °C", "110–130 °C"], "a": 0, "d": 3, "t": "Karbantartás", "e": "Az olajszint-mérés feltételei: 71–93 °C váltóolaj-hőmérséklet, vízszintes talaj, kézifék behúzva, váltó „N” állásban, a fel-le nyilak egyidejű megnyomása.", "r": "16. Üzemeltetői szintű karbantartás"}, {"q": "Mit kell tenni a váltóolajszint elektronikus mérésekor a kijelzőn?", "o": ["A fel és le nyilakat egyszerre megnyomni, „N” állásban", "Csak a MODE gombot nyomni", "Mérés közben D állásban hagyni"], "a": 0, "d": 3, "t": "Karbantartás", "e": "A méréshez a váltó „N” állásban legyen, a kézifék behúzva, és a fel-le nyilakat egyszerre kell megnyomni. A kijelző jelzi, ha a szint OK, alacsony vagy magas.", "r": "16. Üzemeltetői szintű karbantartás"}];
+
+/* Sorrendbe állítós feladatok (a items tömb a HELYES sorrend) */
+var ORDER = [
+ {type:"order",t:"Erőátvitel",d:2,
+  q:"Állítsd sorrendbe a Gidrán hajtásláncát: a forgatónyomaték útja a motortól a kerekekig.",
+  items:["Motor","Automata nyomatékváltó","Osztómű","Kardántengelyek","Kereszt-differenciálművek","Féltengelyek","Kerékagyak"],
+  e:"A motor forgatónyomatékát az automata nyomatékváltó (Allison 3200 SP) viszi az osztóműhöz. Az osztómű a kardántengelyeken keresztül a kereszt-differenciálművekhez továbbítja. A differenciálművek 90°-kal elfordítják a hajtás irányát, a féltengelyek pedig a kerékagyakhoz viszik a nyomatékot.",
+  r:"Erőátvitel és segédrendszerek elemei: Erőátvitel, Osztómű, Kardántengelyek, Differenciálművek (Gidrán.pdf)"},
+ {type:"order",t:"Erőátvitel",d:2,
+  q:"Állítsd sorrendbe a nyomaték útját az osztóműtől a kerékig.",
+  items:["Osztómű","Kardántengely","Kereszt-differenciálmű","Féltengely","Kerékagy"],
+  e:"Az osztómű a kardántengelyeken át adja tovább a nyomatékot a kereszt-differenciálművekhez. A differenciálmű a féltengelyeken keresztül hajtja meg a kerékagyakat.",
+  r:"Erőátvitel és segédrendszerek elemei: Osztómű, Kardántengelyek, Differenciálművek (Gidrán.pdf)"},
+ {type:"order",t:"Motor",d:3,
+  q:"Állítsd sorrendbe a common rail üzemanyagrendszer elemeit: az üzemanyag útja a tartálytól az injektorig.",
+  items:["Üzemanyagtartály","Vízleválasztó előszűrő","Kisnyomású betápszivattyú","Üzemanyag-finomszűrő","Nagynyomású szivattyú","Rail (nyomástároló cső)","Injektorok"],
+  e:"A gázolaj a tartályból az előszűrőn és vízleválasztón át jut a kisnyomású betápszivattyúhoz, ez a finomszűrőn keresztül viszi a nagynyomású szivattyúhoz. A nagynyomású szivattyú a közös nyomástárolóba (rail) nyomja az üzemanyagot, onnan jut az injektorokhoz, amelyeket a motorvezérlő nyit. Ez a tipikus sorrend, a szűrők pontos elhelyezése motortípusonként eltérhet.",
+  r:"Gidrán.pdf: Motor (Common-rail Turbo-Diesel, Cummins ISL9E3), Üzemanyagrendszer: tartály, üzemanyagszűrő, vízleválasztó szűrő. A nagynyomású oldal sorrendje általános common rail ismeret."},
+ {type:"order",t:"Motor",d:3,
+  q:"Állítsd sorrendbe a common rail rendszer fő elemeit a nagynyomású szivattyútól kezdve.",
+  items:["Nagynyomású szivattyú","Rail (nyomástároló cső)","Nyomásérzékelő a rail-en","Injektorok","Visszafolyó vezeték a tartályba"],
+  e:"A nagynyomású szivattyú nyomja az üzemanyagot a rail-be, ahol a nyomásérzékelő méri a nyomást. A rail-ből jutnak az injektorokhoz, a fölös üzemanyag a visszafolyó vezetéken tér vissza a tartályba.",
+  r:"Gidrán.pdf: Motor típusa Common-rail Turbo-Diesel. A részletes sorrend általános common rail ismeret."}
+];
+
+/* Folyadék-feltöltős feladatok (tol = hibahatár, 2%) */
+var FLUID_COL={"gazolaj":"#d9a521","benzin":"#efe3a8","adblue":"#8cc4ee","motorolaj":"#7a4e12","hutofolyadek":"#37c2a0","viz":"#a9d6f2","fek":"#c9c36a","valto":"#c4392f","hajtomu":"#9b6a2b","hidr":"#d8b45a"};
+var FILL = [
+ {type:"fill",t:"Üzemanyag",d:1,grp:"fuel",
+  q:"Tankold meg a Gidrán üzemanyagtartályait. Két tartálya van, egyenként 100 literes, mindkettőt külön kell feltölteni. Válaszd ki az üzemanyagot, majd töltsd tele mindkét tartályt.",
+  fluids:["Gázolaj","Benzin","AdBlue (karbamid)","SAE 15W-40 motorolaj"],cols:["gazolaj","benzin","adblue","motorolaj"],a:0,
+  tanks:[{n:"1. tartály",v:100},{n:"2. tartály",v:100}],scale:100,cap:100,step:0.5,
+  e:"A Gidrán Cummins ISL9E3 common rail turbódízel motorja gázolajjal üzemel. Az üzemanyagrendszer 2 × 100 literes tartályokból áll, ezeket egyenként kell feltölteni. Benzin vagy más folyadék a common rail rendszert súlyosan károsítja.",
+  r:"Gidrán.pdf: Üzemanyag tartály (kapacitás 2×100 liter, üzemanyag típusa gázolaj); Motor típusa: Common-rail Turbo-Diesel"},
+ {type:"fill",t:"Olajok, folyadékok",d:2,grp:"eng",
+  q:"A külső hőmérséklet +15 °C. Töltsd fel a Gidrán főmotorját (Cummins ISL9E3) a megfelelő olajjal, a gyártó szerinti mennyiséggel.",
+  fluids:["SAE 5W-30","SAE 15W-40","SAE 75W-90 / API GL-5","TES 295 (váltóolaj)"],cols:["motorolaj","motorolaj","hajtomu","valto"],a:1,
+  tanks:[{n:"Főmotor",v:22.5}],scale:40,step:0.1,
+  e:"5 °C felett a motorhoz SAE 15W-40 olaj való (−5 °C és alatta SAE 5W-30). A rendszer kb. 22,5 liter olajat vesz fel. A táblázat szerint a mennyiségek körülbelüliek, a szintet ezért a nívópálcával is ellenőrizni kell.",
+  r:"16. Kenőanyagok és munkafolyadékok táblázata, 1. sor: Motor (Cummins ISL9E3 375)"},
+ {type:"fill",t:"Olajok, folyadékok",d:2,grp:"eng",
+  q:"A külső hőmérséklet −12 °C. Töltsd fel a Gidrán főmotorját (Cummins ISL9E3) a megfelelő olajjal, a gyártó szerinti mennyiséggel.",
+  fluids:["SAE 5W-30","SAE 15W-40","SAE 75W-90 / API GL-5","TES 295 (váltóolaj)"],cols:["motorolaj","motorolaj","hajtomu","valto"],a:0,
+  tanks:[{n:"Főmotor",v:22.5}],scale:40,step:0.1,
+  e:"−5 °C és az alatti hőmérsékleten a motorhoz SAE 5W-30 olaj való (5 °C felett SAE 15W-40). A rendszer kb. 22,5 liter olajat vesz fel. A táblázat szerint a mennyiségek körülbelüliek, a szintet ellenőrizni kell.",
+  r:"16. Kenőanyagok és munkafolyadékok táblázata, 1. sor: Motor (Cummins ISL9E3 375)"},
+ {type:"fill",t:"Olajok, folyadékok",d:2,grp:"cool",
+  q:"Töltsd fel a főmotor hűtőrendszerét. Válaszd ki a megfelelő folyadékot, és töltsd be a rendszer előírt mennyiségét.",
+  fluids:["CES-1463 hűtőfolyadék","Desztillált víz","ASTM D-6210 (APU hűtőfolyadék)","SAE 5W-30 motorolaj"],cols:["hutofolyadek","viz","hutofolyadek","motorolaj"],a:0,
+  tanks:[{n:"Hűtőrendszer",v:38}],scale:60,step:0.2,
+  e:"A főmotor hűtőrendszerébe CES-1463 hűtőfolyadék kerül, kb. 38 liter. Az ASTM D-6210 az APU (fedélzeti áramforrás) hűtőfolyadéka, abból 2 liter fér. Forró motornál nyomás van a rendszerben, ezért csak lehűlt motornál szabad kinyitni a kiegyenlítő tartályt.",
+  r:"16. Kenőanyagok és munkafolyadékok táblázata, 9. sor: Hűtőrendszer (CES-1463, 38 l); Hűtőfolyadékszint ellenőrzése"},
+ {type:"fill",t:"Olajok, folyadékok",d:2,grp:"atf",
+  q:"Töltsd fel az Allison 3200 SP automata nyomatékváltót a megfelelő olajjal, az előírt mennyiségben.",
+  fluids:["TES 295","SAE 15W-40 motorolaj","SAE 75W-90 / API GL-5","ISO 11158 HM hidraulikaolaj"],cols:["valto","motorolaj","hajtomu","hidr"],a:0,
+  tanks:[{n:"Nyomatékváltó",v:19.6}],scale:30,step:0.1,
+  e:"Az Allison 3200 SP nyomatékváltóba TES 295 olaj kerül, kb. 19,6 liter. Az olajszintet melegen, 71–93 °C olajhőmérsékleten, vízszintes talajon, „N” állásban kell mérni.",
+  r:"16. Kenőanyagok és munkafolyadékok táblázata, 2. sor: Nyomatékváltó (Allison 3200 SP, TES 295, 19,6 l)"},
+ {type:"fill",t:"Olajok, folyadékok",d:3,grp:"tc",
+  q:"Töltsd fel az osztóművet (GHM MTC60 420) a megfelelő olajjal, az előírt mennyiségben.",
+  fluids:["SAE 75W-90 / API GL-5","TES 295","SAE 15W-40","CES-1463"],cols:["hajtomu","valto","motorolaj","hutofolyadek"],a:0,
+  tanks:[{n:"Osztómű",v:8.2}],scale:15,step:0.05,
+  e:"Az osztómű SAE 75W-90 / API GL-5 (MIL-L-2105 D) olajat használ, mennyisége kb. 8,2 liter. Az első csere 4000 km után esedékes.",
+  r:"16. Kenőanyagok és munkafolyadékok táblázata, 3. sor: Osztómű (GHM MTC60 420, 8,2 l)"},
+ {type:"fill",t:"Olajok, folyadékok",d:3,grp:"hyd",
+  q:"Töltsd fel a hűtőventilátor-hajtás hidraulikarendszerét a megfelelő olajjal, az előírt mennyiségben.",
+  fluids:["ISO 11158 HM / DIN 55524-2 HLP","TES 295","SAE 75W-90 / API GL-5","CES-1463"],cols:["hidr","valto","hajtomu","hutofolyadek"],a:0,
+  tanks:[{n:"Hidraulika",v:15}],scale:25,step:0.1,
+  e:"A hidraulikarendszer ISO 11158 HM / DIN 55524-2 HLP olajat használ, kb. 15 liter. Alacsony szintnél a műszerfalon figyelmeztető lámpa jelez, és a hidraulika olajtartály szintjét kell ellenőrizni.",
+  r:"16. Kenőanyagok és munkafolyadékok táblázata, 8. sor: Hidraulikarendszer (15 l)"},
+ {type:"fill",t:"APU",d:3,grp:"apuoil",
+  q:"Az APU (fedélzeti áramforrás) motorolaját kell feltölteni, a külső hőmérséklet +20 °C. Válaszd ki az olajat és az előírt mennyiséget.",
+  fluids:["SAE 5W-30 / API CI-4","SAE 15W-40 / API CI-4","SAE 75W-90 / API GL-5","TES 295"],cols:["motorolaj","motorolaj","hajtomu","valto"],a:1,
+  tanks:[{n:"APU",v:1.1}],scale:2,step:0.01,
+  e:"Az APU motorjába 5 °C felett SAE 15W-40 / API CF-4 / API CI-4 olaj kerül, 1,1 liter. Az első csere 50 üzemóra után, utána 75 óránként vagy 12 havonta esedékes.",
+  r:"16. Kenőanyagok és munkafolyadékok táblázata, 14. sor: Segéd áramforrás (APU) motorolaj, 1,1 l"},
+ {type:"fill",t:"APU",d:3,grp:"apucool",
+  q:"Töltsd fel az APU (fedélzeti áramforrás) hűtőrendszerét a megfelelő folyadékkal, az előírt mennyiségben.",
+  fluids:["ASTM D-6210","CES-1463","Desztillált víz","SAE 5W-30 motorolaj"],cols:["hutofolyadek","hutofolyadek","viz","motorolaj"],a:0,
+  tanks:[{n:"APU hűtő",v:2}],scale:4,step:0.02,
+  e:"Az APU hűtőfolyadéka ASTM D-6210, mennyisége 2 liter, cseréje 24 havonta esedékes. A főmotor hűtőfolyadéka ettől eltérő: CES-1463, 38 liter.",
+  r:"16. Kenőanyagok és munkafolyadékok táblázata, 15. sor: APU hűtőfolyadék (ASTM D-6210, 2 l)"}
+];
+FILL.forEach(function(f){f.tol=0.02;});
+var ALLQ = BANK.concat(ORDER, FILL);
+
 var TOTAL = 50, LIVES = 3;
 function worth(lv){ return lv<16 ? 1000 : (lv<33 ? 2000 : 3000); }  /* 1-16: könnyű, 17-33: közepes, 34-50: nehéz */
 function diffOf(lv){ return lv<16 ? 1 : (lv<33 ? 2 : 3); }
@@ -246,6 +419,18 @@ function pickQuestions(){
     used[p.i]=true;
     out.push({q:p.q, order:shuffle([0,1,2])}); /* a válaszok sorrendje minden játékban más */
   }
+  /* két sorrendbe állítós feladat minden játékban: egy hajtáslánc (kb. 20.), egy common rail (kb. 40.) */
+  var dr = shuffle(ORDER.filter(function(o){return o.t==="Erőátvitel";}))[0];
+  var cr = shuffle(ORDER.filter(function(o){return o.t==="Motor";}))[0];
+  out[19] = {q:dr, order:null};
+  out[38] = {q:cr, order:null};
+  /* három folyadék-feltöltős feladat: tankolás (kb. 12.), közepes (kb. 29.), nehéz (kb. 45.) */
+  var f1 = FILL.filter(function(o){return o.grp==="fuel";})[0];
+  var f2 = shuffle(FILL.filter(function(o){return o.d===2;}))[0];
+  var f3 = shuffle(FILL.filter(function(o){return o.d===3;}))[0];
+  out[11] = {q:f1, order:null};
+  out[28] = {q:f2, order:null};
+  out[44] = {q:f3, order:null};
   return out;
 }
 
@@ -279,6 +464,10 @@ function showQuestion(){
   $("stopBtn").classList.toggle("hide", S.lv===0);
   $("nextBtn").textContent="Következő kérdés";
   var box=$("answers"); box.innerHTML="";
+  $("checkBtn").classList.add("hide");
+  ["l50","lAud","lTel"].forEach(function(id){$(id).disabled = (q.type==="order"||q.type==="fill") || !S.life[id];});
+  if(q.type==="fill"){ $("tag").textContent=q.t+" · folyadék-feltöltés"; renderFill(q); renderHud(); return; }
+  if(q.type==="order"){ $("tag").textContent=q.t+" · sorrendbe állítás"; renderOrder(q); renderHud(); return; }
   cur.order.forEach(function(oi,pos){
     var b=document.createElement("button"); b.className="ans"; b.dataset.pos=pos; b.dataset.oi=oi;
     var l=document.createElement("span"); l.className="l"; l.textContent="ABC"[pos];
@@ -292,9 +481,42 @@ function showQuestion(){
 }
 
 function btns(){return Array.prototype.slice.call($("answers").children);}
-function correctPos(){var c=S.qs[S.lv];return c.order.indexOf(c.q.a);}
+function correctPos(){var c=S.qs[S.lv];return c.order?c.order.indexOf(c.q.a):-1;}
+function isOrd(){return S && S.qs && S.qs[S.lv] && (S.qs[S.lv].q.type==="order" || S.qs[S.lv].q.type==="fill");}
+
+function settle(right,q,yours,rightTxt,detail,orderList){
+  var cur=S.qs[S.lv], st=S;
+  var t=store.topics[q.t]||(store.topics[q.t]={ok:0,bad:0});
+  if(right) t.ok++; else t.bad++;
+  save(store);
+  var v=$("verdict"); v.classList.remove("hide","ok","bad");
+  var last=(S.lv===TOTAL-1);
+  if(right){
+    S.okN++; S.score+=worth(S.lv);
+    v.classList.add("ok"); v.textContent="Helyes válasz! +"+fmt(worth(S.lv))+" pont";
+    renderHud();
+    if(last){ S.after="win"; setTimeout(function(){ if(S===st && !$("game").classList.contains("hide")) finish("win"); },1300); }
+    else{ $("nextBtn").classList.remove("hide"); $("nextBtn").focus(); }
+  }else{
+    S.badN++; S.lives--;
+    S.missed.push({q:q, yours:yours, right:rightTxt});
+    v.classList.add("bad");
+    v.textContent = S.lives>0 ? (orderList?"Nem jó a sorrend. ":"Nem ez a jó válasz. ")+"Elvesztettél egy életet, "+S.lives+" maradt." : (orderList?"Nem jó a sorrend. ":"Nem ez a jó válasz. ")+"Elfogyott az életed.";
+    var ex=$("expl"); ex.classList.remove("hide"); ex.innerHTML="";
+    var h=document.createElement("b"); h.textContent="Magyarázat"; ex.appendChild(h);
+    var p=document.createElement("div"); p.textContent=(orderList?"Helyes sorrend:":"Helyes válasz: "+detail+".")+(orderList?"":" ")+(orderList?"":(q.e||"")); ex.appendChild(p);
+    if(orderList){var ol=document.createElement("ol");orderList.forEach(function(x){var li=document.createElement("li");li.textContent=x;ol.appendChild(li);});ex.appendChild(ol);var p2=document.createElement("div");p2.style.marginTop="8px";p2.textContent=q.e||"";ex.appendChild(p2);}
+    var r=document.createElement("div"); r.className="ref"; r.textContent="Hivatkozás: "+(q.r||q.t); ex.appendChild(r);
+    $("stopBtn").classList.add("hide");
+    S.after = S.lives<=0 ? "lose" : (last ? "done" : null);
+    $("nextBtn").textContent = S.after ? "Eredmény" : "Következő kérdés";
+    $("nextBtn").classList.remove("hide"); $("nextBtn").focus();
+    renderHud();
+  }
+}
 
 function answer(pos){
+  if(isOrd()) return;
   if(S.locked) return;
   if(S.gone.indexOf(pos)>-1) return;
   S.locked=true;
@@ -307,33 +529,178 @@ function answer(pos){
     bs[pos].classList.remove("sel");
     bs[cp].classList.add("ok","flash");
     if(!right) bs[pos].classList.add("bad");
-    var t=store.topics[q.t]||(store.topics[q.t]={ok:0,bad:0});
-    if(right) t.ok++; else t.bad++;
-    save(store);
-    var v=$("verdict"); v.classList.remove("hide","ok","bad");
-    var last=(S.lv===TOTAL-1);
-    if(right){
-      S.okN++; S.score+=worth(S.lv);
-      v.classList.add("ok"); v.textContent="Helyes válasz! +"+fmt(worth(S.lv))+" pont";
-      renderHud();
-      if(last){ S.after="win"; setTimeout(function(){ if(S===st && !$("game").classList.contains("hide")) finish("win"); },1300); }
-      else{ $("nextBtn").classList.remove("hide"); $("nextBtn").focus(); }
-    }else{
-      S.badN++; S.lives--;
-      S.missed.push({q:q, yours:q.o[cur.order[pos]], right:q.o[q.a]});
-      v.classList.add("bad");
-      v.textContent = S.lives>0 ? "Nem ez a jó válasz. Elvesztettél egy életet, "+S.lives+" maradt." : "Nem ez a jó válasz. Elfogyott az életed.";
-      var ex=$("expl"); ex.classList.remove("hide"); ex.innerHTML="";
-      var h=document.createElement("b"); h.textContent="Magyarázat"; ex.appendChild(h);
-      var p=document.createElement("div"); p.textContent="Helyes válasz: "+"ABC"[cp]+") "+q.o[q.a]+". "+(q.e||""); ex.appendChild(p);
-      var r=document.createElement("div"); r.className="ref"; r.textContent="Hivatkozás: "+(q.r||q.t); ex.appendChild(r);
-      $("stopBtn").classList.add("hide");
-      S.after = S.lives<=0 ? "lose" : (last ? "done" : null);
-      $("nextBtn").textContent = S.after ? "Eredmény" : "Következő kérdés";
-      $("nextBtn").classList.remove("hide"); $("nextBtn").focus();
-      renderHud();
-    }
+    settle(right,q,q.o[cur.order[pos]],q.o[q.a],"ABC"[cp]+") "+q.o[q.a]);
   },900);
+}
+
+/* sorrendbe állítás: húzás a fogantyúnál, vagy ▲▼ gombokkal */
+function renderOrder(q){
+  var box=$("answers"); box.innerHTML="";
+  var hint=document.createElement("div"); hint.className="ordhint";
+  hint.textContent="Húzd a ☰ fogantyút, vagy használd a ▲▼ gombokat. Ha kész, nyomd meg az Ellenőrzés gombot.";
+  box.appendChild(hint);
+  var ids=q.items.map(function(_,i){return i;}), mix;
+  do{ mix=shuffle(ids); }while(mix.every(function(v,i){return v===i;}));
+  var list=document.createElement("div"); list.id="ordList"; list.style.display="grid"; list.style.gap="8px"; box.appendChild(list);
+  mix.forEach(function(id){
+    var row=document.createElement("div"); row.className="ord"; row.dataset.id=id;
+    var n=document.createElement("span"); n.className="n";
+    var t=document.createElement("span"); t.className="t"; t.textContent=q.items[id];
+    var c=document.createElement("span"); c.className="ctl";
+    var up=document.createElement("button"); up.type="button"; up.className="mv"; up.textContent="▲"; up.setAttribute("aria-label","Feljebb");
+    var dn=document.createElement("button"); dn.type="button"; dn.className="mv"; dn.textContent="▼"; dn.setAttribute("aria-label","Lejjebb");
+    var hd=document.createElement("span"); hd.className="hd"; hd.textContent="☰"; hd.setAttribute("aria-label","Húzd a mozgatáshoz");
+    up.addEventListener("click",function(){var p=row.previousElementSibling; if(p&&!S.locked){list.insertBefore(row,p);numberOrder();}});
+    dn.addEventListener("click",function(){var nx=row.nextElementSibling; if(nx&&!S.locked){list.insertBefore(nx,row);numberOrder();}});
+    c.appendChild(up); c.appendChild(dn); c.appendChild(hd);
+    row.appendChild(n); row.appendChild(t); row.appendChild(c);
+    hd.addEventListener("pointerdown",function(e){ if(S.locked) return; e.preventDefault(); startDrag(row,list,e); });
+    list.appendChild(row);
+  });
+  numberOrder();
+  $("checkBtn").classList.remove("hide");
+}
+function numberOrder(){
+  var rows=document.querySelectorAll("#ordList .ord");
+  Array.prototype.forEach.call(rows,function(r,i){ r.querySelector(".n").textContent=i+1; });
+}
+function startDrag(row,list,e){
+  var startY=e.clientY, gap=8, hd=e.currentTarget, id=e.pointerId;
+  try{hd.setPointerCapture(id);}catch(_){}
+  row.classList.add("drag");
+  function mv(ev){
+    if(ev.pointerId!==id) return;
+    var dy=ev.clientY-startY; row.style.transform="translateY("+dy+"px)";
+    var r=row.getBoundingClientRect(), c=r.top+r.height/2, nx=row.nextElementSibling, pv=row.previousElementSibling;
+    if(nx){var nr=nx.getBoundingClientRect(); if(c>nr.top+nr.height/2){ list.insertBefore(nx,row); startY+=nr.height+gap; row.style.transform="translateY("+(ev.clientY-startY)+"px)"; numberOrder(); }}
+    else if(pv){var pr=pv.getBoundingClientRect(); if(c<pr.top+pr.height/2){ list.insertBefore(row,pv); startY-=pr.height+gap; row.style.transform="translateY("+(ev.clientY-startY)+"px)"; numberOrder(); }}
+    if(pv && nx){var pr2=pv.getBoundingClientRect(); if(c<pr2.top+pr2.height/2){ list.insertBefore(row,pv); startY-=pr2.height+gap; row.style.transform="translateY("+(ev.clientY-startY)+"px)"; numberOrder(); }}
+  }
+  function end(ev){
+    if(ev.pointerId!==id) return;
+    hd.removeEventListener("pointermove",mv); hd.removeEventListener("pointerup",end); hd.removeEventListener("pointercancel",end);
+    row.classList.remove("drag"); row.style.transform=""; numberOrder();
+  }
+  hd.addEventListener("pointermove",mv); hd.addEventListener("pointerup",end); hd.addEventListener("pointercancel",end);
+}
+
+/* folyadék-feltöltés: animált tartályok */
+var FD=null;
+function nf(v,dec){return v.toFixed(dec).replace(".",",");}
+function decOf(q){return q.step<0.1?2:1;}
+function tankSvg(id,q){
+  var ticks="";
+  for(var i=0;i<=10;i++){ var y=191-i/10*164, v=q.scale*i/10;
+    ticks+='<line x1="14" y1="'+y.toFixed(1)+'" x2="22" y2="'+y.toFixed(1)+'" stroke="#8e948c" stroke-width="1.5"/>';
+    if(i%2===0) ticks+='<text x="11" y="'+(y+3).toFixed(1)+'" text-anchor="end" font-size="9" fill="#97a3c2">'+(v%1?v.toFixed(1).replace(".",","):v)+'</text>'; }
+  return '<svg viewBox="-14 0 164 215" aria-hidden="true"><defs><clipPath id="c'+id+'"><rect x="23" y="27" width="94" height="164" rx="12"/></clipPath></defs>'
+   +'<rect x="62" y="0" width="16" height="22" rx="3" fill="#8e948c"/><rect class="stream st" x="67" y="22" width="6" height="0" opacity=".85"/>'
+   +'<rect class="body" x="20" y="24" width="100" height="170" rx="14"/>'
+   +'<g clip-path="url(#c'+id+')"><g class="surf" transform="translate(0,191)"><rect class="st" x="23" y="0" width="94" height="200"/><path class="wave st" d="M-25 0 q12 -6 24 0 t24 0 t24 0 t24 0 t24 0 t24 0 t24 0 t24 0 V12 H-25z" /></g></g>'
+   +'<rect x="30" y="34" width="7" height="150" rx="3.5" fill="rgba(255,255,255,.14)"/>'+ticks+'</svg>';
+}
+function liqColor(){var q=FD.q; if(FD.fluid==null) return "#6b7a99"; return FLUID_COL[q.cols[FD.fluid]]||"#d9a521";}
+function paintTank(i){
+  var q=FD.q, el=FD.els[i], frac=Math.min(1,FD.vols[i]/q.scale), y=191-frac*164;
+  el.querySelector(".surf").setAttribute("transform","translate(0,"+y.toFixed(1)+")");
+  el.querySelector(".rd").textContent=nf(FD.vols[i],decOf(q))+" l";
+  var st=el.querySelector(".stream"); st.setAttribute("height",(FD.hold&&FD.active===i)?Math.max(0,y-22):0);
+  el.style.setProperty("--liq",liqColor());
+}
+function renderFill(q){
+  var box=$("answers"); box.innerHTML="";
+  FD={q:q,fluid:null,vols:q.tanks.map(function(){return 0;}),active:0,hold:null,els:[]};
+  var hint=document.createElement("div"); hint.className="fillhint";
+  hint.textContent="Előbb válaszd ki a folyadékot, utána töltsd a tartályt: a Töltés gombot tartsd nyomva, a pontos szinthez használd a lassú gombokat. Hibahatár: ±2%.";
+  box.appendChild(hint);
+  var s1=document.createElement("div"); s1.className="fstep"; s1.textContent="1. Folyadék kiválasztása"; box.appendChild(s1);
+  var ch=document.createElement("div"); ch.className="fchips"; ch.id="fchips"; box.appendChild(ch);
+  q.fluids.forEach(function(name,i){
+    var b=document.createElement("button"); b.type="button"; b.className="fchip"; b.setAttribute("aria-pressed","false");
+    var sw=document.createElement("i"); sw.style.background=FLUID_COL[q.cols[i]]||"#999";
+    var t=document.createElement("span"); t.textContent=name; b.appendChild(sw); b.appendChild(t);
+    b.addEventListener("click",function(){ if(S.locked) return; FD.fluid=i; Array.prototype.forEach.call(ch.children,function(c,j){c.setAttribute("aria-pressed",j===i?"true":"false");}); FD.vols.forEach(function(_,k){paintTank(k);}); setCtl(true); });
+    ch.appendChild(b);
+  });
+  var s2=document.createElement("div"); s2.className="fstep"; s2.textContent="2. Töltés"+(q.tanks.length>1?" (koppints arra a tartályra, amelyiket töltöd)":""); box.appendChild(s2);
+  var tk=document.createElement("div"); tk.className="tanks"; box.appendChild(tk);
+  q.tanks.forEach(function(tn,i){
+    var d=document.createElement("div"); d.className="tank"+(i===0?" act":""); d.innerHTML=tankSvg(i+"_"+Math.floor(Math.random()*1e6),q)+'<div class="rd">0 l</div><div class="nm"></div>';
+    d.querySelector(".nm").textContent=tn.n;
+    d.addEventListener("click",function(){ if(S.locked) return; FD.active=i; Array.prototype.forEach.call(tk.children,function(c,j){c.classList.toggle("act",j===i);}); });
+    tk.appendChild(d); FD.els.push(d); paintTank(i);
+  });
+  var ct=document.createElement("div"); ct.className="fctl"; ct.id="fctl";
+  ct.innerHTML='<button type="button" class="hold" id="hFill" disabled>⬇ Töltés (tartsd nyomva)</button>'
+   +'<div class="frow"><button type="button" class="hold" id="hMinus" disabled>− lassan</button><button type="button" class="hold" id="hPlus" disabled>+ lassan</button><button type="button" class="hold" id="hDrain" disabled>Leengedés</button></div>'
+   +'<div class="ftol">Lassú lépés: '+nf(q.step,decOf(q))+' liter</div>';
+  box.appendChild(ct);
+  bindHold($("hFill"),function(){startHold(1);},stopHold);
+  bindHold($("hDrain"),function(){startHold(-1);},stopHold);
+  bindFine($("hPlus"),1); bindFine($("hMinus"),-1);
+  $("checkBtn").classList.remove("hide");
+}
+function setCtl(on){ ["hFill","hMinus","hPlus","hDrain"].forEach(function(id){var e=$(id); if(e) e.disabled=!on;}); }
+function bindHold(el,down,up){
+  el.addEventListener("pointerdown",function(e){ if(el.disabled||S.locked) return; e.preventDefault(); try{el.setPointerCapture(e.pointerId);}catch(_){} el.classList.add("on"); down(); });
+  ["pointerup","pointercancel","lostpointercapture"].forEach(function(ev){ el.addEventListener(ev,function(){ el.classList.remove("on"); up(); }); });
+  el.addEventListener("contextmenu",function(e){e.preventDefault();});
+}
+function maxVol(){ return FD.q.cap||FD.q.scale; }
+function startHold(dir){
+  if(!FD||FD.fluid==null||S.locked) return;
+  FD.hold={dir:dir,t0:performance.now(),last:performance.now()};
+  (function loop(now){
+    if(!FD||!FD.hold) return;
+    var h=FD.hold, dt=Math.min(.05,(now-h.last)/1000); h.last=now;
+    var ramp=Math.min(1,(now-h.t0)/1100), rate=FD.q.scale/7*(0.06+0.94*ramp);
+    var i=FD.active, v=FD.vols[i]+h.dir*rate*dt;
+    if(v>=maxVol()){ v=maxVol(); if(FD.q.cap && !FD.fullMsg){FD.fullMsg=1; toast("A tartály megtelt");} }
+    if(v<0) v=0;
+    FD.vols[i]=v; paintTank(i);
+    requestAnimationFrame(loop);
+  })(performance.now());
+}
+function stopHold(){ if(FD){ FD.hold=null; FD.fullMsg=0; FD.vols.forEach(function(_,k){paintTank(k);}); } }
+function bindFine(el,dir){
+  var t1=null,t2=null;
+  function apply(){ if(!FD||FD.fluid==null||S.locked) return; var i=FD.active; var v=Math.round((FD.vols[i]+dir*FD.q.step)*1000)/1000; v=Math.max(0,Math.min(maxVol(),v)); FD.vols[i]=v; paintTank(i); }
+  function stop(){ clearTimeout(t1); clearInterval(t2); el.classList.remove("on"); }
+  el.addEventListener("pointerdown",function(e){ if(el.disabled||S.locked) return; e.preventDefault(); try{el.setPointerCapture(e.pointerId);}catch(_){} el.classList.add("on"); apply(); t1=setTimeout(function(){ t2=setInterval(apply,70); },380); });
+  ["pointerup","pointercancel","lostpointercapture"].forEach(function(ev){ el.addEventListener(ev,stop); });
+  el.addEventListener("contextmenu",function(e){e.preventDefault();});
+}
+function checkFill(){
+  if(FD.fluid==null){ toast("Előbb válaszd ki a folyadékot"); return; }
+  FD.hold=null; S.locked=true;
+  var q=FD.q, fluidOk=(FD.fluid===q.a);
+  var tankOk=q.tanks.map(function(t,i){ return Math.abs(FD.vols[i]-t.v)<=t.v*q.tol+1e-9; });
+  var right=fluidOk && tankOk.every(Boolean);
+  Array.prototype.forEach.call($("fchips").children,function(c,j){ c.disabled=true; if(j===q.a) c.classList.add("ok"); else if(j===FD.fluid) c.classList.add("bad"); });
+  FD.els.forEach(function(el,i){ el.classList.add(tankOk[i]?"ok":"bad"); el.classList.remove("act"); el.style.cursor="default"; });
+  setCtl(false); $("checkBtn").classList.add("hide");
+  var d=decOf(q);
+  var yours=q.fluids[FD.fluid]+" ("+FD.vols.map(function(v){return nf(v,d)+" l";}).join(" + ")+")";
+  var good=q.fluids[q.a]+" ("+q.tanks.map(function(t){return nf(t.v,d>1?2:(t.v%1?1:0))+" l";}).join(" + ")+")";
+  var why=[]; if(!fluidOk) why.push("rossz folyadék"); if(!tankOk.every(Boolean)) why.push("a mennyiség a ±2% hibahatáron kívül van");
+  settle(right,q,yours,good,good+(why.length?" ("+why.join(", ")+")":""),null);
+}
+
+$("checkBtn").addEventListener("click",function(){
+  if(!S||S.locked) return;
+  var ty=S.qs[S.lv].q.type;
+  if(ty==="order") checkOrder(); else if(ty==="fill") checkFill();
+});
+function checkOrder(){
+  S.locked=true;
+  var cur=S.qs[S.lv], q=cur.q;
+  var rows=Array.prototype.slice.call(document.querySelectorAll("#ordList .ord"));
+  var ids=rows.map(function(r){return +r.dataset.id;});
+  var right=ids.every(function(v,i){return v===i;});
+  rows.forEach(function(r,i){ r.classList.add("done", ids[i]===i?"ok":"bad"); });
+  $("checkBtn").classList.add("hide");
+  var yours=ids.map(function(i){return q.items[i];}).join(" → "), good=q.items.join(" → ");
+  settle(right,q,yours,good,"",right?null:q.items);
 }
 
 $("nextBtn").addEventListener("click",function(){
@@ -436,6 +803,91 @@ $("exitYes").addEventListener("click",function(){
 $("exitModal").addEventListener("click",function(e){ if(e.target===this) closeExit(); });
 $("startBtn").addEventListener("click",newGame);
 $("againBtn").addEventListener("click",newGame);
+
+/* verzió, link megosztás, frissítés */
+$("verTxt").textContent = APP_VERSION+" ("+APP_DATE+")";
+$("qCount").textContent = ALLQ.length;
+function toast(m){var e=$("toast");e.textContent=m;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove("on");},2200);}
+function baseUrl(){return location.origin+location.pathname;}
+function shareUrl(url,text){
+  if(navigator.share){ navigator.share({title:"Gidrán Milliomos",text:text,url:url}).catch(function(){}); return; }
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(function(){toast("Link a vágólapra másolva");},function(){toast(url);}); return; }
+  var ta=document.createElement("textarea"); ta.value=url; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select();
+  try{document.execCommand("copy");toast("Link a vágólapra másolva");}catch(e){toast(url);} document.body.removeChild(ta);
+}
+$("shareBtn").addEventListener("click",function(){ shareUrl(baseUrl(),"Gidrán Milliomos – üzemeltetői tudásteszt, "+ALLQ.length+" kérdéssel."); });
+$("keyShare").addEventListener("click",function(){ shareUrl(baseUrl()+"#kulcs","Gidrán Milliomos – kérdések és megoldókulcs"); });
+function vcmp(a,b){var x=a.split(".").map(Number),y=b.split(".").map(Number);for(var i=0;i<3;i++){if((x[i]||0)!==(y[i]||0))return (x[i]||0)>(y[i]||0)?1:-1;}return 0;}
+function hardReload(){
+  var jobs=[];
+  if("serviceWorker" in navigator&&navigator.serviceWorker.getRegistrations) jobs.push(navigator.serviceWorker.getRegistrations().then(function(rs){return Promise.all(rs.map(function(r){return r.unregister();}));}));
+  if(window.caches&&caches.keys) jobs.push(caches.keys().then(function(ks){return Promise.all(ks.map(function(k){return caches.delete(k);}));}));
+  Promise.all(jobs).catch(function(){}).then(function(){ location.reload(); });
+}
+function updMsg(text,btnText){
+  var m=$("updMsg"); m.textContent=text;
+  if(btnText){var b=document.createElement("button"); b.type="button"; b.className="btn"; b.textContent=btnText; b.addEventListener("click",function(){m.textContent="Frissítés…"; hardReload();}); m.appendChild(document.createElement("br")); m.appendChild(b);}
+}
+$("updBtn").addEventListener("click",function(){
+  updMsg("Frissítés keresése…");
+  fetch(baseUrl()+"?_="+Date.now(),{cache:"no-store"}).then(function(r){ if(!r.ok) throw 0; return r.text(); }).then(function(t){
+    var m=t.match(/APP_VERSION\s*=\s*"([^"]+)"/);
+    if(!m) throw 0;
+    if(vcmp(m[1],APP_VERSION)>0) updMsg("Új verzió érhető el: "+m[1]+" (jelenleg: "+APP_VERSION+").","Frissítés most");
+    else updMsg("Ez a legújabb verzió ("+APP_VERSION+").","Mégis újratöltés tiszta gyorsítótárral");
+  }).catch(function(){ updMsg("Nem sikerült ellenőrizni. Van internetkapcsolat?","Újratöltés tiszta gyorsítótárral"); });
+});
+
+/* kérdések és megoldókulcs (külön oldal, #kulcs) */
+var keyBuilt=false;
+function topics(){var o={};ALLQ.forEach(function(q){o[q.t]=1;});return Object.keys(o).sort(function(a,b){return a.localeCompare(b,"hu");});}
+function norm(x){return String(x||"").toLowerCase();}
+function renderKey(){
+  var txt=norm($("keySearch").value), tp=$("keyTopic").value, list=$("keyList"); list.innerHTML="";
+  var n=0;
+  ALLQ.forEach(function(q,i){
+    if(tp && q.t!==tp) return;
+    var hay=norm(q.q+" "+(q.o||q.items||q.fluids).join(" ")+" "+(q.e||"")+" "+(q.r||"")+" "+q.t);
+    if(txt && hay.indexOf(txt)<0) return;
+    n++;
+    var d=document.createElement("div"); d.className="kq";
+    var kn=document.createElement("div"); kn.className="kn"; kn.textContent=q.t+(q.type==="order"?" · sorrendbe állítás":(q.type==="fill"?" · folyadék-feltöltés":""))+" · "+(q.d===1?"könnyű":q.d===2?"közepes":"nehéz"); d.appendChild(kn);
+    var qt=document.createElement("div"); qt.className="kqt"; qt.textContent=q.q; d.appendChild(qt);
+    if(q.type==="fill"){
+      q.fluids.forEach(function(x,j){var o=document.createElement("div"); o.className="ko"+(j===q.a?" c":""); o.textContent="ABCD"[j]+") "+x+(j===q.a?"  ✔":""); d.appendChild(o);});
+      var am=document.createElement("div"); am.className="ko c"; am.textContent="Mennyiség: "+q.tanks.map(function(t){return (q.tanks.length>1?t.n+": ":"")+String(t.v).replace(".",",")+" liter";}).join("; ")+" (±2%)"; d.appendChild(am);
+    }else if(q.type==="order"){
+      var h=document.createElement("div"); h.className="kn"; h.textContent="Helyes sorrend:"; d.appendChild(h);
+      q.items.forEach(function(x,j){var o=document.createElement("div"); o.className="ko c"; o.textContent=(j+1)+". "+x; d.appendChild(o);});
+    }else{
+      q.o.forEach(function(x,j){var o=document.createElement("div"); o.className="ko"+(j===q.a?" c":""); o.textContent="ABC"[j]+") "+x+(j===q.a?"  ✔":""); d.appendChild(o);});
+    }
+    var e=document.createElement("div"); e.className="ke"; e.textContent=q.e||"Nincs külön magyarázat."; d.appendChild(e);
+    var r=document.createElement("div"); r.className="kr"; r.textContent="Hivatkozás: "+(q.r||q.t); d.appendChild(r);
+    list.appendChild(d);
+  });
+  $("keyCount").textContent=n+" / "+ALLQ.length+" kérdés";
+}
+function showKey(){
+  if(!keyBuilt){
+    var sel=$("keyTopic"); sel.innerHTML=""; var o0=document.createElement("option"); o0.value=""; o0.textContent="Minden téma"; sel.appendChild(o0);
+    topics().forEach(function(t){var o=document.createElement("option"); o.value=t; o.textContent=t; sel.appendChild(o);});
+    $("keySearch").addEventListener("input",renderKey); sel.addEventListener("change",renderKey);
+    keyBuilt=true;
+  }
+  renderKey();
+  ["start","game","end"].forEach(function(id){$(id).classList.add("hide");});
+  $("key").classList.remove("hide"); window.scrollTo(0,0);
+}
+function hideKey(){
+  $("key").classList.add("hide");
+  if(S && !$("game").classList.contains("hide")) return;
+  $("start").classList.remove("hide"); window.scrollTo(0,0);
+}
+$("keyBtn").addEventListener("click",function(){ try{history.pushState(null,"","#kulcs");}catch(e){location.hash="kulcs";} showKey(); });
+$("keyBack").addEventListener("click",function(){ try{history.pushState(null,"",location.pathname+location.search);}catch(e){} hideKey(); });
+window.addEventListener("popstate",function(){ if(location.hash==="#kulcs") showKey(); else if(!$("key").classList.contains("hide")) hideKey(); });
+if(location.hash==="#kulcs") showKey();
 renderStats();
 if(window.matchMedia && window.matchMedia("(max-width:899px)").matches){ $("ladderBox").removeAttribute("open"); }
 
@@ -443,7 +895,7 @@ document.addEventListener("keydown",function(e){
   if(e.key==="Escape"){ if($("exitModal").classList.contains("hide")) openExit(); else closeExit(); return; }
   if($("game").classList.contains("hide") || !$("exitModal").classList.contains("hide")) return;
   var k=e.key.toLowerCase(), pos={a:0,b:1,c:2,"1":0,"2":1,"3":2}[k];
-  if(pos!==undefined){answer(pos);}
+  if(pos!==undefined){ if(!isOrd()) answer(pos); }
   else if((k==="enter"||k===" ") && !$("nextBtn").classList.contains("hide") && document.activeElement!==$("nextBtn")){ $("nextBtn").click(); }
 });
 </script>
