@@ -1,15 +1,35 @@
-const C="gidran-kviz-v11",F=["./","index.html","manifest.json","icon-192.png","icon-512.png","icon-180.png","icon-maskable-512.png"];
-self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(F.map(u=>new Request(u,{cache:"reload"})))));self.skipWaiting()});
-self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(n=>n!==C).map(n=>caches.delete(n)))).then(()=>self.clients.claim())));
+
+const C="gidran-kviz-v12";
+const A=["./","./index.html","./manifest.json","./icon-192.png","./icon-512.png","./icon-180.png","./icon-maskable-512.png","./hajtaslanc.jpg","./motor-hutorendszer.jpg"];
+
+self.addEventListener("install",e=>{
+  e.waitUntil(
+    caches.open(C).then(c=>c.addAll(A))
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener("activate",e=>{
+  e.waitUntil(
+    caches.keys().then(keys=>
+      Promise.all(keys.filter(k=>k!==C).map(k=>caches.delete(k)))
+    )
+  );
+  self.clients.claim();
+});
+
 self.addEventListener("fetch",e=>{
-  const r=e.request,u=new URL(r.url);
-  if(r.method!=="GET"||u.origin!==location.origin||u.search) return; /* a frissítés-ellenőrzés (?_=) mindig a hálózatra megy */
-  e.respondWith((async()=>{
-    const c=await caches.open(C);
-    const hit=await c.match(r,{ignoreSearch:true});
-    const net=fetch(r).then(x=>{if(x&&x.ok)c.put(r,x.clone());return x}).catch(()=>null);
-    if(hit){e.waitUntil(net);return hit}
-    const x=await net;
-    return x||(r.mode==="navigate"?(await c.match("index.html")||await c.match("./")):Response.error());
-  })());
+  if(e.request.method!=="GET") return;
+  e.respondWith(
+    caches.match(e.request).then(cached=>{
+      if(cached) return cached;
+      return fetch(e.request).then(response=>{
+        if(response && response.ok && new URL(e.request.url).origin===self.location.origin){
+          const copy=response.clone();
+          caches.open(C).then(c=>c.put(e.request,copy));
+        }
+        return response;
+      });
+    })
+  );
 });
