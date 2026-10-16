@@ -192,3 +192,7 @@ body.harcon{overflow:hidden}
 #harc .gbsir small{font-size:10px;font-weight:600;opacity:.85}
 #harc .hstat span{font-size:11px}
 #harc .gbsay{float:right;border:0;border-radius:999px;background:#2b3342;color:#fff;font:inherit;font-size:12px;padding:4px 10px;cursor:pointer}
+#harc[hidden]{display:none!important}
+#harc .gbrow .full{grid-column:1/-1}
+#harc .gbegg{background:linear-gradient(180deg,#f7d56b,#d99a1f);color:#2a1a00;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+#harc .gbegg small{font-size:10px;font-weight:600;opacity:.8}
