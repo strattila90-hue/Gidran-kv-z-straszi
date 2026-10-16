@@ -1,4 +1,4 @@
-const C="gidran-kviz-v14",F=["./","index.html","manifest.json","icon-192.png","icon-512.png","icon-180.png","icon-maskable-512.png","games.js","games.css","firebase-config.js"];
+const C="gidran-kviz-v16",F=["./","index.html","manifest.json","icon-192.png","icon-512.png","icon-180.png","icon-maskable-512.png","games.js","games.css","firebase-config.js"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>Promise.all(F.map(u=>c.add(new Request(u,{cache:"reload"})).catch(()=>{})))));self.skipWaiting()});
 self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(n=>n!==C).map(n=>caches.delete(n)))).then(()=>self.clients.claim())));
 self.addEventListener("fetch",e=>{

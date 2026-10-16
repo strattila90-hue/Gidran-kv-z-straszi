@@ -47,16 +47,17 @@ service cloud.firestore {
       // saját rekord és rendfokozat frissítése; nevet és szerepkört nem írhat át
       allow update: if signedIn() && request.auth.uid == uid
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
-             'rank', 'harcBest', 'harcAt', 'droneBest', 'droneAt', 'gtBest', 'gtBestAt', 'gkBest', 'gkBestAt', 'ghBest', 'ghBestAt',
-             'harcN', 'droneN', 'gtN', 'gkN', 'ghN', 'lastPlay'])
+             'rank', 'harcBest', 'harcAt', 'droneBest', 'droneAt', 'gtBest', 'gtBestAt', 'gmBest', 'gmBestAt', 'gkBest', 'gkBestAt', 'ghBest', 'ghBestAt',
+             'harcN', 'droneN', 'gtN', 'gmN', 'gkN', 'ghN', 'lastPlay'])
         && validRank(request.resource.data.get('rank', ''))
         && scoreOk('harcBest', false, 100000)
         && scoreOk('droneBest', false, 100000000)
         && scoreOk('gtBest', true, 3600000)
+        && scoreOk('gmBest', true, 14400000)
         && scoreOk('gkBest', false, 100000000)
         && scoreOk('ghBest', false, 100000000)
-        && tsOk('harcAt') && tsOk('droneAt') && tsOk('gtBestAt') && tsOk('gkBestAt') && tsOk('ghBestAt') && tsOk('lastPlay')
-        && cntOk('harcN') && cntOk('droneN') && cntOk('gtN') && cntOk('gkN') && cntOk('ghN');
+        && tsOk('harcAt') && tsOk('droneAt') && tsOk('gtBestAt') && tsOk('gmBestAt') && tsOk('gkBestAt') && tsOk('ghBestAt') && tsOk('lastPlay')
+        && cntOk('harcN') && cntOk('droneN') && cntOk('gtN') && cntOk('gmN') && cntOk('gkN') && cntOk('ghN');
 
       // admin (akinek a dokumentumában role = "admin"): javíthat, törölhet
       allow update, delete: if isAdmin();

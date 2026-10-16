@@ -169,3 +169,4 @@ body.harcon{overflow:hidden}
 #harc .hbar .hx{margin-left:auto}
 #harc .hub{min-height:0}
 #gdToast{position:fixed;left:50%;bottom:120px;transform:translateX(-50%);z-index:300;background:rgba(0,0,0,.88);color:#fff;padding:10px 16px;border-radius:12px;font:600 14px system-ui,sans-serif;opacity:0;pointer-events:none;transition:opacity .2s;max-width:86vw;text-align:center}#gdToast.on{opacity:1}
+#harc .gths[hidden]{display:none}
