@@ -1029,6 +1029,179 @@ function ghDrawGid(c,x,y,pw,ph,tilt,now){c.save();c.translate(x,y);c.rotate(tilt
   const on=GH.siren?((now/170|0)%2):-1;c.fillStyle=on===1?'#3d8bff':'#243a66';c.fillRect(-pw*.3,-ph*.3,pw*.28,3);c.fillStyle=on===0?'#ff3b3b':'#5a2020';c.fillRect(pw*.02,-ph*.3,pw*.28,3);
   if(GH.siren){c.globalCompositeOperation='lighter';const g=c.createRadialGradient(on===1?-pw*.16:pw*.16,-ph*.3,0,on===1?-pw*.16:pw*.16,-ph*.3,pw*1.1);g.addColorStop(0,on===1?'rgba(70,150,255,.7)':'rgba(255,60,60,.65)');g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.fillRect(-pw*1.4,-ph*.9,pw*2.8,ph*1.1)}
   c.restore()}
+/* ===== GIDRÁN BEMUTATÓ: kiállított Gidrán, látogatók kérdései, szabad szöveges válasz ===== */
+const GB={};
+const gbN=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]/g,'');
+/* t: o = idős bácsi, k = gyerek, s = leendő katona · k = fogalomcsoportok (bármelyik alak elég a csoporthoz) · need = hány csoport kell a teljes jóhoz · a = helyes válasz */
+const GB_Q=[
+{t:'o',q:'Hát ez nem BTR! Az még úgy volt építve, hogy soha nem ment tönkre. Mi az, amit ez jobban tud nála?',k:[['akna','tnt','stanag','vedelm','pancel','vedett','lovedek'],['automata','allison','valto'],['klima','legkond'],['runflat','defekt','gumi'],['375','276','cummins','nyomatek','turbo']],need:2,a:'A védelem: STANAG 4569 szerint körkörösen 2+ szint, a kerekek alatt 4a (10 kg TNT), a páncéltest alatt 2b (6 kg TNT) aknavédelem, az ablakok BR7 szintűek. Mellé 375 LE-s Cummins turbódízel, Allison automata váltó, légkondicionáló és run-flat gumik.'},
+{t:'o',q:'Az Ural 375 még egy kenyérrel is elment, ennek meg csupa elektronika van! Mi lesz, ha elromlik a sötét erdő közepén?',k:[['csorlo'],['szerszam','aso','csakany','emelo'],['runflat','defekt'],['guritoszelep','kezzel','manual'],['apu','tartalek','aramforras'],['kimentes','vontat','segitseg']],need:2,a:'Van önmentő csörlő (25 m kötél, 70 kN), szerszámkészlet (ásó, csákány, balta, 12 tonnás emelő, ékek), run-flat gumi (max. 50 km-ig, 30 km/h-val), kézzel oldható kézifék a gurítószeleppel, vészhelyzeti ajtónyitás aknazárral, és külön áramforrás, az APU.'},
+{t:'o',q:'Mennyit eszik ez a vas? Az Ural is jó nagy étvágyú volt, de legalább egyszerűen tankoltuk.',k:[['2x100','200l','100l','ketto','ketszer','tartaly','liter'],['gazolaj','dizel','uzemanyag'],['viztelen','vizlevalaszt','szuro','viz']],need:1,a:'A Gidrán 2×100 liter gázolajat visz két tartályban. A fogyasztás a terheléstől függ. Tankolás előtt a víztelenítő (vízleválasztó) szűrőre és a figyelmeztetésére oda kell figyelni.'},
+{t:'o',q:'Az Uralnak 180 lóereje volt, mégis húzta a fél falut. Ennek mennyi ereje van, és mi a lényeg benne?',k:[['375','276kw','276'],['1550','nyomatek'],['cummins','isl9','89','8,9','kilenc','soros','hatos'],['1100','1400','alacsonyfordulat','huzoero']],need:2,a:'Cummins ISL9E3 soros hatos, 8,9 literes common-rail turbódízel: 276 kW (375 LE) 2100 f/p-nél. A lényeg az 1550 Nm nyomaték, ami már 1100–1400 f/p között megvan, ezért terepen nem pörgetni kell, hanem ráhúzni.'},
+{t:'o',q:'A BTR úszott! Ez meg biztos elmerül az első pocsolyában, ugye?',k:[['09','kilenc','0,9','90cm','gazlo'],['nemuszik','nemketeltu','nemamfib','nemtud'],['melyseg','meder','fenek','lassan']],need:1,a:'A Gidrán nem kétéltű. A gázlóképessége 0,9 méter, kemény, sima fenéken. Átkelés előtt meg kell nézni a mélységet, a mederfeneket, a ki- és belépő rámpát, lassan és egyenletesen kell menni, utána a féket szárítani.'},
+{t:'o',q:'Régen a gumi gumi volt: kilyukadt, kicseréltük. Ma mi van, ha defektet kap egy ilyen nagy kerék?',k:[['runflat','gyuru','betet','futojelleg'],['50km','50','otven'],['30kmh','30','harminc'],['csere','potkerek','emelo']],need:2,a:'A 395/85 R20 gumikban run-flat gyűrű van: defekttel is lehet menni, de legfeljebb 50 km-t, legfeljebb 30 km/h-val. Utána cserélni kell a kereket. A pótkerék levételéhez külön emelőcsörlő tartozik.'},
+{t:'o',q:'Az Ural felment, ahova csak akartuk. Ez a maga kis híres „60 százalék” mellé mit tud még a hegyen, meg a dőlésen?',k:[['60','hatvan'],['30','harminc','oldaldol'],['emelked','lejt','meredek'],['45','rampa','megkozelit']],need:2,a:'Emelkedő: 60%, oldaldőlés: 30%, gázlóképesség 0,9 m, lépcsőmászás 0,5 m, árokáthidalás 1,1 m. A 60%-os emelkedő előtt 45%-os rámpán kell áthaladni a megközelítési szög miatt. Ezek a plafon-értékek, nem ajánlások.'},
+{t:'o',q:'Ez biztos úgy lenyomja az utat, mint egy tank! Mekkora a súlya?',k:[['152','15200','15tonna','15,2','tizenot'],['168','16800','16tonna','16,8','harci','fegyver']],need:1,a:'A tömege 15 200 kg (15,2 tonna), a harci tömege fegyverzettel 16 800 kg. Ekkora tömeget lefékezni nem kisautó-feladat: követési távolság és a légtartály-nyomás figyelése kell.'},
+{t:'o',q:'A BTR-ben egy szakasz elfért. Hányan ülnek ebben a nagy dobozban?',k:[['7ules','7fo','hetfo','hetules','hetember','7ember','7szemely','het'],['5pontos','ovet','ovvel','biztonsagiov','bekotoz'],['robban','elnyel','csillap']],need:1,a:'A Gidránban 7 ülés van, mindegyik 5 pontos övvel és az ülések alatt robbanáselnyelő anyaggal. Menet közben a láb a csillapító elemeken legyen, ne a padlón.'},
+{t:'o',q:'Szerintem ez egy rakás elektronika. Mi mindent tud, amit mi régen lapáttal csináltunk?',k:[['ctis','abroncsnyomas','gumi','legnyomas'],['csorlo'],['kamera','360'],['tuzolt','porolto','co2','oltorendszer'],['apu','aramforras'],['ejjellato','hokamera']],need:2,a:'Központi abroncsnyomás-szabályozó (CTIS), hidraulikus csörlő, 360°-os kamerarendszer, vezetői éjjellátó, automata tűzoltó rendszer, APU (fedélzeti áramforrás), differenciálzárak és osztómű, terepen és közúton is.'},
+{t:'o',q:'Azt hallottam, hogy ezt a törökök gyártják. Régen szovjet technika volt a jó. Hogy jön ez ide?',k:[['nurol','torok','turk','ejder','yalcin']],need:1,a:'Igen, a Gidránt Törökországban gyártják (Nurol Makina, Ejder Yalçın család), a Magyar Honvédség Gidrán néven rendszeresítette. A lényeg nem a gyártó, hanem az, hogy a mai követelményeknek megfelelő védelmet és terepképességet ad.'},
+{t:'o',q:'Mi az a villogó meg a szirénák a tetején? Mentőautó ez vagy mi?',k:[['sziren'],['kurt'],['hangosbeszel','hangszoro','beszelo'],['gyors','lassu','mento','tuzolto']],need:1,a:'A felső panelen gyors sziréna, „gyors–mentő–tűzoltó” hang, lassú sziréna, jelzőkürt és hangosbeszélő van. A szirénával nem az elsőbbséget kapja meg a jármű, csak a figyelmet; a többi a vezető dolga.'},
+{t:'o',q:'Mi a fenének ez az éjjeli lámpa meg az álcafény, mi a bolondság? Régen sötétben lámpa nélkül mentünk!',k:[['alca'],['infra','ir'],['nato','konvoj'],['ejjel','ejjellato','lathat']],need:1,a:'A „NATO világítás és álcafény” kapcsoló állásaival eltüntethetők az első és hátsó fények: van infravörös elülső álcafény, konvojlámpa és féklámpa-álcafény. A hátsó konvojlámpa a mögötted jövőnek ad támpontot.'},
+{t:'o',q:'Az Ural meg a sárban volt igazi király! Ez a lakkozott dobozautó mit tud a sárban?',k:[['ctis','levegot','nyomas','bar','abroncs'],['csorlo'],['zar','diffzar','differencialzar','differencial'],['osztomu','terepvalto'],['lendulet','alacsonyfokozat','lassan']],need:2,a:'Sárban a CTIS-sel lágyítani kell a gumit (sár/homok/hó üzemmód 2,5 bar, max. 20 km/h), „L” osztómű, alacsony fokozat, differenciálzárak, egyenletes gáz, és ha kell, csörlő vagy ásó. Hirtelen gázadástól a jármű beássa magát.'},
+{t:'k',q:'Miért zöld? Miért nem rózsaszín? 🎀',k:[['alca','terepszin','lathatatlan','elrejt','rejt','nehogy','elbuj','buj','nemlatszik']],need:1,a:'A Gidrán terepszínű, mert álcázás: a zöld, barna foltok a természetben elrejtik, hogy messziről ne látsszon. A rózsaszín meg mindenhol feltűnne!'},
+{t:'k',q:'Ez egy tank? Lő is? 💥',k:[['nemtank','nemigazi','kerek','lanctalp','nem'],['fegyver','puska','golyo','torony','geppuska']],need:1,a:'Nem tank: tankoknak lánctalpuk van. A Gidrán kerekes, páncélozott harcjármű, 4 kerékkel, katonák szállítására, vezetésére, felderítésre; fegyverzettel is el lehet látni (ilyenkor a harci tömege 16 800 kg).'},
+{t:'k',q:'Mi a villogó a tetején? Olyan, mint a tűzoltóautón! 🚒',k:[['sziren','villog','lampa','jelzes','figyelem','figyelmez']],need:1,a:'Az a lámpa és a sziréna: jelzi a többieknek, hogy a jármű jön, és figyelmet kér. A felső panelen háromféle szirénahang, jelzőkürt és hangosbeszélő is van.'},
+{t:'k',q:'Elfér benne az egész osztályom? Huszonketten vagyunk! 🧒🧒🧒',k:[['7ules','7fo','hetfo','hetules','het','7','hetember','nem','kevesebb']],need:1,a:'Nem, a Gidránban 7 ülés van (a vezetővel együtt). Mindegyik 5 pontos biztonsági övvel van szerelve, ezért mindenkinek le kell ülnie és be kell kötnie magát.'},
+{t:'k',q:'Mit eszik a Gidrán? Tud enni? 🍔',k:[['gazolaj','dizel','uzemanyag','olaj','tankol']],need:1,a:'Gázolajat (dízelt) iszik, két tartályába 2×100 liter fér. Nem tud enni, de a tankolás neki az étkezés: addig nem indulhat, amíg tele nem tankolták.'},
+{t:'k',q:'Miért ilyen nagyok a kerekei? Óriás kerekek! 🛞',k:[['395','85','r20','20col'],['terep','akadaly','hasmagas','sar','nagyobb','dombot','megy','megyen','hepehupa']],need:1,a:'A kerekek mérete 395/85 R20: a nagy kerék átgurul az akadályokon, magasan tartja a járművet a terepen, és run-flat betéttel még defekttel is megy. A gumi nyomását a vezető menet közben is állíthatja (CTIS).'},
+{t:'k',q:'Tud úszni a Gidrán? Mint egy béka? 🐸',k:[['nem','09','gazlo','kilenc','melyseg','atmegy','atkel']],need:1,a:'Nem tud úszni, de gázlóképessége 0,9 méter: ennyi mély vízben még átmehet, ha a fenék kemény. Előbb meg kell nézni a víz mélységét, és lassan, egyenletesen kell átkelni.'},
+{t:'k',q:'Mi az a kötél a Gidránon? Kötelet húz? 🪢',k:[['csorlo','huz','kimentes','elakad','kiszabad','vonszol']],need:1,a:'A csörlő: hidraulikus önmentő csörlő, 25 méter hosszú, 6 pászmás acélhuzallal, egy ágon 70 kN (kb. 7 tonna) vonóerővel. Ha a jármű elakad, a csörlővel kihúzza magát egy fától vagy másik járműtől.'},
+{t:'k',q:'Miért olyan hangos a motorja? Akkora, mint a hegy! 🔊',k:[['motor','dizel','turbo','375','lo','nyomatek','nagy','erosebb','ero']],need:1,a:'8,9 literes, soros hatos Cummins turbódízel van benne: 375 lóerő, 1550 Nm forgatónyomaték. Egy 15 tonnás járművet kell mozgatnia, ezért kell neki ekkora erő.'},
+{t:'k',q:'Ha rálőnek, akkor sem esik baja? Mint egy szuperhős? 🦸',k:[['stanag','762','lovedek','pancel','vedelm','golyoallo','akna','vedi','vedett','nem']],need:1,a:'Nem sebezhetetlen, de erősen védett: a páncélja körkörösen STANAG 4569 2+ szintű (7,62×39 mm páncéltörő lövedék ellen), aknavédelmi szintje a kerekek alatt 4a, az ablakok BR7 (7,62×51 NATO) szintűek.'},
+{t:'k',q:'Van benne klíma, vagy rádió? Hideg van-e télen benne? ❄️',k:[['klima','legkond','futes','ablakfutes','usb','aljzat','konnektor','rado','meleg']],need:1,a:'Van légkondicionáló, ablakfűtés (a belső jegesedést kizárólag azzal szabad olvasztani), 12 V és 24 V szivargyújtó aljzat, 230 V-os konnektor és USB-aljzat, valamint rádió. A telefon tehát nem merül le.'},
+{t:'k',q:'És ha kigyullad? Tud tüzet oltani? 🔥',k:[['tuzolt','porolto','co2','szenmonox','erzekel','olt','automata','oltorendszer']],need:1,a:'Igen: a kabinban 4,5 literes poroltó, a motortérben 2 db 3,4 literes CO₂ palack dolgozik, optikai (IR/UV) érzékelőkkel. A kézi tűzoltónál szél felől kell közelíteni.'},
+{t:'k',q:'Milyen gyorsan megy? Gyorsabb, mint a vonat? 🚄',k:[['120'],['50','otven'],['terep','l allas','osztomu']],need:1,a:'Közúton („H” állás) legfeljebb 120 km/h, terepen („L” állás) legfeljebb 50 km/h, de az „L” állásban akár 3720 Nm nyomatékkal. A vonatot nem előzi be, de közúton elég gyors.'},
+{t:'s',q:'Őrmester úr, mi a harcjárművezető feladata? Mire számítsak, ha jelentkezem?',k:[['vezet','hajt'],['karbantart','gondoz','ellenor','szolgalat','zsir','uzemanyag','tankol','muszaki'],['parancs','kezjel','rado','kommunik','konvoj','jelz','irany'],['biztons','ovet','kezifek','utas','legenyseg','katon']],need:2,a:'A harcjárművezető vezeti a járművet, de ennél több: járműszolgálatot tart (indítás előtti, menet közbeni és utáni ellenőrzés), gondozza és karbantartja a járművet (tankolás, zsírzás, folyadékszintek), kezeli a rendszereit (CTIS, differenciálzár, csörlő), parancs és kézjel szerint mozog, és felel a utasok és a jármű biztonságáért.'},
+{t:'s',q:'Mit kell ellenőriznem, mielőtt elindulok a járművel?',k:[['ellenor','atnez','szemle','muszaki'],['legtartaly','6bar','nyomas','bar','levegot'],['olaj','folyadek','hutofolyadek','szint','uzemanyag'],['gumi','abroncs','kerek'],['ovet','kezifek','lampa','fenyek','aramtalan']],need:2,a:'Indulás előtt szemle: folyadékszintek (olaj, hűtő-, üzemanyag), gumik és kerékanyák, fények, áramtalanító bekapcsolása, és a légtartályokban (S1, S2, P, A) legalább 6 bar nyomás. Az öv bekötése és a kézifék ellenőrzése is hozzátartozik.'},
+{t:'s',q:'Mit csinál a vezető, ha terepen elakad a jármű?',k:[['gaz','pori','kipor','finom','lassan'],['ctis','levegot','nyomas','lagyit'],['zar','diffzar','differencial'],['csorlo','huz','kimentes','kot'],['aso','asas','csakany','kitamasz','szerszam','tamasz']],need:2,a:'Nem szabad hirtelen gázt adni, mert a kerekek beássák magukat. Alacsony fokozat és finom gáz, szükség esetén a CTIS lágyítása (sár/homok mód), differenciálzárak sorrendben (hosszanti, hátsó, mellső), kézi kiásás, és ha kell, csörlő vagy másik jármű segítsége.'},
+{t:'s',q:'Hogyan kell biztonságosan csörlőzni?',k:[['kesztyu'],['tavol','tavolsag','nealljon','nealljak','nealljunk'],['kabat','suly','fedes','takar','dob'],['horgony','fa','ero','biztos','stabil','jarmu']],need:2,a:'Kesztyűben dolgozunk, a feszes kötél mellett nem állunk (a kötelet súllyal, például kabáttal lefedjük, hogy elszakadáskor ne csapódjon), és a horgonypont (fa, kő, másik jármű) biztosan erős legyen. A 25 m-es kötél 70 kN-t bír egy ágon.'},
+{t:'s',q:'Mire kell figyelni egy gázlónál? Mit mond az előírás?',k:[['09','kilenc'],['melyseg','fenek','meder','rampa'],['lassan','egyenletes','tempo','hullam'],['fek','szaritas','szaraz','ellenor']],need:2,a:'A Gidrán gázlóképessége 0,9 m. Átkelés előtt megnézzük a mélységet, a mederfeneket, a be- és kilépő rámpát; lassan, egyenletesen megyünk, hogy a bukóhullám ne menjen a motortérbe, utána finom fékezéssel szárítjuk a fékeket.'},
+{t:'s',q:'Hogyan kell leállítani a járművet szolgálat végén?',k:[['kezifek','fek'],['motor','leall','lekapcsol','lekapcs'],['kerekek','ekek','kitamasz','ek'],['aramtalan','fokapcsolo','akku','semleges','ures']],need:2,a:'Megállunk, váltó „N”, kézifék be, motor le, szükség szerint kerékék a kerekek alá. Az áramtalanítót kikapcsoljuk, hogy a rádió és a többi fogyasztó ne merítse le az akkukat. A kézifék a P levegőtartályt használja: ha elfogy a levegő, a kézifék bekapcsol, ez szándékos védelem.'},
+{t:'s',q:'Milyen biztonsági szabályokat kell betartanom a járművön és körülötte?',k:[['ovet','biztonsagiov','5pontos','bekotoz'],['kezifek'],['vedoszemuveg','szemuveg','kesztyu','fuldugo','vedofelszereles'],['6bar','legtartaly','levegonyomas'],['dohany','tuz','tuzvesz']],need:2,a:'Öv, kézifék, kerékék, védőszemüveg, kesztyű, füldugó; dohányzás tűzveszélyes környezetben tilos (200 l gázolaj mellett különösen), és ne indulj el, amíg a levegőtartályokban nincs legalább 6 bar.'},
+{t:'s',q:'Hogyan kell váltani a H–N–L osztómű között?',k:[['megall','allj','allo','allat','allunk','ne mozog'],['semleges','nallas','nbe','nben','nvalto','ures','allison'],['120'],['50','3720']],need:2,a:'Átkapcsolás előtt mindig teljesen meg kell állni, az Allison váltót N-be kell tenni, és csak utána váltunk osztóművet. „H” állásban legfeljebb 120 km/h és 1550 Nm, „L” (terep) állásban legfeljebb 50 km/h, akár 3720 Nm.'},
+{t:'s',q:'Mi az a CTIS, és mikor milyen üzemmódot használok?',k:[['kozut','aszfalt'],['nehezterep','terep'],['sar','homok','ho'],['vesz','1,8','18bar'],['bar','nyomas','abroncs','gumi']],need:2,a:'A CTIS a központi abroncsnyomás-szabályozó. Közút: 6,5 bar (max. 120 km/h); nehéz terep: 4,5 bar (max. 65 km/h); sár/homok/hó: 2,5 bar (max. 20 km/h); vészhelyzet: 1,8 bar (max. 10 km/h). Minél lágyabb a gumi, annál lassabban szabad menni.'},
+{t:'s',q:'Mit csinálok, ha defektet kapok a konvojban?',k:[['runflat','gyuru','betet'],['50'],['30'],['csere','potkerek','emelo','jelent','megall','rado']],need:2,a:'A run-flat gyűrű miatt még legfeljebb 50 km-t lehet megtenni, legfeljebb 30 km/h-val, utána cserélni kell. Jelentjük a parancsnoknak, a pótkereket az emelőcsörlővel vesszük le (tetőpáncélon, távirányítóval), 12 tonnás emelővel és kerékékekkel cserélünk.'},
+{t:'s',q:'Milyen kézjeleket kell ismernem, ha rádió nélkül kell irányítani?',k:[['alj','megall'],['elore','hatra','balra','jobbra','irany'],['rado','zaj','ejjel']],need:2,a:'Előre, hátra, balra, jobbra és „állj”. Az „Állj!” kézjel mindig erősebb, mint bármilyen rádióparancs: ha valaki így int, azonnal meg kell állni. Zajban, terepen, éjjel a kézjel a legbiztosabb.'},
+{t:'s',q:'Mi a vezető dolga konvojban menet közben?',k:[['koveteses','tavolsag','tavol','sorban','nyom'],['lampa','fenyek','alca','konvojlampa'],['rado','jelzes','kezjel','kommunik'],['sebesseg','tempo','egyenletes','figyel']],need:2,a:'Követési távolság tartása (15 tonnát nem lehet hirtelen lefékezni), az előírt sebesség és a légtartály-nyomás figyelése, az álcafény és konvojlámpa helyes használata, rádión és kézjellel tartani a kapcsolatot, és az előző jármű nyomában haladni.'},
+{t:'s',q:'Milyen berendezések segítik a vezetőt a látásban?',k:[['360'],['kamera','monitor'],['ejjellato','ejjel','hokamera'],['10,1','101','erintokepernyo']],need:1,a:'A 360°-os kamerarendszer monitora 10,1 hüvelykes érintőképernyő, 4 kamerabemenettel. A járművezetői éjjellátó monitor ugyancsak 10,1", 10 lépcsős fényerővel.'}
+];
+const GB_T={o:['🧓','Nyugdíjas bácsi'],k:['🧒','Kisgyerek'],s:['🎖️','Leendő katona']};
+const GB_R={o:[['Na látod, ezt nem tudod! Bezzeg a mi időnkben…','Pfff… ennyit tudsz? A BTR-t mindenki ismerte!','Hát ez így nem túl meggyőző, fiam…'],['Részben igaz… de ennél azért többet vártam.','Nem rossz, nem rossz, de nem egészen ez.'],['Hm… no jó, ezt elismerem. Értesz hozzá, fiam.','Na ja, ez így már más. Bár a BTR attól még legenda!','Rendben, meggyőztél. Pedig nem akartam.']],
+ k:[['Hmm, hát nem ezt hallottam… 🤔','Tényleg? Nem hiszem!','Ezt nem értem…'],['Majdnem! Mesélj még!','Ez kicsit béna, de jó volt!'],['Wooow! Ez király! 🤩','Tényleg?! Ezt elmondom az osztálynak!','Hűű, ez menő! 😍']],
+ s:[['Hmm… ezt másképp képzeltem el. Utánanézek.','Ez elég hiányos… nem biztos, hogy értem.'],['Értem… részben. Van még valami?','Köszi, de szolgálatban ennél több kell.'],['Köszönöm, ezt felírom! 📝','Pontosan erre voltam kíváncsi. Világos!','Remélem, én is így tudok majd válaszolni.']]};
+const gbPick=a=>a[Math.floor(Math.random()*a.length)];
+function gbSh(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function gbSay(txt,t){try{if(!SOUND||!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu,''));u.lang='hu-HU';const v=speechSynthesis.getVoices().find(x=>/^hu/i.test(x.lang));if(v)u.voice=v;const P={o:[.55,.86],k:[1.8,1.08],s:[1,1],a:[1,1]}[t]||[1,1];u.pitch=P[0];u.rate=P[1];u.volume=1;u.onstart=()=>{if(GB.asker)GB.asker.talk=1};u.onend=u.onerror=()=>{if(GB.asker)GB.asker.talk=0};speechSynthesis.speak(u)}catch(e){}}
+function gbShut(){try{window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}if(GB.asker)GB.asker.talk=0}
+function gbEngine(now){if(!GB.snd||GB.over)return;const t=(now-GB.eng0)/1000;let rpm;if(t<1.3)rpm=140+t*430+Math.sin(t*38)*70;else rpm=GB.siren?1250+Math.sin(t*3)*60:820+Math.sin(t*5)*12;gEngTick(GB,rpm,GB.siren?.35:.08,false)}
+function gbEval(v,q){const t=gbN(v);if(t.length<9)return -1;let m=0;for(const g of q.k)if(g.some(x=>t.includes(gbN(x))))m++;const need=q.need||1;return m>=need?2:m>0?1:0}
+const GB_COL=['#3b5b7a','#7a3b3b','#4a6b3a','#6b5a3a','#5b4a7a','#2f6a6a','#8a6a2a','#4a4a55'],GB_SK=['#f1c9a5','#e0b08a','#c68d62','#f6d7b8','#a9744d'];
+function gbPerson(){return {x:0,y:0,tx:0,ty:0,k:gbPick(['a','a','a','o','k','s']),col:gbPick(GB_COL),sk:gbPick(GB_SK),ph:Math.random()*9,wait:Math.random()*3,ph2:Math.random(),phone:Math.random()<.22,fl:0,flee:0,vx:0,em:'',emT:0}}
+function gbSpot(p){const W=GB.W,H=GB.H,gy=GB.gy;p.tx=W*(.06+Math.random()*.88);p.ty=gy+8+Math.random()*(H-gy-30);p.wait=1.2+Math.random()*3.5}
+function gbAddCrowd(side){const p=gbPerson();p.x=side?-30:GB.W+30;p.y=GB.gy+14+Math.random()*(GB.H-GB.gy-34);gbSpot(p);GB.crowd.push(p);return p}
+function gbDrawPerson(c,p,t,sc,face){const k=p.k,H=k==='k'?30:k==='o'?40:44,hunch=k==='o'?.18:0;const mv=Math.hypot(p.dx||0,p.dy||0)>2||p.flee;const sw=mv?Math.sin(t*(p.flee?16:7)+p.ph)*(p.flee?7:3.2):0,bob=mv?Math.abs(Math.sin(t*(p.flee?16:7)+p.ph))*(p.flee?2.6:1.2):Math.sin(t*1.4+p.ph)*.5;
+ c.save();c.translate(p.x,p.y);c.scale(sc*face,sc);c.fillStyle='rgba(0,0,0,.28)';c.beginPath();c.ellipse(0,0,H*.28,H*.07,0,0,7);c.fill();
+ const dark=k==='s'?'#3b4a2c':k==='o'?'#4a3d35':'#2b3342',leg=H*.42;
+ c.strokeStyle=dark;c.lineWidth=k==='k'?4:5;c.lineCap='round';c.beginPath();c.moveTo(-2.5,-leg);c.lineTo(-2.5+sw,0);c.moveTo(2.5,-leg);c.lineTo(2.5-sw,0);c.stroke();
+ c.translate(0,-bob);const by=-H*.78,bh=H*.4,bw=k==='k'?11:13;c.save();c.rotate(hunch*(1-.5*0));
+ c.fillStyle=k==='s'?'#5a6a3c':p.col;c.beginPath();c.roundRect?c.roundRect(-bw/2,by,bw,bh+leg*.15,4):c.rect(-bw/2,by,bw,bh);c.fill();
+ if(k==='s'){c.fillStyle='rgba(30,40,20,.55)';c.fillRect(-bw/2+1,by+3,5,5);c.fillRect(1,by+10,6,5)}
+ /* kar */
+ c.strokeStyle=k==='s'?'#5a6a3c':p.col;c.lineWidth=3.6;const ay=by+4;
+ if(p.phone){c.beginPath();c.moveTo(bw/2-1,ay);c.lineTo(bw/2+8,ay-8);c.stroke();c.fillStyle='#111';c.fillRect(bw/2+5,ay-17,5,9);if(p.fl>0){c.fillStyle='rgba(255,255,255,'+Math.min(1,p.fl*3)+')';c.beginPath();c.arc(bw/2+8,ay-12,9*p.fl+3,0,7);c.fill()}}
+ else if(p.em==='❗'||p.point){c.beginPath();c.moveTo(bw/2-1,ay);c.lineTo(bw/2+11,ay-5+Math.sin(t*3+p.ph)*1.5);c.stroke()}
+ else{c.beginPath();c.moveTo(bw/2-1,ay);c.lineTo(bw/2+2+sw*.3,ay+11);c.stroke()}
+ c.beginPath();c.moveTo(-bw/2+1,ay);c.lineTo(-bw/2-2-sw*.3,ay+11);c.stroke();
+ if(k==='o'){c.strokeStyle='#6b4a2a';c.lineWidth=2;c.beginPath();c.moveTo(-bw/2-3,ay+10);c.lineTo(-bw/2-5,0);c.stroke()}
+ /* fej */
+ const hr=k==='k'?6.4:5.2,hy=by-hr+1;c.fillStyle=p.sk;c.beginPath();c.arc(0,hy,hr,0,7);c.fill();
+ if(k==='o'){c.fillStyle='#d9d9d9';c.beginPath();c.arc(0,hy-1,hr,Math.PI,0);c.fill();c.fillStyle='#4a4a4a';c.fillRect(-hr-1.5,hy-hr+1,hr*2+3,3);c.fillRect(-hr*.7,hy-hr-2.5,hr*1.4,3.5)}
+ else if(k==='s'){c.fillStyle='#4b5a30';c.beginPath();c.arc(0,hy-.5,hr+.4,Math.PI,0);c.fill();c.fillRect(-hr-.5,hy-1.5,hr*2+1,2)}
+ else if(k==='k'){c.fillStyle=p.ph2>.5?'#7a4a22':'#e8c14a';c.beginPath();c.arc(0,hy-1.5,hr,Math.PI*1.05,Math.PI*1.95);c.fill()}
+ else{c.fillStyle=p.ph2>.5?'#3b2a1d':'#8a6a3a';c.beginPath();c.arc(0,hy-1,hr,Math.PI,0);c.fill()}
+ c.fillStyle='#111';c.fillRect(1.2,hy-.5,1.4,1.4);if(p.talk&&Math.sin(t*22)>0){c.fillStyle='#7a2a2a';c.fillRect(.6,hy+2.2,2.4,1.8)}
+ c.restore();c.restore()
+ if(p.em&&p.emT>0){c.save();c.translate(p.x,p.y-H*sc-2);c.font=(13*sc+4)+'px sans-serif';c.textAlign='center';c.fillText(p.em,0,-Math.sin(Math.min(1,p.emT)*3)*2);c.restore()}}
+function gbDraw(now){const c=GB.c,W=GB.W,H=GB.H,gy=GB.gy,t=now/1000;c.setTransform(GB.dpr,0,0,GB.dpr,0,0);c.clearRect(0,0,W,H);
+ let g=c.createLinearGradient(0,0,0,gy);g.addColorStop(0,'#1a2233');g.addColorStop(1,'#37445a');c.fillStyle=g;c.fillRect(0,0,W,gy);
+ g=c.createLinearGradient(0,gy,0,H);g.addColorStop(0,'#5b5f66');g.addColorStop(1,'#2c2f35');c.fillStyle=g;c.fillRect(0,gy,W,H-gy);
+ c.strokeStyle='rgba(255,255,255,.07)';c.lineWidth=1;for(let i=1;i<9;i++){const y=gy+(H-gy)*Math.pow(i/9,1.5);c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke()}
+ c.strokeStyle='rgba(255,255,255,.1)';for(let i=-4;i<=4;i++){c.beginPath();c.moveTo(W/2+i*W*.04,gy);c.lineTo(W/2+i*W*.22,H);c.stroke()}
+ /* ceiling truss + spotlights */
+ c.fillStyle='#0f1522';c.fillRect(0,0,W,14);c.strokeStyle='#2b3550';c.lineWidth=2;c.beginPath();for(let x=0;x<W;x+=18){c.moveTo(x,0);c.lineTo(x+9,14);c.lineTo(x+18,0)}c.stroke();
+ for(let i=0;i<3;i++){const x=W*(.2+i*.3),sw=Math.sin(t*.6+i*2)*8;c.globalCompositeOperation='lighter';const gg=c.createLinearGradient(x,14,x+sw,gy);gg.addColorStop(0,'rgba(255,240,200,.28)');gg.addColorStop(1,'rgba(255,240,200,.02)');c.fillStyle=gg;c.beginPath();c.moveTo(x-5,14);c.lineTo(x+5,14);c.lineTo(x+sw+W*.12,gy+6);c.lineTo(x+sw-W*.12,gy+6);c.fill();c.globalCompositeOperation='source-over';c.fillStyle='#ffe9a8';c.fillRect(x-4,10,8,5)}
+ /* banner */
+ const bw=Math.min(W*.74,300),bx=(W-bw)/2;c.fillStyle='rgba(0,0,0,.35)';c.fillRect(bx+3,24,bw,20);c.fillStyle='#3b4a2c';c.fillRect(bx,21,bw,20);c.strokeStyle='#ffb52e';c.lineWidth=1.4;c.strokeRect(bx+.7,21.7,bw-1.4,18.6);c.fillStyle='#ffe08a';c.font='700 12px system-ui,sans-serif';c.textAlign='center';c.fillText('GIDRÁN BEMUTATÓ · HONVÉDELMI NAP',W/2,35);
+ c.strokeStyle='#7a7f8a';c.lineWidth=1.2;c.beginPath();c.moveTo(bx+12,14);c.lineTo(bx+12,22);c.moveTo(bx+bw-12,14);c.lineTo(bx+bw-12,22);c.stroke();
+ /* flags */
+ for(const fx of [W*.07,W*.93]){c.strokeStyle='#999';c.lineWidth=2;c.beginPath();c.moveTo(fx,gy-70);c.lineTo(fx,gy+4);c.stroke();const w=Math.sin(t*2.4+fx)*3;c.fillStyle='#c62828';c.fillRect(fx,gy-70,22,5);c.fillStyle='#fff';c.beginPath();c.moveTo(fx,gy-65);c.lineTo(fx+22+w,gy-65);c.lineTo(fx+22,gy-60);c.lineTo(fx,gy-60);c.fill();c.fillStyle='#2e7d32';c.beginPath();c.moveTo(fx,gy-60);c.lineTo(fx+22,gy-60);c.lineTo(fx+22+w,gy-55);c.lineTo(fx,gy-55);c.fill()}
+ /* kordonok */
+ c.strokeStyle='#d9a21b';c.lineWidth=2.2;const cx0=W*.18,cx1=W*.82;c.beginPath();c.moveTo(cx0,gy+3);c.lineTo(cx1,gy+3);c.stroke();for(const sx of [cx0,W*.5,cx1]){c.fillStyle='#d9a21b';c.fillRect(sx-1.5,gy-9,3,13)}
+ /* a Gidrán */
+ const S=GB.sc,vy=gy-GWR*S+2;
+ const people=GB.crowd.concat(GB.asker?[GB.asker]:[]);
+ people.filter(p=>p.y<gy+3).sort((a,b)=>a.y-b.y).forEach(p=>gbDrawPerson(c,p,t,GB.ps(p),p.face||1));
+ c.save();c.translate(W/2,vy);c.scale(S,S);c.fillStyle='rgba(0,0,0,.35)';c.beginPath();c.ellipse(0,GWR+1,GOX*GK*.95,6,0,0,7);c.fill();
+ /* talapzat-kör */
+ c.restore();c.save();c.translate(W/2,vy);c.scale(S,S);
+ gidDraw(c,0,0,0,null,0,false);
+ if(GB.siren){gtSirenLamp(c,0,0,0,now);const ph=Math.floor(now/160)%2;c.globalCompositeOperation='lighter';const gg=c.createRadialGradient(0,-30,5,0,-30,110);gg.addColorStop(0,ph?'rgba(255,60,50,.35)':'rgba(70,130,255,.35)');gg.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=gg;c.fillRect(-120,-140,240,200);
+  const hx=60,hy=-19;const hg=c.createLinearGradient(hx,hy,hx+110,hy);hg.addColorStop(0,'rgba(255,245,200,.75)');hg.addColorStop(1,'rgba(255,245,200,0)');c.fillStyle=hg;c.beginPath();c.moveTo(hx,hy-3);c.lineTo(hx+120,hy-30);c.lineTo(hx+120,hy+34);c.lineTo(hx,hy+3);c.fill();c.globalCompositeOperation='source-over'}
+ c.restore();
+ people.filter(p=>!(p.y<gy+3)).sort((a,b)=>a.y-b.y).forEach(p=>gbDrawPerson(c,p,t,GB.ps(p),p.face||1));
+ if(GB.siren){c.globalCompositeOperation='lighter';const ph=Math.floor(now/160)%2;c.fillStyle=ph?'rgba(255,40,40,.10)':'rgba(60,110,255,.10)';c.fillRect(0,0,W,H);c.globalCompositeOperation='source-over'}
+ }
+function gbUpdate(dt,now){const W=GB.W,H=GB.H,gy=GB.gy;GB.t+=dt;
+ /* a tömeg: lassan sétál, fotóz */
+ for(const p of GB.crowd){p.emT=Math.max(0,p.emT-dt);p.fl=Math.max(0,p.fl-dt*2.5);
+  if(p.flee){p.x+=p.vx*dt;p.dx=p.vx;p.face=p.vx>0?1:-1;continue}
+  const dx=p.tx-p.x,dy=p.ty-p.y,d=Math.hypot(dx,dy);p.dx=0;p.dy=0;
+  if(d>3){const v=26;p.x+=dx/d*v*dt;p.y+=dy/d*v*dt;p.dx=dx/d*v;p.dy=dy/d*v;p.face=dx>0?1:-1}else{p.wait-=dt;p.face=(W/2-p.x)>0?1:-1;if(p.wait<=0)gbSpot(p)}
+  if(p.phone&&Math.random()<dt*.18&&d<=3){p.fl=1;if(SOUND&&ac())try{snare(AC.currentTime,.012)}catch(e){}}
+  p.point=!p.phone&&d<=3&&Math.sin(GB.t*.5+p.ph*3)>.8}
+ /* a sor lassan nő */
+ GB.q=Math.min(16,3+Math.floor(GB.t/18));while(GB.crowd.length<GB.q&&!GB.siren)gbAddCrowd(Math.random()<.5);
+ if(GB.siren){GB.sirenT+=dt;if(!GB.fled){GB.fled=1;for(const p of GB.crowd.concat(GB.asker?[GB.asker]:[])){p.flee=1;p.vx=(p.x<W/2?-1:1)*(120+Math.random()*130);p.em='❗';p.emT=3}}
+  GB.crowd=GB.crowd.filter(p=>p.x>-60&&p.x<W+60);if(GB.asker&&(GB.asker.x<-60||GB.asker.x>W+60))GB.asker=null;
+  if(GB.sirenT>3.2&&!GB.over)gbEnd()}
+ const a=GB.asker;if(a&&a.flee){a.x+=a.vx*dt;a.dx=a.vx;a.face=a.vx>0?1:-1;a.emT=Math.max(0,a.emT-dt)}if(a&&!a.flee){a.emT=Math.max(0,a.emT-dt);a.jump=Math.max(0,(a.jump||0)-dt);
+  const dx=a.tx-a.x,dy=a.ty-a.y,d=Math.hypot(dx,dy);a.dx=0;a.dy=0;
+  if(GB.st==='leave'){a.x+=a.vx*dt;a.dx=a.vx;a.face=a.vx>0?1:-1;if(a.x<-40||a.x>W+40){GB.asker=null;GB.st='gap';GB.gap=.5}}
+  else if(d>3){const v=70;a.x+=dx/d*v*dt;a.y+=dy/d*v*dt;a.dx=dx/d*v;a.dy=dy/d*v;a.face=dx>0?1:-1}
+  else{a.face=1;if(GB.st==='enter'){GB.st='ask';gbShowQ()}}
+  if(a.jump>0)a.y=a.ty-Math.sin(a.jump*Math.PI/.5)*7}
+ if(GB.st==='gap'){GB.gap-=dt;if(GB.gap<=0)gbNext()}
+ const ps=$('#gbQn');if(ps)ps.textContent=GB.crowd.length+(GB.asker?1:0)}
+function gbLoop(now){if(!GB.run)return;const dt=Math.min(.05,(now-GB.last)/1000);GB.last=now;gbUpdate(dt,now);gbEngine(now);gbDraw(now);GB.raf=requestAnimationFrame(gbLoop)}
+function gbOpen(){const el=$('#harc');el.hidden=false;document.body.classList.add('harcon');let best=0;try{best=Number(localStorage.getItem('medve-gb-best')||0)}catch(e){}
+ el.innerHTML=`<div class="hbar"><div class="htitle">Gidrán <b>Bemutató</b></div><div class="hstat"><span>Kérdés <b id="gbAsked">0</b></span><span>Jó <b id="gbGood">0</b></span><span>Sor <b id="gbQn">0</b></span></div><button class="hx" id="gbClose" aria-label="Bezárás">✕</button></div>
+  <div class="gbscene"><canvas id="gbCv"></canvas></div>
+  <div class="gbpanel" id="gbPanel"></div>
+  <div class="hstart" id="gbStart"><img class="gidfull" src="${GID_FULL||GID_SPRITE}" alt="" style="width:100%;height:90px;object-fit:contain"><h3>Gidrán bemutató</h3><p>Te vagy a kiállított Gidrán mellett álló katona. A látogatók <b>egyesével</b> kérdeznek: <b>idős bácsik</b> (akik szerint a BTR vagy az Ural volt a jobb), <b>gyerekek</b> és <b>leendő katonák</b>. Válaszolj <b>saját szavaiddal</b>, szövegesen – nem kell szó szerint, a lényeg számít. A válasz után mindig megkapod a helyes választ.</p>
+   <div class="dinfo"><b>Kezelés</b><span>✍️ Válasz</span><i>írd be, majd „Válaszolok”</i><span>🚨 Lámpa + sziréna</span><i>ha túl sok a kérdés: a tömeg elfut, vége a bemutatónak</i><span>Jó válasz</span><i>a lényeg szerepeljen benne</i></div>
+   <button class="btn pri" id="gbGo">▶ Kezdés</button>${best?`<p style="margin-top:10px">Eddigi legjobb: <b class="hrec">${best} jó válasz</b></p>`:''}</div>
+  <div class="hover" id="gbOver" hidden></div>`;
+ $('#gbClose').onclick=gbClose;$('#gbGo').onclick=gbStart;gidFullSet();gbSetup()}
+function gbClose(){gbShut();ghSirenSnd(false);gClose(GB)}
+function gbSetup(){Object.assign(GB,gCanvas('#gbCv'));const c=GB.cv.getContext('2d');GB.c=c;GB.gy=GB.H*.6;GB.sc=Math.min(GB.W*.52,GB.H*1.2)/140;GB.ps=p=>(.85+(p.y-GB.gy)/(GB.H-GB.gy)*.7)*(GB.H/260);
+ GB.run=true;GB.crowd=[];GB.asker=null;GB.t=0;GB.siren=false;GB.fled=0;GB.sirenT=0;GB.st='start';GB.over=false;GB.q=3;GB.asked=0;GB.good=0;GB.pts=0;GB.last=performance.now();
+ for(let i=0;i<5;i++){const p=gbAddCrowd(i%2);p.x=GB.W*(.1+Math.random()*.8);p.y=GB.gy+14+Math.random()*(GB.H-GB.gy-34)}
+ GB.key=e=>{if(e.type==='keydown'&&e.key==='Escape'){gbClose()}};addEventListener('keydown',GB.key);GB.raf=requestAnimationFrame(gbLoop)}
+function gbStart(){gEngStart(GB);GB.eng0=performance.now();$('#gbStart').hidden=true;$('#gbOver').hidden=true;GB.order=gbSh(GB_Q.map((q,i)=>i));GB.i=0;GB.asked=0;GB.good=0;GB.pts=0;GB.t=0;GB.st='gap';GB.gap=.4;GB.siren=false;GB.fled=0;GB.over=false;gbStats();gbPanel('<div class="gbwait">A bemutató megkezdődött…</div>')}
+function gbStats(){const a=$('#gbAsked'),g=$('#gbGood');if(a)a.textContent=GB.asked;if(g)g.textContent=GB.good}
+function gbPanel(h){const p=$('#gbPanel');if(p){p.innerHTML=h;p.scrollTop=0}}
+function gbNext(){if(GB.over)return;if(GB.i>=GB.order.length){GB.siren=false;return gbEnd(true)}
+ const q=GB_Q[GB.order[GB.i++]];GB.cur=q;const p=gbPerson();p.k=q.t;p.x=Math.random()<.5?-30:GB.W+30;p.y=GB.H-16;p.tx=GB.W*(.5+(Math.random()-.5)*.14);p.ty=GB.H-14;p.vx=0;GB.asker=p;GB.st='enter';p.phone=false;p.emT=2;p.em='❓';
+ gbPanel(`<div class="gbwait">${GB_T[q.t][0]} ${GB_T[q.t][1]} érkezik…</div>`)}
+function gbShowQ(){const q=GB.cur;gbPanel(`<div class="gbwho gbt-${q.t}">${GB_T[q.t][0]} ${GB_T[q.t][1]}</div><button type="button" class="gbsay" id="gbSay" aria-label="Kérdés felolvasása">🔊 Újra</button><div class="gbbub">${esc(q.q)}</div>
+ <textarea id="gbA" rows="3" placeholder="Írd be a saját szavaiddal a választ…" autocomplete="off" spellcheck="true"></textarea>
+ <div class="gbrow"><button class="btn pri" id="gbSend">Válaszolok ▶</button><button class="btn gbsir" id="gbSir" type="button">🚨 Lámpa + sziréna<small>elfut a tömeg</small></button></div>`);
+ gbSay(q.q,q.t);const rb=$('#gbSay');if(rb)rb.onclick=()=>gbSay(q.q,q.t);$('#gbSend').onclick=gbAnswer;$('#gbSir').onclick=gbSiren;const ta=$('#gbA');ta.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();gbAnswer()}});ta.addEventListener('keyup',e=>e.stopPropagation())}
+function gbAnswer(){if(GB.st!=='ask')return;const q=GB.cur,ta=$('#gbA'),v=ta.value;const r=gbEval(v,q);
+ if(r<0){const h=ta.parentNode.querySelector('.gbhint')||document.createElement('div');h.className='gbhint';h.textContent='Írj egy kicsit részletesebben, a látogató többet vár egy mondatnál.';ta.insertAdjacentElement('afterend',h);return}
+ gbShut();GB.st='react';GB.asked++;if(r===2)GB.good++;GB.pts+=r;gbStats();const a=GB.asker;
+ a.em=['😠','🤔','😊'][r];if(q.t==='k')a.em=['🤔','🙂','🤩'][r];if(q.t==='s')a.em=['😕','🙂','👍'][r];a.emT=3;if(r===2)a.jump=.5;
+ const line=gbPick(GB_R[q.t][r]);
+ gbPanel(`<div class="gbwho gbt-${q.t}">${GB_T[q.t][0]} ${GB_T[q.t][1]}</div><div class="gbmine">${esc(v)}</div><div class="gbbub gbre r${r}">${esc(line)}</div>
+  <div class="gbref"><b>${r===2?'Így van, kiegészítésül:':r===1?'Majdnem – a teljes válasz:':'A helyes válasz:'}</b> ${esc(q.a)}</div>
+  <div class="gbrow"><button class="btn pri" id="gbNext">Következő látogató ▶</button><button class="btn gbsir" id="gbSir" type="button">🚨 Lámpa + sziréna<small>elfut a tömeg</small></button></div>`);
+ $('#gbNext').onclick=()=>{if(GB.st!=='react')return;GB.st='leave';a.vx=(a.x<GB.W/2?-1:1)*60;gbPanel('<div class="gbwait">A látogató tovább áll…</div>')};$('#gbSir').onclick=gbSiren}
+function gbSiren(){if(GB.siren||GB.over)return;gbShut();GB.siren=true;GB.sirenT=0;GB.fled=0;GB.st='flee';ghSirenSnd(true);gbPanel('<div class="gbwait">🚨 Lámpa és sziréna bekapcsolva – mindenki menekül!</div>')}
+function gbEnd(natural){if(GB.over)return;GB.over=true;gbShut();ghSirenSnd(false);gEngStop(GB);const n=GB.asked,gd=GB.good;let best=0;try{best=Number(localStorage.getItem('medve-gb-best')||0);if(gd>best){best=gd;localStorage.setItem('medve-gb-best',String(gd))}}catch(e){}
+ const rank=gd>=30?'Gidrán nagykövet 🏅':gd>=20?'Kiállítási szakértő 🎖️':gd>=10?'Rutinos idegenvezető':gd>=4?'Gyakorló idegenvezető':'Kezdő bemutató katona';
+ const o=$('#gbOver');o.hidden=false;o.innerHTML=`<h3>${natural?'🎪 Minden látogató végzett':'🚨 Vége a bemutatónak'}</h3><p>${natural?'Mindenki megkapta a választ, a kiállítás csendes.':'A sziréna elűzte a tömeget.'}<br>Kérdések: <b class="hrec">${n}</b> · Jó válaszok: <b class="hrec">${gd}</b> (részben vagy nem jó: ${n-gd})<br>Rangod: <b>${rank}</b><br>Legjobb: <b>${best}</b></p><button class="btn pri" id="gbAgain">▶ Új bemutató</button> <button class="btn line" id="gbQuit">Kilépés</button>`;
+ $('#gbAgain').onclick=()=>{gbSetupReset();gbStart()};$('#gbQuit').onclick=gbClose;gbPanel('<div class="gbwait">Vége a bemutatónak.</div>')}
+function gbSetupReset(){GB.crowd=[];GB.asker=null;GB.siren=false;GB.fled=0;GB.over=false;for(let i=0;i<5;i++){const p=gbAddCrowd(i%2);p.x=GB.W*(.1+Math.random()*.8);p.y=GB.gy+14+Math.random()*(GB.H-GB.gy-34)}}
 /* ===== FIÓK + ÉLŐ RANGLISTA (Firebase, a M.E.D.V.E. Arcade közös fiókjaival) ===== */
 const RANKS=['','honvéd','őrvezető','tizedes','szakaszvezető','őrmester','törzsőrmester','főtörzsőrmester','zászlós','törzszászlós','főtörzszászlós','hadnagy','főhadnagy','százados','őrnagy','alezredes','ezredes','dandártábornok','civil'];
 const RANKG=[['terep','Gidrán Terep','gmBest','medve-gm-best',true,v=>gtFmt(v/1000),'🏔️','Terep-maraton 16 km: CTIS, mocsár, hó, jég, csörlő, autópálya + konvoj.'],
@@ -1093,6 +1266,7 @@ function hubHTML(){if(TIPI<0)tipNext();
   return `<div class="hbar"><div class="htitle">Gidrán <b>Játékterem</b></div><button class="hx" id="hubX" aria-label="Bezárás">✕</button></div>
   <div class="hub"><p class="hubsub">Elfáradtál a tanulásban? Pihenj egyet – a Gidrán közben is a fejedben marad. 😉</p>
    <div class="hgames" id="hubGames">${RANKG.map(hubCard).join('')}</div>
+   <div class="hgame"><button type="button" class="hgbtn" data-play="bemutato"><span class="hgic">🎪</span><span class="hgt"><b>Gidrán bemutató</b><small>Válaszolj a látogatók kérdéseire – bácsik, gyerekek, leendő katonák</small></span><span class="hggo">▶</span></button></div>
    <div class="hcard tipbox" id="tipBox"><div class="tiph"><b>💡 Tudtad-e?</b><span class="tipn" id="tipN"></span></div><div id="tipBody">${tipHTML(TIPI)}</div><div class="tipbtns"><button type="button" class="btn line sm" id="tipNext">Következő ▶</button><button type="button" class="btn line sm" id="tipAll">Összes (${TIPS.length})</button></div></div>
    <div class="hcard" id="authBox">${authInner()}</div></div>`}
 function gHubShow(){const el=$('#harc');el.hidden=false;document.body.classList.add('harcon');el.innerHTML=hubHTML()}
@@ -1124,7 +1298,7 @@ document.addEventListener('click',e=>{const t=e.target.closest?e.target:null;if(
   if(t.closest('#auOut')){if(confirm('Kijelentkezel?'))AUTH.signOut();return}
   if(t.closest('#auRetry')){FB_BOOT=0;FB_FAIL=false;AUTHREADY=false;hubRefresh();fbBoot();return}
   if(t.closest('#hubX')){hubClose();return}
-  if(b=t.closest('[data-play]')){const g=b.dataset.play;if(g==='terep')gtOpen();else if(g==='konvoj')gvOpen();else ghOpen();return}
+  if(b=t.closest('[data-play]')){const g=b.dataset.play;if(g==='terep')gtOpen();else if(g==='konvoj')gvOpen();else if(g==='bemutato')gbOpen();else ghOpen();return}
   if(b=t.closest('[data-rank]')){rankOpen(b.dataset.rank);return}
   if(b=t.closest('[data-rg]')){rankFill(b.dataset.rg);return}
   if(b=t.closest('[data-close]')){const o=document.getElementById(b.dataset.close);if(o)o.hidden=true;return}
@@ -1133,9 +1307,9 @@ document.addEventListener('click',e=>{const t=e.target.closest?e.target:null;if(
   if(b=t.closest('[data-tf]')){tipsAll(b.dataset.tf);return}});
 document.addEventListener('change',e=>{if(e.target.id==='auRankEd'&&UID){const r=e.target.value;if(RANKS.includes(r))DB.doc('users/'+UID).update({rank:r}).then(()=>toast('Rendfokozat mentve')).catch(()=>toast('Nem sikerült menteni'))}});
 addEventListener('online',()=>{if(HUB&&!FB_ON){FB_BOOT=0;FB_FAIL=false;fbBoot()}});
-window.GIDGAMES={open:hubOpen,close:hubClose,tips:()=>{hubOpen();tipsAll('*')},ver:GAMES_VER};
+window.GIDGAMES={bemutato:gbOpen,open:hubOpen,close:hubClose,tips:()=>{hubOpen();tipsAll('*')},ver:GAMES_VER};
 if(!document.getElementById('harc')){const h=document.createElement('div');h.id='harc';h.hidden=true;document.body.appendChild(h)}
 if(!document.getElementById('gdToast')){const h=document.createElement('div');h.id='gdToast';document.body.appendChild(h)}
 
-window.__G={gtOpen,gvOpen,ghOpen,GT,GV,GH,gtG,gtPhys,gtSeg,gtWinch,gtSurf,gtGame,ghUpdate,ghSpawn,hubOpen,TIPS};
+window.__G={gtOpen,gvOpen,ghOpen,gbOpen,GB,gbEval,GB_Q,GT,GV,GH,gtG,gtPhys,gtSeg,gtWinch,gtSurf,gtGame,ghUpdate,ghSpawn,hubOpen,TIPS};
 })();

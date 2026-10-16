@@ -170,3 +170,25 @@ body.harcon{overflow:hidden}
 #harc .hub{min-height:0}
 #gdToast{position:fixed;left:50%;bottom:120px;transform:translateX(-50%);z-index:300;background:rgba(0,0,0,.88);color:#fff;padding:10px 16px;border-radius:12px;font:600 14px system-ui,sans-serif;opacity:0;pointer-events:none;transition:opacity .2s;max-width:86vw;text-align:center}#gdToast.on{opacity:1}
 #harc .gths[hidden]{display:none}
+
+#harc .gbscene{position:relative;height:40vh;min-height:190px;max-height:340px;flex:none;background:#10151f}
+#harc .gbscene canvas{position:absolute;inset:0;width:100%;height:100%}
+#harc .gbpanel{flex:1;min-height:0;overflow-y:auto;padding:10px 14px calc(14px + env(safe-area-inset-bottom,0px));touch-action:pan-y;user-select:text;-webkit-user-select:text;background:linear-gradient(180deg,#141a25,#0c1018)}
+#harc .gbpanel *{user-select:text;-webkit-user-select:text}
+#harc .gbwait{padding:26px 8px;text-align:center;opacity:.8;font-size:15px}
+#harc .gbwho{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:3px 10px;border-radius:999px;margin-bottom:8px;background:#2b3342}
+#harc .gbt-o{background:#5a4a30;color:#ffe3a8}#harc .gbt-k{background:#2f5a6b;color:#bdf1ff}#harc .gbt-s{background:#3f5a2c;color:#d4f5b0}
+#harc .gbbub{position:relative;background:#fff;color:#16181d;border-radius:16px;padding:11px 14px;font-size:16px;line-height:1.4;font-weight:600;margin:0 0 10px}
+#harc .gbbub:before{content:"";position:absolute;left:22px;top:-8px;border:8px solid transparent;border-top:0;border-bottom-color:#fff}
+#harc .gbre.r2{background:#d6f5e3;color:#0b3a22}#harc .gbre.r1{background:#fff2c9;color:#4a3606}#harc .gbre.r0{background:#ffdcdc;color:#4a1010}
+#harc .gbmine{font-size:14px;opacity:.85;border-left:3px solid #ffb52e;padding:3px 10px;margin:0 0 8px;font-style:italic;white-space:pre-wrap;word-break:break-word}
+#harc .gbref{background:rgba(255,255,255,.07);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.45;margin:0 0 10px}
+#harc .gbref b{color:#ffe08a}
+#harc textarea#gbA{width:100%;box-sizing:border-box;background:#0a0e15;color:#fff;border:1.5px solid rgba(255,255,255,.28);border-radius:14px;padding:11px 13px;font:inherit;font-size:16px;resize:none;margin:0 0 8px;touch-action:auto}
+#harc textarea#gbA:focus{outline:none;border-color:#ffb52e}
+#harc .gbhint{color:#ffb020;font-size:13px;margin:-2px 0 8px}
+#harc .gbrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#harc .gbsir{background:linear-gradient(180deg,#3d8bff,#c62828);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;white-space:normal}
+#harc .gbsir small{font-size:10px;font-weight:600;opacity:.85}
+#harc .hstat span{font-size:11px}
+#harc .gbsay{float:right;border:0;border-radius:999px;background:#2b3342;color:#fff;font:inherit;font-size:12px;padding:4px 10px;cursor:pointer}
