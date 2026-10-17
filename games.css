@@ -196,3 +196,14 @@ body.harcon{overflow:hidden}
 #harc .gbrow .full{grid-column:1/-1}
 #harc .gbegg{background:linear-gradient(180deg,#f7d56b,#d99a1f);color:#2a1a00;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
 #harc .gbegg small{font-size:10px;font-weight:600;opacity:.8}
+
+.gbthr{position:absolute;left:6px;bottom:6px;display:flex;gap:4px;z-index:3}
+.gbthr button{width:34px;height:34px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.5);font-size:18px;color:#fff;padding:0}
+.gbthr button.on{border-color:#ffb52e;background:rgba(255,181,46,.3)}
+.gbeng{width:auto!important;padding:0 10px;font-size:12px;font-weight:700}
+.gbeng[aria-pressed=true]{background:#2e7d32;color:#fff}
+.gbquar{position:absolute;left:8px;right:8px;bottom:48px;z-index:4;background:rgba(20,10,10,.88);border:2px solid #d62828;border-radius:12px;padding:8px 10px;color:#fff;display:flex;flex-direction:column;gap:6px;font-size:13px}
+.gbquar[hidden]{display:none}.gbquar span{display:none}
+.gbqb{display:flex;gap:8px}.gbqb .btn{flex:1;min-height:44px}
+.gbgun{background:#b00020!important;color:#fff!important}.gbgun small{display:block;font-size:10px;opacity:.85}
+.gbpanel.lock{pointer-events:none;opacity:.45}
