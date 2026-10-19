@@ -207,3 +207,54 @@ body.harcon{overflow:hidden}
 .gbqb{display:flex;gap:8px}.gbqb .btn{flex:1;min-height:44px}
 .gbgun{background:#b00020!important;color:#fff!important}.gbgun small{display:block;font-size:10px;opacity:.85}
 .gbpanel.lock{pointer-events:none;opacity:.45}
+#harc .gtctis{width:min(160px,41vw)}#harc .gtctis .row{gap:3px}#harc .gtctis .row button{padding:4px 1px;font-size:10.5px;min-width:0;flex:1}#harc .gtctis .row button small{font-size:5.5px;letter-spacing:0;white-space:nowrap}
+/* 3D szétszedhető Gidrán */
+#harc .exwrap{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+#harc .exscene{position:relative;flex:1 1 44%;min-height:200px}
+#harc .exscene canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
+#harc .exhint{position:absolute;left:8px;right:8px;top:6px;font-size:11px;color:#9fb0c8;text-align:center;pointer-events:none;text-shadow:0 1px 2px #000}
+#harc .exctl{padding:6px 10px;background:#0e131a;border-top:1px solid rgba(255,255,255,.1)}
+#harc .exsl{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700}
+#harc .exsl input{flex:1;accent-color:#ffb52e;height:28px}
+#harc .exbt{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+#harc .exbt .btn{padding:6px 9px;font-size:12px;min-height:34px}
+#harc .exbt .btn[aria-pressed=true]{background:#ffb52e;color:#1a1204;border-color:#ffb52e}
+#harc .expanel{flex:0 0 auto;max-height:26vh;overflow:auto;padding:8px 12px;background:#121923;font-size:13px;line-height:1.4;touch-action:pan-y}
+#harc .expanel h4{margin:2px 0 4px;font-size:16px;color:#ffe08a}
+#harc .expanel p{margin:0 0 6px}
+#harc .exg1{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:#2b3a22;color:#b8e08a;border-radius:6px;padding:1px 7px}
+#harc .exempty{display:flex;flex-direction:column;gap:4px;color:#9fb0c8}#harc .exempty b{color:#fff}
+#harc .exact{display:flex;gap:6px}
+#harc .exlist{flex:0 0 auto;max-height:15vh;overflow:auto;padding:6px 8px;background:#0b0f15;touch-action:pan-y}
+#harc .exg{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-bottom:4px}
+#harc .exg b{font-size:10px;color:#7f8da3;text-transform:uppercase;letter-spacing:.05em;margin-right:2px}
+#harc .exchip{border:1px solid rgba(255,255,255,.2);background:#1a212c;color:#dbe4f2;border-radius:14px;padding:3px 9px;font-size:11px}
+#harc .exchip.on{background:#ffb52e;color:#1a1204;border-color:#ffb52e}
+/* 3.4.0 – élő 3D + hajtáslánc vezérlők */
+.exscene{background:radial-gradient(ellipse at 50% 62%,rgba(120,150,190,.2),rgba(120,150,190,0) 70%),linear-gradient(180deg,#26344a,#162030 55%,#0b0f15)}
+#harc .exscene canvas#exOv{pointer-events:none}
+.mnhud{position:absolute;left:8px;bottom:6px;pointer-events:none;font:700 12px/1.2 system-ui,sans-serif;color:#dfe9f7;text-shadow:0 1px 3px #000;background:rgba(0,0,0,.38);padding:3px 8px;border-radius:8px}
+.exdv{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:6px 10px;background:#0e131a;border-top:1px solid rgba(255,255,255,.1)}
+.exdv .btn{padding:6px 9px;font-size:12px;min-height:38px}
+.exdv .dEng[aria-pressed=true]{background:#2fa84f;border-color:#2fa84f;color:#fff}
+.dgs{display:inline-flex;border:1px solid rgba(255,255,255,.22);border-radius:10px;overflow:hidden}
+.dgs button{background:transparent;color:#cfd8e6;border:0;min-width:38px;min-height:38px;font:700 13px system-ui,sans-serif;padding:0 8px;cursor:pointer}
+.dgs button.on{background:#ffb52e;color:#1a1204}
+.dpd{display:flex;gap:8px;flex:1 1 150px;min-width:150px}
+.dPed{flex:1;min-height:46px;border-radius:12px;border:1px solid rgba(255,255,255,.2);font:800 14px system-ui,sans-serif;letter-spacing:.05em;color:#fff;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.dGas{background:linear-gradient(180deg,#2f9a4a,#1f7034)}.dBrk{background:linear-gradient(180deg,#c0392b,#8b241a)}
+.dPed.hold{transform:scale(.97);filter:brightness(1.25)}
+.dBar{flex:1 1 100%;height:5px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}.dBar i{display:block;height:100%;width:0;background:#5bd68c;transition:width .08s}
+.exdrw{flex:none}
+/* főképernyői kártya */
+.mn3{margin:12px 0;border:1px solid var(--line,#2a3658);border-radius:18px;overflow:hidden;background:#0b0f15;text-align:left}
+.mn3 .mnh{padding:10px 14px 8px;display:flex;flex-direction:column;gap:2px;background:linear-gradient(180deg,#1a2440,#131b30)}
+.mn3 .mnh b{font-size:15px;color:#eef1f8}.mn3 .mnh small{font-size:12px;color:#97a3c2}
+.mn3 .mnsc{position:relative;aspect-ratio:16/10;max-height:300px;width:100%;background:radial-gradient(ellipse at 50% 62%,rgba(120,150,190,.2),rgba(120,150,190,0) 70%),linear-gradient(180deg,#26344a,#162030 55%,#0b0f15)}
+.mn3 canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:pan-y;cursor:grab}
+.mn3 canvas#mnOv{pointer-events:none}
+.mn3 .mnno{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:16px;text-align:center;color:#97a3c2;font-size:13px}
+.mn3 .mnbt{display:flex;gap:8px;padding:8px 10px 10px;background:#0e131a;flex-wrap:wrap}
+.mn3 .mnbt .btn{padding:8px 12px;font-size:13px;min-height:40px}.mn3 .mnbt #mnFull{flex:1}
+.mn3 .mnbt .btn[aria-pressed=true]{background:#ffb52e;color:#1a1204;border-color:#ffb52e}
+.mn3 .exdv{border-top:1px solid rgba(255,255,255,.08)}

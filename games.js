@@ -118,7 +118,7 @@ const GT_TRACK=(()=>{let a=20261015;const R=()=>{a=(a+0x6D2B79F5)|0;let t=Math.i
     if(k>=6)seq.splice(4,0,['jeg',rnd(110,150),.08,'',0]);
     for(const q of seq)add(...q)}
   add('aszfalt',140,.05);return T})();
-const GT_PR=[4.0,2.5,1.2];
+const GT_PR=[6.5,4.5,2.5,1.8];const GT_CT=[[1.8,10],[2.5,20],[4.5,65],[6.5,120]];function gtLerp(T,p,ix){if(p<=T[0][0])return T[0][ix];for(let i=1;i<T.length;i++)if(p<=T[i][0]){const a=T[i-1],b=T[i];return a[ix]+(b[ix]-a[ix])*(p-a[0])/(b[0]-a[0])}return T[T.length-1][ix]}const GT_GK=[[1.8,2],[2.5,1.4],[4.5,.7],[6.5,0]];
 function gtBuild(){let x0=0;GT.segs=GT_TRACK.map(([s,m,h,f,bl])=>{const o={s,x0,x1:x0+m*20,h,f,bl};x0+=m*20;return o});GT.len=x0;const OFF=1200,N=Math.ceil((x0+OFF+2400)/2);const Hh=new Float32Array(N);const S=GT.segs;let k0=0;
   const hil=x=>{while(k0<S.length-1&&x>S[k0].x1+700)k0++;let h=0,wsum=0;for(let k=k0;k<S.length;k++){const g=S[k];if(g.x0>x+700)break;const d=x<g.x0?g.x0-x:x>g.x1?x-g.x1:0;const w=Math.exp(-(d*d)/(2*140*140));h+=g.h*w;wsum+=w}return wsum>1e-6?h/wsum:.05};
   for(let i=0;i<N;i++){const x=i*2-OFF;const A=hil(x)*120;let y=A*(.55*Math.sin(x/430+.7)+.3*Math.sin(x/170+2.1)+.15*Math.sin(x/66+.4));const g=gtSeg(x);
@@ -194,28 +194,28 @@ function gtG(x){const f=(x+GT.OFF)/2,i=Math.floor(f);const H=GT.hh;if(i<0)return
 function gtOpen(){const el=$('#harc');el.hidden=false;document.body.classList.add('harcon');let best=0;try{best=Number(localStorage.getItem('medve-gm-best')||0)}catch(e){}
   el.innerHTML=`<div class="hbar"><div class="htitle">Gidrán <b>Terep</b></div><div class="hstat"><span>Idő <b id="gtTime">0,0</b></span><span>Cél <b id="gtLeft">0</b></span><span>Rekord <b id="gtBest">${best?gtFmt(best/1000):'–'}</b></span></div><button class="hx" id="gtClose" aria-label="Bezárás">✕</button></div>
    <div class="dwrap"><canvas id="gtCv"></canvas>
-    <div class="dhud gthud"><div class="gtspd"><b id="gtKmh">0</b><small>km/h</small></div><div class="gtgauge"><div class="lbl">Abroncsnyomás</div><b id="gtP">4,0 bar</b><div class="gtsurf" id="gtSurf">Aszfalt</div></div><div class="gtgauge"><div class="lbl">Abroncs</div><div class="dhp"><i id="gtDmg"></i></div><div class="gtwarn" id="gtWarn"></div></div><div class="gtgauge gtfuel"><div class="lbl">Üzemanyag <span id="gtRes" class="gtres" hidden>TARTALÉK</span></div><b id="gtFuel">–</b><div class="dhp"><i id="gtFuelB"></i></div><small id="gtLph">0 l/h</small></div></div>
+    <div class="dhud gthud"><div class="gtspd"><b id="gtKmh">0</b><small>km/h</small></div><div class="gtgauge"><div class="lbl">Abroncsnyomás</div><b id="gtP">6,5 bar</b><div class="gtsurf" id="gtSurf">Aszfalt</div></div><div class="gtgauge"><div class="lbl">Abroncs</div><div class="dhp"><i id="gtDmg"></i></div><div class="gtwarn" id="gtWarn"></div></div><div class="gtgauge gtfuel"><div class="lbl">Üzemanyag <span id="gtRes" class="gtres" hidden>TARTALÉK</span></div><b id="gtFuel">–</b><div class="dhp"><i id="gtFuelB"></i></div><small id="gtLph">0 l/h</small></div></div>
     <div class="gtwinch" id="gtWinch" hidden><div class="lbl">🪝 CSÖRLŐ – elöl <span id="gtWst"></span></div><div class="row"><button type="button" id="gtHook">Felakaszt</button><button type="button" id="gtFm" aria-label="Kisebb erő">−</button><b id="gtF">50%</b><button type="button" id="gtFp" aria-label="Nagyobb erő">+</button><button type="button" id="gtPull" class="pull">⤓ HÚZ</button></div><div class="fbar"><i id="gtFb"></i></div></div>
     <div class="gtside"><button type="button" id="gtHand" class="gths" aria-pressed="false"><b>(P)</b><small>KÉZIFÉK</small></button><button type="button" id="gtSiren" class="gths" aria-pressed="false"><b>🚨</b><small>SZIRÉNA</small></button><button type="button" id="gtLane" class="gths" hidden><b>⇅</b><small>SÁV</small></button><span id="gtGear" class="gtgear">D</span></div>
     <button type="button" class="gtbig gtrefuel" id="gtRefuel" hidden>⛽ TANKOLÁS<small>tartsd nyomva · 900 l/perc</small></button>
     <button type="button" class="gtbig gtunstick" id="gtUnstick" hidden>⟲ KISZABADÍTÁS<small>+10 s büntetés</small></button>
-    <div class="gtctis"><div class="lbl">CTIS – abroncsnyomás</div><div class="row"><button data-p="0">4,0<small>KÖZÚT</small></button><button data-p="1">2,5<small>TEREP</small></button><button data-p="2">1,2<small>SÁR/HOMOK</small></button></div></div>
+    <div class="gtctis"><div class="lbl">CTIS – abroncsnyomás</div><div class="row"><button data-p="0">6,5<small>KÖZÚT</small></button><button data-p="1">4,5<small>NEHÉZ TEREP</small></button><button data-p="2">2,5<small>SÁR/HÓ</small></button><button data-p="3">1,8<small>VÉSZ</small></button></div></div>
     <button class="dpedal brake" id="gtBrake">FÉK<small>hátra</small></button><button class="dpedal gas" id="gtGas">GÁZ</button></div>
-   <div class="hstart" id="gtStart"><img class="gidfull" src="${GID_FULL||GID_SPRITE}" alt="" style="width:100%;height:110px;object-fit:contain"><h3>Gidrán Terepbajnokság</h3><p>Teljesítsd a ${Math.round(GT_TRACK.reduce((a,b)=>a+b[1],0)/10)/100} km-es pályát a lehető leggyorsabban: aszfalt, murva, sár, homok, mocsár, mélysár, sziklák, hó és jég – közben egy oldalnézetes <b>autópálya-szakasz</b> forgalommal, ahol 5 Gidránból álló konvoj áll be mögéd. Hosszú, nehéz pálya – tankolj a táborokban!<br>A <b>CTIS</b> gombokkal menet közben állítod az abroncsnyomást: <b>sárban, homokban engedd le</b>, különben elakadsz – <b>aszfalton fújd fel</b>, mert leeresztve lassú vagy, és 30 km/h felett az abroncs tönkremegy.</p><div class="dinfo"><b>Abroncsnyomás és sebességkorlát</b><span>4,0 bar – közút</span><i>max. kb. 100 km/h</i><span>2,5 bar – terep</span><i>max. 60 km/h</i><span>1,2 bar – sár, homok</span><i>max. 30 km/h</i><span>Fújás / leengedés</span><i>lassan fúj, gyorsan enged</i><b style="margin-top:6px">Új a pályán</b><span>Mélysár</span><i>elakadtál? csörlővel húzd ki magad</i><span>Kézifegyver-tűz</span><i>a Gidrán RWS-e automatikusan visszalő</i><span>Billenés</span><i>gáz: orr fel · fék: orr le (levegőben is)</i><span>Üzemanyag</span><i>2×100 l tartály, tartalékból indulsz – tankolj a táborokban!</i><span>Tolatás</span><i>FÉK nyomva tartva megállás után</i><span>Kézifék / sziréna</span><i>külön gombokkal</i><span>Autópálya</span><i>SÁV gomb: sávváltás · szirénával félreállnak · karambol +5 s</i><span>Hó, jég</span><i>kevés tapadás – finoman gázozz</i><span>Cél</span><i>javítóbázis üzemanyagkúttal</i></div><p class="hint" style="margin:0 0 8px"><b>Csörlő (önkimentés):</b> ha a mélysárban elakadtál, állj meg, <b>Felakaszt</b> az elöl álló horgonyfára (max. 30 m), állíts <b>70–80%</b> húzóerőt és tartsd a <b>HÚZ</b> gombot – közben a leengedett abroncsnyomás és kis gáz segít. 90% fölött elszakad a kötél!</p><button class="btn pri" id="gtGo">▶ Indítás</button> <button type="button" class="btn line rkstart" data-rank="terep">🏆 Rekordjaim</button>${gBoard('gmBest',true,v=>gtFmt(v/1000))}</div>
+   <div class="hstart" id="gtStart"><img class="gidfull" src="${GID_FULL||GID_SPRITE}" alt="" style="width:100%;height:110px;object-fit:contain"><h3>Gidrán Terepbajnokság</h3><p>Teljesítsd a ${Math.round(GT_TRACK.reduce((a,b)=>a+b[1],0)/10)/100} km-es pályát a lehető leggyorsabban: aszfalt, murva, sár, homok, mocsár, mélysár, sziklák, hó és jég – közben egy oldalnézetes <b>autópálya-szakasz</b> forgalommal, ahol 5 Gidránból álló konvoj áll be mögéd. Hosszú, nehéz pálya – tankolj a táborokban!<br>A <b>CTIS</b> gombokkal menet közben állítod az abroncsnyomást: <b>sárban, homokban engedd le</b>, különben elakadsz – <b>aszfalton fújd fel</b>, mert leeresztve lassú vagy, és a megengedett sebesség felett az abroncs tönkremegy (a tananyag szerinti CTIS-értékek).</p><div class="dinfo"><b>Abroncsnyomás és sebességkorlát</b><span>6,5 bar – közút</span><i>max. 120 km/h</i><span>4,5 bar – nehéz terep</span><i>max. 65 km/h</i><span>2,5 bar – sár/homok/hó</span><i>max. 20 km/h</i><span>1,8 bar – vészhelyzet</span><i>max. 10 km/h</i><span>Fújás / leengedés</span><i>lassan fúj, gyorsan enged</i><b style="margin-top:6px">Új a pályán</b><span>Mélysár</span><i>elakadtál? csörlővel húzd ki magad</i><span>Kézifegyver-tűz</span><i>a Gidrán RWS-e automatikusan visszalő</i><span>Billenés</span><i>gáz: orr fel · fék: orr le (levegőben is)</i><span>Üzemanyag</span><i>2×100 l tartály, tartalékból indulsz – tankolj a táborokban!</i><span>Tolatás</span><i>FÉK nyomva tartva megállás után</i><span>Kézifék / sziréna</span><i>külön gombokkal</i><span>Autópálya</span><i>SÁV gomb: sávváltás · szirénával félreállnak · karambol +5 s</i><span>Hó, jég</span><i>kevés tapadás – finoman gázozz</i><span>Cél</span><i>javítóbázis üzemanyagkúttal</i></div><p class="hint" style="margin:0 0 8px"><b>Csörlő (önkimentés):</b> ha a mélysárban elakadtál, állj meg, <b>Felakaszt</b> az elöl álló horgonyfára (max. 30 m), állíts <b>70–80%</b> húzóerőt és tartsd a <b>HÚZ</b> gombot – közben a leengedett abroncsnyomás és kis gáz segít. 90% fölött elszakad a kötél!</p><button class="btn pri" id="gtGo">▶ Indítás</button> <button type="button" class="btn line rkstart" data-rank="terep">🏆 Rekordjaim</button>${gBoard('gmBest',true,v=>gtFmt(v/1000))}</div>
    <div class="hover" id="gtOver" hidden></div>`;
   $('#gtClose').onclick=()=>gClose(GT);$('#gtGo').onclick=gtStart;gidFullSet();gtSetup()}
 function gtSetup(){Object.assign(GT,gCanvas('#gtCv'));gtBuild();GT.gas=0;GT.brake=0;gHold('#gtGas',GT,'gas');gHold('#gtBrake',GT,'brake');gHold('#gtPull',GT,'pull');gHold('#gtRefuel',GT,'fueling');
   const tap=(id,fn)=>{const b=$(id);if(b)b.addEventListener('pointerdown',e=>{e.preventDefault();fn()})};
   tap('#gtHook',gtHookToggle);tap('#gtFm',()=>{GT.force=Math.max(10,GT.force-10);gtWinchUi()});tap('#gtFp',()=>{GT.force=Math.min(100,GT.force+10);gtWinchUi()});tap('#gtUnstick',gtUnstick);tap('#gtHand',()=>{GT.hand=!GT.hand;$('#gtHand').setAttribute('aria-pressed',GT.hand);if(SOUND&&ac())snare(AC.currentTime,.15);toast(GT.hand?'(P) Kézifék behúzva':'Kézifék kiengedve')});tap('#gtSiren',()=>{GT.siren=!GT.siren;$('#gtSiren').setAttribute('aria-pressed',GT.siren);gtSirenSnd(GT.siren)});tap('#gtLane',gtLaneToggle);
   $('.gtctis').addEventListener('pointerdown',e=>{const b=e.target.closest('[data-p]');if(!b)return;e.preventDefault();GT.pt=GT_PR[+b.dataset.p];gtCtisUi();if(SOUND&&ac()){const t=AC.currentTime;snare(t,.08)}});
-  GT.key=e=>{const d=e.type==='keydown'?1:0;if(e.key==='ArrowRight'||e.key==='d')GT.gas=d;if(e.key==='ArrowLeft'||e.key==='a')GT.brake=d;if(d&&(e.key==='ArrowUp'||e.key==='ArrowDown'||e.key==='w'||e.key==='s'))gtLaneToggle();if(d&&'123'.includes(e.key)){GT.pt=GT_PR[+e.key-1];gtCtisUi()}};addEventListener('keydown',GT.key);addEventListener('keyup',GT.key);
+  GT.key=e=>{const d=e.type==='keydown'?1:0;if(e.key==='ArrowRight'||e.key==='d')GT.gas=d;if(e.key==='ArrowLeft'||e.key==='a')GT.brake=d;if(d&&(e.key==='ArrowUp'||e.key==='ArrowDown'||e.key==='w'||e.key==='s'))gtLaneToggle();if(d&&'1234'.includes(e.key)){GT.pt=GT_PR[+e.key-1];gtCtisUi()}};addEventListener('keydown',GT.key);addEventListener('keyup',GT.key);
   gtReset();GT.last=performance.now();GT.raf=requestAnimationFrame(gtLoop)}
-function gtReset(){const y=gtG(-200);Object.assign(GT,{t:{x:-200,y:y-GWR-20,a:0,vx:0,vy:0,w:0},wh:GWL.map(lx=>({lx,x:0,y:0,rot:0,c:0,slip:0,L:16,r:GWR,flat:0,rev:0})),flat:null,terr:null,rk:null,sh:gtShInit(),eb:[],rb:[],rwsT:0,rwsLock:0,mf:0,wreck:null,fx2:[],shake:0,flash:0,trees:gtTrees(),hook:null,hand:false,siren:false,revMode:false,revT:0,force:50,pull:0,snapT:0,stuckT:0,fuel:2+Math.random()*.6,fuelCap:200,lph:0,fueling:0,fuelT:0,dry:0,p:4,pt:4,dmg:0,time:0,run:false,done:false,flipT:0,fx:[],mud:0,started:false,warnT:0,zm:1,cars:[],conv:null,laneT:0,lanePos:0,hwSeen:0});gtZones();gtCtisUi()}
+function gtReset(){const y=gtG(-200);Object.assign(GT,{t:{x:-200,y:y-GWR-20,a:0,vx:0,vy:0,w:0},wh:GWL.map(lx=>({lx,x:0,y:0,rot:0,c:0,slip:0,L:16,r:GWR,flat:0,rev:0})),flat:null,terr:null,rk:null,sh:gtShInit(),eb:[],rb:[],rwsT:0,rwsLock:0,mf:0,wreck:null,fx2:[],shake:0,flash:0,trees:gtTrees(),hook:null,hand:false,siren:false,revMode:false,revT:0,force:50,pull:0,snapT:0,stuckT:0,fuel:2+Math.random()*.6,fuelCap:200,lph:0,fueling:0,fuelT:0,dry:0,p:6.5,pt:6.5,dmg:0,time:0,run:false,done:false,flipT:0,fx:[],mud:0,started:false,warnT:0,zm:1,cars:[],conv:null,laneT:0,lanePos:0,hwSeen:0});gtZones();gtCtisUi()}
 function gtStart(){$('#gtStart').hidden=true;$('#gtOver').hidden=true;gtSirenSnd(false);gtReset();['#gtHand','#gtSiren'].forEach(id=>$(id)?.setAttribute('aria-pressed','false'));GT.run=true;GT.last=performance.now();gEngStart(GT);gtWinchUi();rockStart('terep');playCount('terep');toast('Rajt! Tartalékban vagy – tankolj a tábori töltőállomáson ⛽')}
 function gtCtisUi(){document.querySelectorAll('.gtctis [data-p]').forEach(b=>b.classList.toggle('on',GT_PR[+b.dataset.p]===GT.pt))}
-function gtPar(s){const S=GT_S[s]||GT_S.aszfalt;const k=Math.max(0,Math.min(2,(4-GT.p)/(4-1.2)*2)),i=Math.min(1,Math.floor(k)),f=k-i;return {mu:S.mu[i]+(S.mu[i+1]-S.mu[i])*f,crr:S.crr[i]+(S.crr[i+1]-S.crr[i])*f}}
+function gtPar(s){const S=GT_S[s]||GT_S.aszfalt;const k=Math.max(0,Math.min(2,gtLerp(GT_GK,GT.p,1))),i=Math.min(1,Math.floor(k)),f=k-i;return {mu:S.mu[i]+(S.mu[i+1]-S.mu[i])*f,crr:S.crr[i]+(S.crr[i+1]-S.crr[i])*f}}
 function gtPhys(dt){const T=GT.t,G=500,K=42,Cd=6.5,Lmax=20,Lmin=5;const ca=Math.cos(T.a),sa=Math.sin(T.a);const dx=-sa,dy=ca;let ax=0,ay=G,tq=0;const sp=T.vx*ca+T.vy*sa;
-  const kmh=Math.abs(sp)/20*3.6;let Fe=0;const rev=GT.revMode&&GT.brake&&!GT.hook&&!GT.hand;if(GT.gas&&!GT.hand)Fe=300*Math.min(1,90/Math.max(Math.abs(sp),1));if(rev)Fe=-160*Math.min(1,60/Math.max(Math.abs(sp),1));if(kmh>108&&sp>0)Fe=Math.min(Fe,0);if(GT.flat)Fe*=.38;if(GT.fuel<=0)Fe=0;
+  const kmh=Math.abs(sp)/20*3.6;let Fe=0;const rev=GT.revMode&&GT.brake&&!GT.hook&&!GT.hand;if(GT.gas&&!GT.hand)Fe=300*Math.min(1,90/Math.max(Math.abs(sp),1));if(rev)Fe=-160*Math.min(1,60/Math.max(Math.abs(sp),1));if(kmh>118&&sp>0)Fe=Math.min(Fe,0);if(GT.flat)Fe*=.38;if(GT.fuel<=0)Fe=0;
   let cont=0;for(const w of GT.wh){const lx=w.lx,ly=-14;const Ax=T.x+lx*ca-ly*sa,Ay=T.y+lx*sa+ly*ca;const gy=gtG(Ax+dx*w.L);const sC=(gy-w.r-Ay)/Math.max(.3,dy);
     if(sC<Lmax){const L=Math.max(Lmin-3,sC);w.L=Math.max(Lmin,L);const rx=Ax-T.x,ry=Ay-T.y;const vpx=T.vx-T.w*ry,vpy=T.vy+T.w*rx;const vn=vpx*dx+vpy*dy;let F=K*(Lmax-Math.max(Lmin,L))+Cd*vn;if(L<Lmin)F+=K*12*(Lmin-L);F=Math.max(0,F);
       ax-=dx*F;ay-=dy*F;tq+=rx*(-dy*F)-ry*(-dx*F);cont++;w.c=1;
@@ -280,9 +280,9 @@ function gtLoop(now){const cv=$('#gtCv');if(!cv)return;const c=cv.getContext('2d
 function gtGame(dt){const T=GT.t;
   if(!GT.started&&T.x>=0){GT.started=true;GT.time=0}if(GT.started&&!GT.done)GT.time+=dt;
   // CTIS
-  if(GT.p<GT.pt)GT.p=Math.min(GT.pt,GT.p+.42*dt);else if(GT.p>GT.pt)GT.p=Math.max(GT.pt,GT.p-.85*dt);
+  if(GT.p<GT.pt)GT.p=Math.min(GT.pt,GT.p+.7*dt);else if(GT.p>GT.pt)GT.p=Math.max(GT.pt,GT.p-1.4*dt);
   // abroncs sebességkorlát
-  const lim=GT.p>=3.4?110:GT.p>=2?60+(GT.p-2)/1.4*50:30+(GT.p-1.2)/.8*30;GT.warnTxt='';if(GT.kmh>lim+2){GT.dmg+=(GT.kmh-lim)*.55*dt;GT.warnTxt=`⚠ Max. ${Math.round(lim)} km/h ennyi nyomással!`;GT.warnT-=dt;if(GT.warnT<=0&&SOUND&&AC){GT.warnT=.5;const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.type='square';o.frequency.value=1400;g.gain.setValueAtTime(.04,t);g.gain.setValueAtTime(0,t+.12);o.connect(g).connect(MASTER);o.start(t);o.stop(t+.13)}}
+  const lim=gtLerp(GT_CT,GT.p,1);GT.warnTxt='';if(GT.kmh>lim+2){GT.dmg+=(GT.kmh-lim)*.4*dt;GT.warnTxt=`⚠ Max. ${Math.round(lim)} km/h ennyi nyomással!`;GT.warnT-=dt;if(GT.warnT<=0&&SOUND&&AC){GT.warnT=.5;const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.type='square';o.frequency.value=1400;g.gain.setValueAtTime(.04,t);g.gain.setValueAtTime(0,t+.12);o.connect(g).connect(MASTER);o.start(t);o.stop(t+.13)}}
   else{const stuck=GT.gas&&GT.kmh<3&&GT.wh.some(w=>w.slip>.3);if(stuck)GT.warnTxt='Kipörög! Engedd le a nyomást ↓';}
   gtZones();gtWinch(dt);gtFuel(dt);gtShoot(dt);gtHw(dt);
   {const sp=GT.t.vx*Math.cos(GT.t.a)+GT.t.vy*Math.sin(GT.t.a);if(GT.brake&&!GT.gas&&Math.abs(sp)<10&&!GT.hand){GT.revT+=dt;if(GT.revT>.35&&!GT.revMode){GT.revMode=true;if(SOUND&&AC){const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.frequency.value=1000;g.gain.setValueAtTime(.04,t);g.gain.setValueAtTime(0,t+.08);o.connect(g).connect(MASTER);o.start(t);o.stop(t+.1)}}}else if(!GT.brake){GT.revT=0;GT.revMode=false}else GT.revT=0;
@@ -307,12 +307,12 @@ function gtGame(dt){const T=GT.t;
   if(GT.fuel<=0&&GT.kmh<1&&!GT.done){GT.dry+=dt;if(GT.dry>2.5)return gtEnd(false,'Kifogyott az üzemanyag')}
   if(T.x>=GT.len&&!GT.done)return gtEnd(true)}
 function gtSirenSnd(on){if(!on){const S=GT.ssnd;GT.ssnd=null;if(S){try{S.g.gain.setTargetAtTime(0,AC.currentTime,.05);setTimeout(()=>{try{S.o.stop();S.l.stop()}catch(e){}},300)}catch(e){}}return}if(!SOUND||!ac()||GT.ssnd)return;const a=AC,o=a.createOscillator(),l=a.createOscillator(),lg=a.createGain(),g=a.createGain(),f=a.createBiquadFilter();o.type='sawtooth';o.frequency.value=900;l.type='sine';l.frequency.value=.45;lg.gain.value=330;l.connect(lg).connect(o.frequency);f.type='lowpass';f.frequency.value=2600;g.gain.value=0;o.connect(f).connect(g).connect(MASTER);o.start();l.start();g.gain.setTargetAtTime(.06,a.currentTime,.1);GT.ssnd={o,l,g}}
-const GT_ROPE=600;
+const GT_ROPE=500;
 function gtTrees(){return GT.bogs.map(b=>({k:'horgony',x:b.x1+200,r:20,prog:0,done:0,seed:Math.random()*9}))}
 function gtNearTree(){const wp=gtWinchPt();let best=null;for(const t of GT.trees){if(t.done)continue;const d=Math.hypot(t.x-6-wp.x,gtG(t.x)-t.r*1.1-wp.y);if(t.x>GT.t.x-40&&d<GT_ROPE+120&&(!best||d<best.d))best={t,d}}return best}
 function gtWinchPt(){const T=GT.t,c=Math.cos(T.a),s=Math.sin(T.a),lx=66,ly=-4;return {x:T.x+lx*c-ly*s,y:T.y+lx*s+ly*c}}
 function gtHookToggle(){if(!GT.run)return;if(GT.hook){GT.hook=null;GT.pull=0;toast('🪝 Csörlő leakasztva');gtWinchUi();return}
-  const n=gtNearTree();if(!n){toast('Nincs horgonypont a kötél hatósugarában (30 m)');return}if(n.d>GT_ROPE){toast('Túl messze – a csörlőkötél 30 m');return}if(GT.kmh>6){toast('Előbb állj meg');return}
+  const n=gtNearTree();if(!n){toast('Nincs horgonypont a kötél hatósugarában (25 m)');return}if(n.d>GT_ROPE){toast('Túl messze – a csörlőkötél 25 m');return}if(GT.kmh>6){toast('Előbb állj meg');return}
   GT.hook={t:n.t};GT.snapT=0;if(SOUND&&ac()){const t=AC.currentTime;snare(t,.2);sndPing()}toast('🪝 Felakasztva a horgonyfára – 70–80% erő, közben gáz');gtWinchUi()}
 function gtWinchUi(){const b=$('#gtHook');if(b){b.textContent=GT.hook?'Leakaszt':'Felakaszt';b.classList.toggle('on',!!GT.hook)}const f=$('#gtF');if(f)f.textContent=GT.force+'%';const fb=$('#gtFb');if(fb){fb.style.width=GT.force+'%';fb.style.background=GT.force>80?'#ff3b30':GT.force>60?'#f4c04e':'#2ecc40'}}
 function gtWinchSnd(on){if(!SOUND||!ac())return;if(on&&!GT.wsnd){const a=AC,o=a.createOscillator(),g=a.createGain(),f=a.createBiquadFilter();o.type='sawtooth';o.frequency.value=180;f.type='bandpass';f.frequency.value=700;f.Q.value=2;g.gain.value=0;o.connect(f).connect(g).connect(MASTER);o.start();g.gain.setTargetAtTime(.07,a.currentTime,.05);GT.wsnd={o,g}}
@@ -1359,7 +1359,7 @@ Object.assign(GB_R,{
  d:[['Hát ez nem volt meggyőző… 😅','Aha, értem… vagyis nem igazán.'],['Majdnem! De azért menő.','Oké, ez félig érthető volt.'],['Jaaaa, ez király! Ezt posztolom! 🤩','Hűha, tényleg? Ezt megmutatom a haverjaimnak!']],
  w:[['Hát fiam, mi régen ezt másképp csináltuk, de ez így nem jó.','Ezt kellett volna tudnod, fiam.'],['Majdnem, de a részleteken múlik a dolog.','Nagyjából, de a gyakorlatban ez kevés.'],['Na látod, így kell ezt! Látszik, hogy gyakorlatból tudod.','Jól mondod, fiam. Ezt így tanítják.']]});
 const GB_X2=[
-{t:'p',q:'Jó napot, a Honvédségi Híradótól jövök! Mire való a Gidrán, és milyen feladatokat láthat el?',k:[['szallit','katona','szemely'],['felderit','tuzfelderit','megfigyel'],['parancsnok','vezetesi','hirado','rado','osszekot'],['konfig','r20','r30','r40','r50']],need:2,a:'A Gidrán páncélozott, kerekes harcjármű, többféle konfigurációban: felderítő (R20, R30), tűzfelderítő, szakaszparancsnoki, előretolt megfigyelő (R30/R40), parancsnoki vezetési pont és rádióállomás, összekötő tiszti (R50) változatban is. 7 ülése van.'},
+{t:'p',q:'Jó napot, a Honvédségi Híradótól jövök! Mire való a Gidrán, és milyen feladatokat láthat el?',k:[['szallit','katona','szemely','harcjarmu'],['felderit','tuzfelderit','megfigyel'],['parancsnok','vezetesi','hirado','rado','osszekot'],['konfig','r20','r30','r40','r50']],need:2,a:'A Gidrán páncélozott, kerekes harcjármű, többféle konfigurációban: R20 (felderítő, akusztikus tűzfelderítő), R30 (felderítő, tűzfelderítő, szakaszparancsnoki, előretolt megfigyelő), R40 (összekötő tiszti, zászlóalji parancsnoki vezetési pont, rádióállomás, híradó szakaszparancsnoki) és R50 (parancsnoki vezetési pont, rádióállomás). 7 ülése van.'},
 {t:'p',q:'Kamera forog! Hányan ülnek a járműben, és kik? Mindenkit név szerint, azaz beosztás szerint kérek!',k:[['7','het'],['vezeto','jarmuvezeto'],['parancsnok','rajparancsnok'],['iranyzo'],['szemelyzet']],need:2,a:'7 ülés van: harcjármű vezető, harcjármű parancsnok, rajparancsnok, irányzó és a személyzet.'},
 {t:'p',q:'Mit mondana a nézőknek: mi védi a Gidránban ülőket, ha baj van?',k:[['stanag','4569'],['akna','tnt'],['ov','biztonsagiov','5pontos'],['robban','elnyel'],['tuzolt','porolto','co2'],['pancel','vedelm','lovedek']],need:2,a:'STANAG 4569 szerinti páncélvédelem (körkörösen 2+, kerekek alatt 4a, páncéltest alatt 2b aknavédelem), 5 pontos övek, robbanáselnyelő anyag minden ülés alatt, és automata tűzoltó rendszer.'},
 {t:'p',q:'Egy gyors, számokban gazdag válasz kellene: mekkora a tömege, milyen gyors, és mennyire mély vízben mehet át?',k:[['152','15200','15tonna'],['120'],['09','0,9','kilenc','90cm']],need:2,a:'Tömeg: 15 200 kg (harci tömeg 16 800 kg), sebesség közúton max. 120 km/h, gázlóképesség 0,9 m.'},
@@ -1456,6 +1456,566 @@ function gbDeco(c,p,t,k,by,bw,hy,hr,ay){
  if(p.food){c.font='9px sans-serif';c.textAlign='center';c.fillText(p.food,bw/2+8,ay+(Math.sin(t*3+p.ph)>.35?-6:7))}
  if(p.splat){const s=Math.min(1,p.splat),dr=Math.min(1,(p.splatT||0)/1.4),C=p.sc||['#f2efe0','#ffc61a'];c.fillStyle=C[0];c.beginPath();c.ellipse(.5,hy-hr*.3,hr*1.05,hr*.85,0,0,7);c.fill();c.fillStyle=C[1];c.beginPath();c.ellipse(1,hy-hr*.2,hr*.55,hr*.5,0,0,7);c.fill();c.fillStyle=C[0];c.fillRect(-hr*.5,hy+hr*.2,1.6,3+dr*7);c.fillRect(hr*.2,hy+hr*.3,1.6,2+dr*9);c.fillRect(-1,by+1,1.7,dr*8)}
 }
+/* ===== Gidrán 3D: 360°-ban forgatható, szétszedhető (robbantott) modell – saját mini 3D-motorral ===== */
+const EX={run:false,ry:.75,rx:.34,zm:1,t:0,tt:0,sel:-1,auto:true,ghost:false,hid:new Set(),faces:[],drag:null,ptr:new Map()};
+/* geometria */
+function exBox(cx,cy,cz,sx,sy,sz,o){o=o||{};const hx=sx/2,hy=sy/2,hz=sz/2,fz=o.fz==null?1:o.fz,fd=o.fd||0,V=[];
+ for(let i=0;i<8;i++){const x=i&1?1:-1,y=i&2?1:-1,z=i&4?1:-1;let X=x*hx,Y=y*hy,Z=z*hz;if(x>0){Z*=fz;if(y>0)Y-=fd}V.push([cx+X,cy+Y,cz+Z])}
+ const F=[[1,3,7,5],[0,2,6,4],[2,3,7,6],[0,1,5,4],[4,5,7,6],[0,2,3,1]];return {f:F.map(f=>f.map(i=>V[i])),c:[cx,cy,cz],col:o.col}}
+function exCyl(cx,cy,cz,r,len,ax,o){o=o||{};const n=o.n||14,r2=o.r2==null?r:o.r2;const P=(t,k,rr)=>{const a=k/n*Math.PI*2,u=Math.cos(a)*rr,v=Math.sin(a)*rr;return ax==='x'?[cx+t,cy+u,cz+v]:ax==='y'?[cx+u,cy+t,cz+v]:[cx+u,cy+v,cz+t]};
+ const A=[],B=[];for(let k=0;k<n;k++){A.push(P(-len/2,k,r));B.push(P(len/2,k,r2))}const f=[];for(let k=0;k<n;k++){const j=(k+1)%n;f.push([A[k],A[j],B[j],B[k]])}f.push(A.slice(),B.slice());return {f,c:[cx,cy,cz],col:o.col,cyl:1}}
+/* alkatrészek */
+const EXC={arm:'#56653a',arm2:'#667747',dark:'#2c3320',steel:'#8b929c',eng:'#b5502a',fuel:'#d9a21b',elec:'#2f6bb5',air:'#b8bcc4',tire:'#1c1c1c',rim:'#9aa0a8',fire:'#c0392b',glass:'#7fb2cf',lamp:'#ece6a8',cool:'#4aa38d',seat:'#3a3f33'};
+/* alkatrészek – koordináta: X előre, Y fel, Z jobbra (méter). Méretek a tananyag ábráiról:
+   hossz 5567 (felülnézet 5889/6032), tengelytáv 3255, nyomtáv 2109, szélesség 2492 / tükrökkel 2702, magasság 2500 (RWS-sel 3345), hasmagasság 473 */
+const XF=2.95,AF=1.80,AR=-1.455,TZ=1.0545,WR=.59;
+function exProf(pts,a0,a1,ax,o){o=o||{};const V0=[],V1=[];for(const q of pts){if(ax==='z'){V0.push([q[0],q[1],a0]);V1.push([q[0],q[1],a1])}else if(ax==='y'){V0.push([q[0],a0,q[1]]);V1.push([q[0],a1,q[1]])}else{V0.push([a0,q[1],q[0]]);V1.push([a1,q[1],q[0]])}}
+ const n=pts.length,f=[V0.slice().reverse(),V1.slice()];for(let i=0;i<n;i++){const j=(i+1)%n;f.push([V0[i],V0[j],V1[j],V1[i]])}
+ let cx=0,cy=0,cz=0;for(const v of V0.concat(V1)){cx+=v[0];cy+=v[1];cz+=v[2]}const m=2*n;return {f,c:[cx/m,cy/m,cz/m],col:o.col}}
+function exWheel(x,z){const s=Math.sign(z);return [exCyl(x,WR,z,WR,.395,'z',{col:EXC.tire,n:20}),exCyl(x,WR,z+s*.004,.36,.4,'z',{col:EXC.rim,n:14}),exCyl(x,WR,z+s*.2,.13,.05,'z',{col:'#6c727b',n:10})]}
+function exDoor(x,s,extra){const zc=s*1.04;return [exBox(x,1.82,zc,.66,1.06,.1,{col:EXC.arm2}),exBox(x,2.12,s*1.1,.42,.3,.03,{col:EXC.glass}),exBox(x+.18,1.62,s*1.1,.22,.045,.04,{col:'#20241a'}),exBox(x-.18,1.5,s*1.1,.2,.04,.04,{col:'#1b6bb0'}),exCyl(x+.02,1.8,s*1.1,.045,.04,'z',{col:'#111',n:8})].concat(extra||[])}
+function exSeat(x,z,col){return [exBox(x,.78,z,.5,.1,.5,{col}),exBox(x-.27,1.18,z,.1,.7,.46,{col}),exBox(x-.27,1.62,z,.12,.2,.28,{col}),exCyl(x,.55,z-.17,.025,.3,'y',{col:'#555',n:6}),exCyl(x,.55,z+.17,.025,.3,'y',{col:'#555',n:6}),exBox(x-.2,1.2,z,.03,.65,.07,{col:'#2a2a2a'})]}
+const EXP=[
+/* ===== PÁNCÉL ===== */
+{n:'Haspáncél (V-alakú padlópáncél)',g:'Páncél',col:EXC.dark,ex:[0,-2.3,0],ghost:1,
+ p:[exProf([[-.95,.64],[-.5,.47],[.5,.47],[.95,.64],[.95,.72],[-.95,.72]],-1.14,1.1,'x'),exBox(.5,.53,.97,1.6,.07,.05,{col:'#9aa0a8'})],
+ d:'A jármű alját védő páncél (a tananyag alulnézeti ábráján pirossal jelölt rész). Aknavédelem: STANAG 4569 2b szint, a páncéltest alatt 6 kg TNT vagy azzal egyenértékű töltet ellen; a kerekek alatt 4a szint, 10 kg TNT ellen. A jobb oldalon található a vonórúd. A padló a robbanás lökéshullámát elnyelő kialakítású, ezért menet közben minimális vibráció érezhető.'},
+{n:'Páncéltest (küzdőtér)',g:'Páncél',col:EXC.arm,ex:[0,0,0],ghost:1,
+ p:[exProf([[-2.62,1.15],[1.3,1.15],[1.3,1.85],[.88,2.4],[-2.62,2.4]],-1,1,'z'),exBox(-.7,.86,0,3.9,.6,1.74,{col:'#4a5733'})],
+ d:'A harcjármű fő védelmi szerkezete. Körkörös védelem: STANAG 4569 2+ szint (7,62×39 mm API ellen). Méretek az ábra szerint: hossz 5567 mm (a felülnézeti ábrán 5889 és 6032 mm), tengelytáv 3255 mm, szélesség-adatok 2109 / 2492 / 2702 mm, magasság 2500 mm (RWS-sel 3345 mm), hasmagasság 473 mm. Tömeg: 15 200 kg, harci tömeg (fegyverzettel együtt) 16 800 kg. A páncéltest átalakítása tilos!'},
+{n:'Tető (páncél)',g:'Páncél',col:EXC.arm2,ex:[0,2.0,0],ghost:1,p:[exBox(-.87,2.45,0,3.5,.1,2.0)],
+ d:'A tetőn találhatók: a levegőszűrő szívócsonk fedele (a motorháztetőn), a vészkijárat búvónyílása, a por- és gázelszívó ventilátor kifújó nyílása, a pótkerékemelő felfogatási pontja, az első és hátsó keresőlámpa, az APU és a SARP II fegyverplatform.'},
+{n:'Emelőfülek (szállításhoz)',g:'Páncél',col:'#c98a1a',ex:[0,2.6,0],p:[exBox(.7,2.56,-.9,.16,.12,.1),exBox(.7,2.56,.9,.16,.12,.1),exBox(-2.4,2.56,-.9,.16,.12,.1),exBox(-2.4,2.56,.9,.16,.12,.1)],
+ d:'A szállításhoz használt emelőfülek (a bal oldalnézeti ábrán „Szállításhoz használt emelőfülek”). Daruzáskor és rögzítéskor csak ezeket használd!'},
+{n:'Vészkijárat búvónyílása',g:'Páncél',col:'#6d7e4a',ex:[-.4,3.0,0],p:[exBox(-.55,2.53,.1,.8,.06,.78)],
+ d:'A tetőn lévő vészkijárat fedele; a felülnézeti ábrán „Vészkijárat búvónyílása”, a szerelőnyílások között „Vészkijárat fedele”. Vészhelyzetben ezen át hagyható el a jármű.'},
+{n:'Motorház (motorháztető és előlap)',g:'Páncél',col:EXC.arm,ex:[1.0,1.5,0],ghost:1,
+ p:[exProf([[1.3,1.15],[2.88,1.15],[2.93,1.7],[2.88,1.86],[1.3,1.86]],-.95,.95,'z'),exBox(2.0,.86,0,1.4,.6,1.5,{col:'#4a5733'}),exBox(2.945,1.4,0,.02,.6,1.3,{col:'#1c2016'})],
+ d:'A motortér páncélburkolata. A motor karbantartó nyílásait csak speciális négyszögkulccsal lehet kinyitni. Az első lapon a hűtőrács van. A motorteret 2 db 3,4 literes, 2,9 kg-os CO₂ oltópalack védi.'},
+{n:'Motor szerelőnyílásai',g:'Páncél',col:'#b8382a',ex:[1.0,2.5,0],p:[exBox(2.15,1.89,-.42,.85,.04,.32),exBox(2.15,1.89,0,.85,.04,.32),exBox(2.15,1.89,.42,.85,.04,.32)],
+ d:'A motorház tetején lévő karbantartó nyílások fedelei (a tananyag ábráján pirossal). A gépjárművön található egyes fedeleket és karbantartó nyílásokat csak speciális kulccsal (négyszögkulcs) lehet kinyitni.'},
+{n:'Szélvédő',g:'Páncél',col:EXC.glass,ex:[1.2,1.3,0],glass:1,ghost:1,p:[exProf([[1.31,1.86],[.89,2.4],[.87,2.38],[1.29,1.84]],-.93,.93,'z')],
+ d:'A harcjármű minden ablaka repesz- és lövedékálló: EN 1063 BR7 szint, 7,62×51 mm NATO lövedék ellen. Az ablakok belső felülete polikarbonáttal bevont, ezért TILOS lemosni bármilyen folyékony vegyszerrel (oldhatja); csak nem vegyszeres, nedves ruhával tisztítsd. A belső felületek jégtelenítése kizárólag ablakfűtéssel történhet!'},
+{n:'Ajtó – bal első',g:'Páncél',col:EXC.arm2,ex:[.5,.3,-1.9],ghost:1,p:exDoor(.4,-1),
+ d:'A gépjárművön 4 oldalsó és 1 hátsó ajtó található. Az oldalajtó részei: ajtónyitó fogantyú, tüzelőnyílás, aknazár karja (az aknazárak javítják az ajtók zárási biztonságát) és ajtórögzítő mechanizmus. Az ablak BR7 védelmű.'},
+{n:'Ajtó – bal hátsó',g:'Páncél',col:EXC.arm2,ex:[-.5,.3,-1.9],ghost:1,p:exDoor(-.3,-1),
+ d:'Bal hátsó oldalajtó: ajtónyitó fogantyú, tüzelőnyílás, aknazár karja és ajtórögzítő mechanizmus. Az ajtó nyitva állapotát jelzés mutatja. A zsanérokat és az ajtózárakat a karbantartási előírás szerint kell zsírozni.'},
+{n:'Ajtó – jobb első',g:'Páncél',col:EXC.arm2,ex:[.5,.3,1.9],ghost:1,p:exDoor(.4,1),
+ d:'Jobb első oldalajtó. Kívülről az ajtónyitó fogantyúval nyitható, belül az aknazár karja és az ajtórögzítő mechanizmus szolgál a zárásra és rögzítésre; tüzelőnyílással rendelkezik.'},
+{n:'Ajtó – jobb hátsó',g:'Páncél',col:EXC.arm2,ex:[-.5,.3,1.9],ghost:1,p:exDoor(-.3,1),
+ d:'Jobb hátsó oldalajtó. Ezen az oldalon található a jobb oldali üzemanyagtartály fedele, a motor és fülkefűtő rendszer kipufogócsöve, a belső kommunikációs rendszer, valamint az ethernet és akkumulátortöltő csatlakozók fedele.'},
+{n:'Hátsó ajtó',g:'Páncél',col:EXC.arm2,ex:[-2.2,.3,0],ghost:1,
+ p:[exBox(-2.67,1.78,.05,.1,1.1,.95,{col:EXC.arm2}),exBox(-2.73,2.1,-.28,.03,.18,.04,{col:'#9ad'}),exBox(-2.74,1.4,-.3,.04,.04,.28,{col:'#222'}),exCyl(-2.74,1.62,-.05,.05,.04,'x',{col:'#111',n:8}),exBox(-2.73,1.15,.2,.03,.05,.06,{col:'#1b6bb0'})],
+ d:'A hátsó ajtó manuálisan és távirányítással is használható. Részei: hátsó figyelő ablak, tüzelőnyílás, aknazár karja, ajtónyitó fogantyú, központizár manuális kiiktató mechanizmusa. Nyitás-zárás gombjai: a vezető műszerfalán (külön a külső nyitást felülíró gomb és a kinyitó-bezáró gomb), a jármű külső oldalán (automatikus ajtónyitás gombjai) és a küzdőtérben (kinyitó-bezáró gombok + vészleállító gomb).'},
+{n:'Első lökhárító, vonószemek, lánc',g:'Páncél',col:'#3b4230',ex:[1.6,-.2,0],p:[exBox(2.92,1.0,0,.07,.2,2.0),exCyl(2.93,.78,-.45,.05,.2,'x',{col:'#c98a1a',n:8}),exCyl(2.93,.78,.45,.05,.2,'x',{col:'#c98a1a',n:8}),exBox(2.95,.62,0,.03,.22,.04,{col:'#999'})],
+ d:'Az első lökhárító vonószemekkel és vonólánccal. A jármű vontatását csak a kijelölt vonószemeknél szabad végezni.'},
+{n:'Hűtőradiátort védő lemez',g:'Páncél',col:'#b8382a',ex:[1.6,-.8,0],p:[exBox(2.86,.62,0,.1,.16,1.1),exBox(2.9,.56,-.25,.03,.06,.14,{col:'#0f5aa8'}),exBox(2.9,.56,.25,.03,.06,.14,{col:'#0f5aa8'})],
+ d:'A hűtőradiátort védő lemez (a tananyag ábráján pirossal) és a csörlő szabadonfutó takarólemeze a jármű elején, a lökhárító alatt. Védi a hűtőt és a csörlőt a talajtól és a terep akadályaitól.'},
+{n:'Külső tükrök',g:'Páncél',col:'#2b2f27',ex:[0,.8,0],p:[exCyl(.95,1.8,-1.15,.02,.3,'z',{col:'#444',n:6}),exBox(.95,1.85,-1.331,.1,.36,.04,{col:'#2b2f27'}),exCyl(.95,1.8,1.15,.02,.3,'z',{col:'#444',n:6}),exBox(.95,1.85,1.331,.1,.36,.04,{col:'#2b2f27'})],
+ d:'Elektromosan állítható visszapillantó tükrök; vezérlőjük a vezetőt segítő panelen van. A tükrökkel mért szélesség 2702 mm.'},
+/* ===== FEGYVERZET ===== */
+{n:'SARP II fegyverplatform (RWS)',g:'Fegyverzet',col:EXC.dark,ex:[.4,2.5,0],
+ p:[exCyl(.34,2.56,0,.3,.12,'y'),exBox(.34,2.88,0,.78,.5,.62,{col:'#3a4226'}),exCyl(1.25,2.93,.07,.045,1.02,'x',{col:'#111'}),exBox(.12,2.88,-.4,.3,.24,.2,{col:'#556040'}),exBox(.55,3.19,-.1,.2,.14,.2,{col:'#222'}),exCyl(.05,3.095,.25,.02,.5,'y',{col:'#aaa',n:6})],
+ d:'Távirányított fegyverplatform a tetőn; a tüzelés a küzdőtérből történik, a jármű teljes magassága vele 3345 mm. Lövés-engedélyezés a kapcsológombok panelén. Lőszer: 7,62×51 mm és 12,7×99 mm. Mozgatás előtt győződj meg róla, hogy senki nem tartózkodik a lőszertér és a forgó rész közelében!'},
+/* ===== VILÁGÍTÁS, KAMERÁK ===== */
+{n:'Mellső keresőlámpa',g:'Világítás',col:EXC.lamp,ex:[.8,2.2,.8],p:[exCyl(.78,2.6,.88,.12,.16,'y',{col:EXC.lamp}),exCyl(.78,2.52,.88,.06,.1,'y',{col:'#444'})],
+ d:'Mozgatható keresőlámpa (projektor) a tető jobb első sarkán (felülnézet). Vezérlőpanelje a kiegészítő műszerfalon: LED – OFF – IR választás, ki-be kapcsoló, kiindulási helyzetbe állítás.'},
+{n:'Hátsó keresőlámpa',g:'Világítás',col:EXC.lamp,ex:[-.8,2.2,-.8],p:[exCyl(-2.22,2.6,-.74,.12,.16,'y',{col:EXC.lamp}),exCyl(-2.22,2.52,-.74,.06,.1,'y',{col:'#444'})],
+ d:'A hátsó keresőlámpa a tető bal hátsó részén van (felülnézet).'},
+{n:'Fényszórók és hátsó lámpák',g:'Világítás',col:EXC.lamp,ex:[0,.6,0],p:[exBox(2.93,1.55,-.82,.06,.2,.3,{col:EXC.lamp}),exBox(2.93,1.55,.82,.06,.2,.3,{col:EXC.lamp}),exBox(-2.66,1.1,-.92,.06,.2,.12,{col:'#b3262a'}),exBox(-2.66,1.1,.92,.06,.2,.12,{col:'#b3262a'}),exBox(-2.68,.95,.0,.05,.1,.16,{col:'#e7c34a'})],
+ d:'Elöl tompított/távolsági fény, ködlámpa és infravörös lámpa; hátul fék/helyzetjelző, irányjelző, ködlámpa, tolatólámpa, álcázott féklámpa és a konvojkövető fény (a hátsó nézeten „Konvojkövető fény”).'},
+{n:'Kamerák (hátsó, éjjellátó, 360°)',g:'Elektromos',col:'#222',ex:[-1.3,.6,0],p:[exBox(-2.66,1.35,.05,.06,.12,.12),exCyl(-3.04,1.72,.56,.05,.06,'x',{col:'#333',n:8}),exBox(-2.58,2.55,-.2,.14,.1,.16)],
+ d:'Hátsó éjjellátó kamera (a tetőszélen), hátsó kamera és a 360°-os panoráma rendszer kamerája (a pótkerék közepénél). A képet a vezető műszerfali kijelzője mutatja.'},
+/* ===== MOTOR ===== */
+{n:'Hűtőrendszer (tömbösített hűtő, ventilátor)',g:'Motor',col:EXC.cool,ex:[2.0,.4,0],
+ p:[exBox(2.76,1.2,0,.26,.95,1.3,{col:EXC.cool}),exBox(2.7,1.7,0,.2,.15,1.2,{col:'#c9a85a'}),exCyl(2.52,1.2,0,.36,.08,'x',{col:'#333',n:12}),exBox(2.76,.7,0,.25,.16,1.25,{col:'#9a3a3a'})],
+ d:'A tömbösített hűtő egy egységben hűti: turbólevegő hűtő, légkondicionáló rendszer hűtője, kompresszor levegőjének hűtő csőkígyója, üzemanyaghűtő, hidraulikarendszer hűtője, nyomatékváltó hűtője és az osztómű hűtője. A ventilátort hidraulikus motor hajtja. A hűtőrendszer megakadályozza, hogy a motor, a nyomatékváltó, az osztómű stb. üzem közben túlmelegedjen. Forró motornál a hűtősapkát ne nyisd ki!'},
+{n:'Kiegyenlítő tartály',g:'Motor',col:'#4f8f7a',ex:[1.2,2.0,-.6],p:[exBox(2.5,1.7,-.45,.3,.28,.28,{col:'#4f8f7a'})],
+ d:'A hűtőrendszer kiegyenlítő tartálya a hűtőegység mellett. A hűtőfolyadék szintjét hideg motornál, a tartályon ellenőrizd.'},
+{n:'Motor (Cummins ISL9E3)',g:'Motor',col:EXC.eng,ex:[1.0,1.0,0],
+ p:[exBox(1.85,.98,0,1.05,.6,.55,{col:EXC.eng}),exBox(1.85,1.38,0,1.0,.2,.5,{col:'#8a3a1e'}),exCyl(1.75,1.58,-.22,.1,.5,'x',{col:'#6a2f1a',n:10}),exCyl(2.25,1.35,.38,.14,.28,'y',{col:'#777'}),exBox(1.85,.62,0,.9,.14,.45,{col:'#3a3f46'})],
+ d:'4 ütemű, közvetlen befecskendezésű, folyadékhűtésű, soros 6 hengeres common-rail turbódízel; hengerűrtartalom 8,9 liter; max. teljesítmény 276 kW (375 LE) @ 2100 1/min; max. nyomaték 1550 Nm @ 1100–1400 1/min. Motorolaj: SAE 15W-40, 22,5 l (−5 °C alatt 5W-30), csere 15 000 km vagy 6 hónap.'},
+{n:'Levegőszűrő',g:'Motor',col:EXC.steel,ex:[.6,2.3,.9],p:[exBox(1.55,1.45,.45,.38,.28,.3,{col:'#6f7782'}),exBox(1.6,1.89,.45,.5,.05,.34,{col:'#4c5360'})],
+ d:'A levegőszűrő tisztítja meg a levegőt a motor megfelelő működéséhez. A szívócsonk fedele a motorháztetőn, a jobb elülső részen van (felülnézeti ábra: „Levegőszűrő szívócsonk fedele”). Eltömődését a műszerfal légszűrő-figyelmeztetője jelzi.'},
+{n:'Kipufogó',g:'Motor',col:'#51474a',ex:[-.5,-.6,2.0],p:[exCyl(1.0,.86,.8,.06,2.2,'x',{col:'#51474a',n:10}),exCyl(-.5,.9,.82,.14,.7,'x',{col:'#6b6266',n:12}),exCyl(-1.0,.9,.9,.045,.35,'z',{col:'#2a2427',n:8})],
+ d:'A kipufogórendszer biztosítja, hogy az üzemanyag-levegő keverék égése során keletkező kipufogógázok szabályozott módon kerüljenek a környezetbe. A motor és a fülkefűtő kipufogócsöve a jobb oldalon vezet ki (jobb oldalnézet: „Motor és fülkefűtő rendszer kipufogócsö”).'},
+{n:'Generátor (28 V, 220 A)',g:'Elektromos',col:'#b8382a',ex:[1.4,-1.0,.8],p:[exCyl(2.2,.72,.38,.1,.24,'x',{col:'#b8382a',n:10})],
+ d:'A motorra szerelt generátor: 28 V feszültség, 220 A áramerősség, tömege 9,8 kg. A motor járása közben tölti az akkumulátorokat és látja el a fogyasztókat.'},
+/* ===== ERŐÁTVITEL ===== */
+{n:'Automata nyomatékváltó (Allison 3200 SP)',g:'Erőátvitel',col:'#c9a47a',ex:[.4,1.0,0],p:[exCyl(.88,.9,0,.27,.95,'x',{col:'#c9a47a',n:12}),exBox(.6,.62,0,.5,.12,.34,{col:'#8a6a4a'})],
+ d:'Automata nyomatékváltó, 6 előre + 1 hátra fokozat. Feladata: a motorból érkező forgatónyomatékot továbbítja az osztóműhöz. A műszerfali H–L–N jelző az osztómű állását mutatja; a nyomatékváltó hibáját és olajhőmérséklet-magasságát a vezetőt segítő panel figyelmeztető jelzései mutatják.'},
+{n:'Osztómű',g:'Erőátvitel',col:EXC.cool,ex:[-.4,.5,0],p:[exBox(0,.82,0,.62,.46,.55,{col:'#2f8f4a'}),exBox(0,.62,.3,.4,.12,.1,{col:'#27763d'})],
+ d:'Osztómű (a tananyag ábráján zöld). „H” állás: max. 120 km/h, max. 1550 Nm; „N” üres; „L” (terep): max. 50 km/h, max. 3720 Nm. Hosszanti, zárható differenciálműve van. A kapcsolást pneumatikus rendszer végzi; átkapcsolás előtt állj meg, a váltó N-ben legyen.'},
+{n:'Kardántengely – első',g:'Erőátvitel',col:'#444a52',ex:[.9,-1.0,0],p:[exCyl(1.05,.62,.12,.06,1.5,'x',{col:'#444a52',n:10}),exBox(.32,.62,.12,.1,.12,.12,{col:'#666'}),exBox(1.78,.62,.12,.1,.12,.12,{col:'#666'})],
+ d:'A kardántengelyek feladata: a motor forgatónyomatékát továbbítják az osztóműből a kereszt-differenciálművekbe. Az első kardántengely az osztóműtől az első differenciálműhöz vezet; a kardánkereszteket előírás szerint zsírozni kell.'},
+{n:'Kardántengely – hátsó',g:'Erőátvitel',col:'#444a52',ex:[-.9,-1.0,0],p:[exCyl(-.88,.62,-.12,.06,1.15,'x',{col:'#444a52',n:10}),exBox(-.3,.62,-.12,.1,.12,.12,{col:'#666'}),exBox(-1.43,.62,-.12,.1,.12,.12,{col:'#666'})],
+ d:'A hátsó kardántengely az osztóműtől a hátsó kereszt-differenciálműhöz továbbítja a nyomatékot (a felülnézeti ábrán a két kardántengely piros).'},
+{n:'Első kereszt-differenciálmű',g:'Erőátvitel',col:'#9a7236',ex:[1.3,-1.1,0],p:[exBox(AF,.59,0,.36,.34,.5,{col:'#b83a2a'})],
+ d:'A differenciálművek, amelyeket a kardántengelyek hajtanak, 90°-kal elfordítják a hajtás irányát és továbbítják a forgatónyomatékot a kerékagyak felé. A mellső differenciálzár akkor használható, ha a hossz- és a hátsó zár már nem elég nehéz terepen. Zárt állapotban a kormánykerék legyen egyenes helyzetben!'},
+{n:'Hátsó kereszt-differenciálmű',g:'Erőátvitel',col:'#9a7236',ex:[-1.3,-1.1,0],p:[exBox(AR,.59,0,.36,.34,.5,{col:'#b83a2a'})],
+ d:'Hátsó kereszt-differenciálmű. A hátsó zár a hátsó tengely differenciálművét zárja, amikor a hossz-differenciálzár már nem elég. Figyelem: ha a hátsó és az első kereszt-differenciálzár aktív, a kormánykeréknek egyenes helyzetben kell lennie, különben a hajtásrendszer megsérül!'},
+{n:'Féltengelyek – első',g:'Erőátvitel',col:'#7d8590',ex:[1.0,-1.6,0],p:[exCyl(AF,.59,-.5,.045,.6,'z',{col:'#7d8590',n:8}),exCyl(AF,.59,.5,.045,.6,'z',{col:'#7d8590',n:8})],
+ d:'A féltengelyek a differenciálművekből érkező forgatónyomatékot továbbítják a kerékagyak felé (első tengely).'},
+{n:'Féltengelyek – hátsó',g:'Erőátvitel',col:'#7d8590',ex:[-1.0,-1.6,0],p:[exCyl(AR,.59,-.5,.045,.6,'z',{col:'#7d8590',n:8}),exCyl(AR,.59,.5,.045,.6,'z',{col:'#7d8590',n:8})],
+ d:'A hátsó tengely féltengelyei: a differenciálművekből érkező forgatónyomatékot továbbítják a kerékagyak felé.'},
+/* ===== FUTÓMŰ ===== */
+{n:'Kerék – bal első',g:'Futómű',col:EXC.tire,ex:[.8,0,-1.6],p:exWheel(AF,-TZ),
+ d:'395/85 R20 abroncs (átmérő kb. 1,18 m), Run-Flat gyűrűvel: defekttel legfeljebb 50 km-t és legfeljebb 30 km/h-val. A CTIS állítja az abroncsnyomást: közút 6,5 bar (120 km/h), nehéz terep 4,5 bar (65 km/h), sár/homok/hó 2,5 bar (20 km/h), vészhelyzet 1,8 bar (10 km/h).'},
+{n:'Kerék – jobb első',g:'Futómű',col:EXC.tire,ex:[.8,0,1.6],p:exWheel(AF,TZ),
+ d:'Jobb első kerék. Kerékcserénél: ékeld ki az egyik kereket, húzd be a kéziféket, vedd le a kerékagy védőburkolatát, lazítsd meg a kerékcsavarokat, majd emeld fel a jármű hidraulikus emelővel.'},
+{n:'Kerék – bal hátsó',g:'Futómű',col:EXC.tire,ex:[-.8,0,-1.6],p:exWheel(AR,-TZ),
+ d:'Bal hátsó kerék. A teljesen független felfüggesztés miatt a jármű nagy mozgékonyságú és jó úttartású. A nyomtáv 2109 mm, a tengelytáv 3255 mm.'},
+{n:'Kerék – jobb hátsó',g:'Futómű',col:EXC.tire,ex:[-.8,0,1.6],p:exWheel(AR,TZ),
+ d:'Jobb hátsó kerék. Terepképesség: gázlóképesség 0,9 m, lépcsőmászás 0,5 m, árokáthidalás 1,1 m, emelkedő 60%, oldaldőlés 30%.'},
+{n:'Féktárcsák és kerékagyak',g:'Futómű',col:'#b9bec6',ex:[0,-1.7,0],
+ p:[exCyl(AF,WR,-.8,.29,.05,'z',{col:'#b9bec6',n:16}),exCyl(AF,WR,.8,.29,.05,'z',{col:'#b9bec6',n:16}),exCyl(AR,WR,-.8,.29,.05,'z',{col:'#b9bec6',n:16}),exCyl(AR,WR,.8,.29,.05,'z',{col:'#b9bec6',n:16}),exBox(AF+.3,WR,-.8,.1,.16,.08,{col:'#b8382a'}),exBox(AF+.3,WR,.8,.1,.16,.08,{col:'#b8382a'}),exBox(AR-.3,WR,-.8,.1,.16,.08,{col:'#b8382a'}),exBox(AR-.3,WR,.8,.1,.16,.08,{col:'#b8382a'})],
+ d:'Kerékagyak és tárcsafékek (a tananyagban „Kerékagyak” és „Fékek”). A fékkör légtartályai: S1 – hátsó, S2 – mellső, P – kézifék. A fékbetétet kopáshatárnál (5,1 mm) kell cserélni.'},
+{n:'Felfüggesztés – első',g:'Futómű',col:'#c0482c',ex:[1.6,-.3,0],
+ p:[exCyl(AF,.95,-.62,.1,.5,'y',{col:'#c0482c',n:10}),exCyl(AF,.95,.62,.1,.5,'y',{col:'#c0482c',n:10}),exCyl(AF,.95,-.62,.04,.62,'y',{col:'#222',n:8}),exCyl(AF,.95,.62,.04,.62,'y',{col:'#222',n:8}),exBox(AF,.42,-.5,.5,.07,.75,{col:'#4b5058'}),exBox(AF,.42,.5,.5,.07,.75,{col:'#4b5058'})],
+ d:'Felfüggesztés feladata: elnyeli az útról érkező ütéseket és rázkódást, csökkenti a vibrációt, így javítja az utazási kényelmet. Teljesen független kerékfelfüggesztés, nagy mozgékonyság és jó úttartás. Csavarrugók, a lengéscsillapítók a csavarrugók belsejében vannak. A rugók és lengéscsillapítók a különböző út- és menetviszony között maximális kapcsolatot biztosítanak a kerekeknek az úttal.'},
+{n:'Felfüggesztés – hátsó',g:'Futómű',col:'#c0482c',ex:[-1.6,-.3,0],
+ p:[exCyl(AR,.95,-.62,.1,.5,'y',{col:'#c0482c',n:10}),exCyl(AR,.95,.62,.1,.5,'y',{col:'#c0482c',n:10}),exCyl(AR,.95,-.62,.04,.62,'y',{col:'#222',n:8}),exCyl(AR,.95,.62,.04,.62,'y',{col:'#222',n:8}),exBox(AR,.42,-.5,.5,.07,.75,{col:'#4b5058'}),exBox(AR,.42,.5,.5,.07,.75,{col:'#4b5058'})],
+ d:'A hátsó tengely független felfüggesztése csavarrugókkal és a rugók belsejében lévő lengéscsillapítókkal (az ábrán pirossal jelölve).'},
+{n:'Kormánymű (kormánykerék, szervokormány)',g:'Futómű',col:'#d98a2a',ex:[.5,-.7,-.8],
+ p:[exCyl(.72,1.45,-.5,.19,.04,'x',{col:'#2b2b2b',n:14}),exCyl(.95,1.33,-.5,.03,.5,'x',{col:'#555',n:6}),exBox(1.45,.75,-.5,.25,.25,.3,{col:'#d98a2a'}),exCyl(1.5,.6,0,.03,1.5,'z',{col:'#d98a2a',n:6})],
+ d:'A kormánymű (a tananyag ábráján narancssárga): kormánykerék, kormányoszlop, kormányszerkezet és kormányrudak. A szervokormányt hidraulika működteti. A kormánykeréknek egyenes helyzetben kell lennie, amikor a hátsó és az első kereszt-differenciálzár aktív.'},
+/* ===== ÜZEMANYAG ===== */
+{n:'Üzemanyagtartályok (2×100 l)',g:'Üzemanyag',col:EXC.fuel,ex:[0,-1.3,0],
+ p:[exBox(-.6,.86,-.7,.9,.38,.34,{col:EXC.fuel}),exBox(-.6,.86,.7,.9,.38,.34,{col:EXC.fuel}),exCyl(-.28,1.08,-.78,.03,.14,'y',{col:'#999',n:6}),exCyl(-.28,1.08,.78,.03,.14,'y',{col:'#999',n:6})],
+ d:'Üzemanyagtartályok: összesen 2×100 liter gázolaj; a motor és a segédáramforrás (APU) ellátására. Az üzemanyagrendszer része még az üzemanyagszűrő, az automatikus vízleválasztó szűrő (leválasztja az üzemanyagban lévő vizet) és különféle érzékelők. A tartályok zárófedele az ajtók alatt, a két oldalon található.'},
+/* ===== PNEUMATIKA ===== */
+{n:'Levegőtartályok (S1, S2, P, A)',g:'Pneumatika',col:EXC.air,ex:[0,-1.7,0],
+ p:[exCyl(1.0,.82,.52,.12,.62,'z',{col:'#3f7fc0'}),exCyl(.7,.82,.52,.12,.62,'z',{col:'#c0392b'}),exCyl(.4,.82,.52,.12,.62,'z',{col:'#3f9a4c'}),exCyl(.1,.82,.52,.12,.62,'z',{col:'#e08a2a'})],
+ d:'A tartályok és minimális nyomásuk: S1 – hátsó fékkör, S2 – mellső fékkör, P – kézifék, A – CTIS, terepváltó és differenciálzár kapcsolók, gurítószelep. Mind 6 bar! FIGYELEM: ne működtesd a gépjárművet, amíg nincs minimum 6 bar levegőnyomás az S1, S2, P és A tartályokban!'},
+{n:'Kompresszor és légszárító',g:'Pneumatika',col:'#8a8f96',ex:[1.0,-.9,-1.0],p:[exBox(1.55,.82,-.38,.26,.2,.26,{col:'#b5502a'}),exCyl(1.35,.82,-.7,.1,.4,'y',{col:'#222'}),exBox(1.2,.9,-.55,.14,.12,.14,{col:'#444'})],
+ d:'A pneumatikus rendszer: kompresszor → kompresszor levegőjét hűtő csőkígyó → légszárító szűrőpatron → 4-utas védőszelep → levegőtartályok (S1, S2, P, A). A kompresszor a motorra van szerelve.'},
+/* ===== HIDRAULIKA ===== */
+{n:'Hidraulika (tartály, szivattyú, vezetékek)',g:'Hidraulika',col:'#d8b45a',ex:[1.5,.6,-1.0],
+ p:[exBox(1.55,1.4,-.42,.3,.3,.2,{col:'#d8b45a'}),exCyl(2.3,.95,-.35,.07,.2,'x',{col:'#555',n:8}),exCyl(2.0,.78,-.3,.02,1.4,'x',{col:'#a33',n:6})],
+ d:'A hidraulika rendszer látja el: szervokormány, motor hűtőventilátor-hajtás, csörlőberendezés. Alacsony hidraulikaolaj-szintnél a műszerfalon figyelmeztetés jelenik meg; vízszintes talajon ellenőrizd a tartály szintjét.'},
+/* ===== MENTÉS ===== */
+{n:'Önmentő csörlő',g:'Mentés',col:'#c98a1a',ex:[2.0,-.4,0],p:[exCyl(2.64,.62,0,.16,.62,'z',{col:'#c98a1a',n:14}),exBox(2.64,.6,-.46,.3,.28,.3,{col:'#444'}),exBox(2.64,.45,0,.22,.05,.8,{col:'#555'})],
+ d:'Hidraulikus csörlő a jármű elején. Kötélhossz 25 m, kötélátmérő 13 mm, vonóerő 70 kN. A kuplung (szabadonfutó) kioldható. A csörlőt a hidraulikarendszer táplálja, vezérlése a kapcsolópanelen és a kézi távvezérlővel történik.'},
+{n:'Pótkerék',g:'Mentés',col:EXC.tire,ex:[-1.9,1.0,1.1],p:[exCyl(-2.82,1.72,.56,.59,.4,'x',{col:EXC.tire,n:20}),exCyl(-2.84,1.72,.56,.36,.4,'x',{col:EXC.rim,n:14})],
+ d:'Pótkerék a hátsó ajtón, a jobb oldalon (hátulnézet). A pótkerékemelővel távolítható el és szerelhető fel; az emelő felfogatási pontja a tetőn van. A pótkerék 395/85 R20 méretű.'},
+{n:'Pótkerékemelő felfogatási pont',g:'Mentés',col:'#c98a1a',ex:[-1.2,2.6,.3],p:[exCyl(-1.98,2.56,.3,.08,.1,'y',{col:'#c98a1a',n:8})],
+ d:'A tetőn lévő felfogatási pont a pótkerékemelő csörlő rögzítéséhez (felülnézet: „Pótkerékemelő felfogatási pont”). A pótkerék leemelése és felszerelése ezzel történik.'},
+{n:'Szerszámosláda és sáncszerszámok',g:'Mentés',col:'#7a6a3a',ex:[-.5,-.4,-1.7],p:[exBox(-.3,1.0,-.93,.46,.24,.1,{col:'#7a6a3a'}),exBox(-2.68,1.2,-.7,.05,.04,.7,{col:'#999'}),exBox(-2.68,1.28,-.7,.05,.04,.6,{col:'#777'})],
+ d:'A bal oldalon, az ajtók alatt van a szerszámosláda rekesz (bal oldalnézet: „Szerszámosláda rekesz”); a jármű hátulján, a bal oldalon a sáncszerszámok.'},
+/* ===== ELEKTROMOS ===== */
+{n:'Akkumulátorok (2×12 V, 120 Ah)',g:'Elektromos',col:EXC.elec,ex:[-1.0,.6,-1.4],p:[exBox(-1.8,1.45,-.8,.36,.26,.22,{col:EXC.elec}),exBox(-1.8,1.45,-.55,.36,.26,.22,{col:EXC.elec})],
+ d:'Harcjárműbe szerelt indító akkumulátorok száma: 2 db; névleges feszültség 12 V; névleges kapacitás 120 Ah; tömeg 40 kg (egyenként); típus: gondozásmentes (AGM); működési hőmérséklet −40 °C / +80 °C. Fedelük a bal oldalon van („Fedélzeti akkumulátorok”), külső indítási csatlakozó: bal oldalon.'},
+{n:'Inverter (24/230 V)',g:'Elektromos',col:'#2fa89a',ex:[-1.6,.4,-.9],p:[exBox(-2.35,1.9,-.82,.22,.5,.34,{col:'#2fa89a'})],
+ d:'Inverter egység főbb jellemzői: névleges feszültség 24/230 V, töltőáram max. 60 A, kimeneti frekvencia 50/60 Hz, töltési funkciók: teljesen automata. Az ethernet és akkumulátortöltő csatlakozók fedele a jobb oldalon van.'},
+{n:'Áramelosztó egység (BMS)',g:'Elektromos',col:'#9aa0a8',ex:[-1.6,1.2,-.9],p:[exBox(-2.35,1.45,-.82,.22,.46,.38,{col:'#9aa0a8'}),exCyl(-2.46,1.45,-.82,.05,.04,'x',{col:'#222',n:8})],
+ d:'Áramelosztó egység (BMS): kapcsolók, biztosítékok és kimeneti csatlakozók, hálózati bemenettel. Az áramtalanítót csak induláskor kapcsold be; külső áramforrás csatlakoztatása előtt olvasd el az eljárást.'},
+{n:'APU (fedélzeti áramforrás)',g:'Elektromos',col:EXC.elec,ex:[-2.3,0,-.9],p:[exBox(-2.85,1.55,-.72,.45,1.2,.5,{col:EXC.elec}),exBox(-3.09,1.55,-.72,.03,1.0,.4,{col:'#2a2f3a'})],
+ d:'APU (fedélzeti áramforrás aggregátor) a hátsó, bal oldalon. 2 hengeres, 4 ütemű, folyadékhűtésű dízel, 479 cm³, 8,1 kW @ 3600 f/p, olajmennyiség 1,1 l. Indítás előtt állítsd le a főmotort; indítása a kormánytól balra lévő gombbal történik. A főmotor leállított állapotában is táplálja a rendszereket.'},
+/* ===== BELSŐ TÉR ===== */
+{n:'Műszerfal (kijelzők, kapcsolók)',g:'Belső tér',col:'#2b2f35',ex:[.6,.7,-.4],
+ p:[exBox(1.1,1.5,0,.3,.42,1.86,{col:'#59626e'}),exBox(.94,1.68,-.5,.06,.22,.5,{col:'#0a0a0a'}),exBox(.94,1.52,.02,.05,.2,.4,{col:'#2f6bb5'}),exBox(.94,1.4,.45,.05,.1,.3,{col:'#222'}),exBox(.94,1.5,-.9,.05,.4,.18,{col:'#3a4f8f'})],
+ d:'A vezetői műszerfal: műszerfal (fordulatszám 0–2600 1/min, sebesség 0–140 km/h, olajnyomás, hűtőfolyadék-hőmérséklet 50–130 °C, nyomatékváltó hőmérséklet, üzemanyagszint), középen színes kijelző (hátsó ajtó nyitva, karbantartás ideje, megtett km, üzemóra, akkufeszültség, fék- és felfüggesztés-nyomások). Kiegészítő panel: kézifékkar, szivargyújtó csatlakozó aljzatok (12 V és 24 V), tükörvezérlő; nyomatékváltó hiba / olajhőmérséklet, indítási várakozás (előmelegítés), ABS hiba, légtartály nyomás figyelmeztetők. A CTIS vezérlőpanelen: négy üzemmód, Run Flat és ON/OFF kapcsoló.'},
+{n:'Ülés – vezető (piros)',g:'Belső tér',col:'#b3262a',ex:[.5,.9,-.8],p:exSeat(.45,-.5,'#b3262a'),
+ d:'Harcjármű vezető ülése: 5 pontos biztonsági öv; állítások: előre-hátra, fel-le, ülés lehajtása, háttámla ledöntése. A karok: biztonsági öv, előre–hátra mozgatás karja (kék), fel–le állítás karja (piros), ülés lehajtó kar (zöld), háttámla ledöntő kar (narancs). Az ülés alatt robbanáselnyelő anyag található.'},
+{n:'Ülés – parancsnok (kék)',g:'Belső tér',col:'#2f6bb5',ex:[.5,.9,.8],p:exSeat(.45,.5,'#2f6bb5'),
+ d:'Harcjármű parancsnok ülése: 5 pontos biztonsági öv; állítások: előre-hátra, fel-le, ülés lehajtása, háttámla ledöntése (azonos a vezető ülésével).'},
+{n:'Ülés – rajparancsnok (narancs)',g:'Belső tér',col:'#e08a2a',ex:[-.3,.9,1.0],p:exSeat(-.55,.62,'#e08a2a'),
+ d:'Rajparancsnok ülése: háttámla ledöntése és ülés lehajtása állítható. 5 pontos biztonsági öv, az ülés alatt robbanáselnyelő anyag.'},
+{n:'Ülés – irányzó (zöld)',g:'Belső tér',col:'#3f9a4c',ex:[-.3,1.4,0],p:exSeat(-.55,.02,'#3f9a4c'),
+ d:'Irányzó ülése (a SARP II kezelőhelye): háttámla ledöntése és ülés lehajtása állítható. 5 pontos biztonsági öv, az ülés alatt robbanáselnyelő anyag.'},
+{n:'Ülések – személyzet (3 db)',g:'Belső tér',col:'#8c9096',ex:[-1.0,.9,0],p:exSeat(-1.25,-.62,'#8c9096').concat(exSeat(-1.85,-.62,'#8c9096'),exSeat(-1.55,.62,'#8c9096')),
+ d:'A személyzet ülései (3 db): háttámla ledöntése és ülés lehajtása állítható. Összesen 7 ülés van (vezető, parancsnok, rajparancsnok, irányzó, 3 fő személyzet), mindegyik 5 pontos biztonsági övvel; minden ülés alatt robbanáselnyelő anyag van.'},
+{n:'ABV (CBRN) szűrőegység',g:'Belső tér',col:'#6f8f9b',ex:[-.6,1.3,0],p:[exBox(-1.5,2.2,0,.6,.28,.5,{col:'#6f8f9b'})],
+ d:'Atom-, biológiai és vegyivédelmi (CBRN) szűrőegység: HEPA és aktívszén szűrőbetét, ventilátor, ABV túlnyomás szelep (bal oldalnézet: „ABV túlnyomás szelep”). Túlnyomást hoz létre a küzdőtérben.'},
+/* ===== BIZTONSÁG ===== */
+{n:'Tűzoltó rendszer (palackok)',g:'Biztonság',col:EXC.fire,ex:[-.4,1.0,0],p:[exCyl(-2.4,1.0,.3,.14,.8,'y',{col:EXC.fire}),exCyl(2.0,.55,.35,.1,.6,'y',{col:EXC.fire}),exCyl(2.2,.55,-.35,.1,.6,'y',{col:EXC.fire})],
+ d:'Automata tűzoltó rendszer optikai érzékelőkkel. Küzdőtér: 1 db 4,5 l, 3,25 kg porral oltó palack; motortér: 2 db 3,4 l, 2,9 kg CO₂ palack.'}
+];
+/* ===== Hajtáslánc – részletes, a tananyag „Erőátvitel” ábrája szerint (szín: hűtő piros, motor kék, váltó bézs, osztómű zöld, kormánymű narancs) ===== */
+function exSwap(name,np){const i=EXP.findIndex(p=>p.n===name);if(i<0){console.warn('exSwap',name);return}EXP[i]=Object.assign({},EXP[i],np)}
+function exRot(cx,cy,a,hl,hw,off){/* forgatott téglalap (síkban), középpont cx,cy; a: szög; hl: fél hossz, hw: fél szélesség */const c=Math.cos(a),s=Math.sin(a);const P=(u,v)=>[cx+u*c-v*s,cy+u*s+v*c];return [P(-hl,-hw),P(hl,-hw),P(hl,hw),P(-hl,hw)]}
+function exBar(x0,y0,x1,y1,w,z,zw,col){/* ferde rúd az x–y síkban */const dx=x1-x0,dy=y1-y0,L=Math.hypot(dx,dy),a=Math.atan2(dy,dx);return exProf(exRot((x0+x1)/2,(y0+y1)/2,a,L/2,w/2),z-zw/2,z+zw/2,'z',{col})}
+function exWheel2(x,z,spare){/* nagy terepgumi: futófelületi bordák, felni, agykupak, kerékcsavarok */
+ const s=Math.sign(z),y=spare?z:WR;const R=.59,out=[];
+ out.push(exCyl(x,WR,z,.572,.395,'z',{col:'#1a1a1c',n:24}));
+ for(let row=0;row<2;row++){const z0=z+(row?.01:-.2)*1,z1=z+(row?.2:-.01);const lo=Math.min(z0,z1),hi=Math.max(z0,z1);
+  for(let k=0;k<14;k++){const a=(k+row*.5)/14*Math.PI*2;out.push(exProf(exRot(x+(R-.012)*Math.cos(a),WR+(R-.012)*Math.sin(a),a,.02,.085),lo,hi,'z',{col:'#242427'}))}}
+ for(const q of[-1,1]){out.push(exCyl(x,WR,z+q*.214,.36,.034,'z',{col:'#aab0b8',n:28}));out.push(exCyl(x,WR,z+q*.236,.27,.026,'z',{col:'#8b929b',n:26}))}
+ out.push(exCyl(x,WR,z+s*.258,.13,.03,'z',{col:'#d3d7dc',n:16}));
+ for(let k=0;k<8;k++){const a=k/8*Math.PI*2;out.push(exBox(x+.185*Math.cos(a),WR+.185*Math.sin(a),z+s*.262,.034,.034,.03,{col:'#4a4f57'}))}
+ return out}
+function exFan(cx,cy,cz,R,n,col){const o=[exCyl(cx,cy,cz,.07,.07,'x',{col:'#1b1d21',n:12})];for(let k=0;k<n;k++){const a=k/n*Math.PI*2+.3;const ex=exRot(cz+Math.cos(a)*(R*.55),cy+Math.sin(a)*(R*.55),a+.35,R*.45,.055);o.push(exProf(ex,cx-.025,cx+.025,'x',{col}))}return o}
+/* Hűtőradiátorok */
+(function(){const p=[exBox(2.8,1.2,0,.2,.88,1.22,{col:'#a42d28'}),exBox(2.78,1.72,0,.26,.2,1.24,{col:'#c9a45e'}),exBox(2.78,.7,0,.26,.1,1.22,{col:'#8c2420'}),exBox(2.78,1.2,-.64,.26,.98,.08,{col:'#b8332e'}),exBox(2.78,1.2,.64,.26,.98,.08,{col:'#b8332e'}),exBox(2.52,1.2,0,.1,1.0,1.26,{col:'#2f353c'}),exBox(2.46,1.45,.5,.08,.18,.25,{col:'#5b8a78'})];
+ for(let i=0;i<13;i++)p.push(exBox(2.91,.82+i*.063,0,.02,.02,1.14,{col:'#7c1f1b'}));
+ for(let i=0;i<5;i++)p.push(exBox(2.915,.95+i*.11,.0,.012,.02,1.0,{col:'#d0d4d8'}));
+ const fan=exFan(2.46,1.2,0,.45,8,'#2c3036');fan.push(exCyl(2.4,1.2,0,.07,.12,'x',{col:'#e7a50b',n:12}));
+ exSwap('Hűtőrendszer (tömbösített hűtő, ventilátor)',{n:'Hűtőradiátorok (tömbösített hűtő, ventilátor)',col:'#a42d28',p,pt:1});
+ const at=EXP.findIndex(q=>q.n==='Hűtőradiátorok (tömbösített hűtő, ventilátor)');
+ EXP.splice(at+1,0,{n:'Ventilátor (hűtőventilátor)',g:'Motor',col:'#2c3036',ex:[2.0,.4,0],p:fan,pt:1,d:'A hűtőventilátor a motorral együtt dolgozik: átszívja a levegőt a hűtőradiátoron, így viszi el a hőt a hűtőfolyadékból. Működő motornál a modellben forog (a fordulatszámmal arányosan).'})})();
+exSwap('Kiegyenlítő tartály',{p:[exBox(2.5,1.7,-.42,.3,.28,.28,{col:'#4f8f7a'}),exCyl(2.5,1.88,-.42,.05,.05,'y',{col:'#222',n:8})],pt:1});
+/* Motor – Cummins ISL (kék, a tananyag színe) */
+(function(){const X=1.85,Y=1.12,b='#3d6db0',h='#35609b',d='#2a4f84';const p=[exBox(X,Y-.05,0,1.05,.5,.6,{col:b}),exBox(X,Y+.27,0,1.02,.18,.54,{col:h}),exBox(X,Y+.4,0,.98,.08,.42,{col:d}),exBox(X+.06,Y-.38,0,.85,.14,.5,{col:'#292c33'}),
+ exBox(X+.55,Y-.06,0,.07,.46,.52,{col:'#2f5890'}),exBox(X-.55,Y-.06,0,.07,.5,.58,{col:h}),exCyl(X+.63,Y-.08,0,.14,.09,'x',{col:'#20232a',n:18}),exCyl(X+.63,Y-.08,0,.05,.11,'x',{col:'#555b66',n:10}),
+ exBox(X,Y+.1,-.4,.92,.17,.15,{col:'#6f83a0'}),exCyl(X-.1,Y+.18,.37,.065,.95,'x',{col:'#5a4a45',n:12}),exCyl(X+.18,Y+.25,.5,.13,.17,'z',{col:'#8794a3',n:16}),exCyl(X+.18,Y+.25,.4,.09,.12,'z',{col:'#6a5750',n:14}),
+ exCyl(X-.38,Y-.2,-.37,.07,.3,'x',{col:'#464a52',n:12}),exCyl(X+.08,Y+.22,-.48,.055,.28,'y',{col:'#c9a32a',n:12}),exCyl(X-.25,Y+.22,-.48,.05,.24,'y',{col:'#2f7fb0',n:12}),exBox(X+.4,Y+.1,-.24,.2,.12,.14,{col:'#2b2e35'})];
+ for(let k=0;k<6;k++){p.push(exBox(X-.4+k*.16,Y+.46,0,.07,.025,.07,{col:'#c3ccd8'}));p.push(exBox(X-.4+k*.16,Y+.13,-.49,.05,.1,.04,{col:'#8da0b8'}));p.push(exBox(X-.4+k*.16,Y+.18,.4,.05,.07,.06,{col:'#6b5a52'}))}
+ exSwap('Motor (Cummins ISL9E3)',{col:b,p,pt:1,ex:[1.1,1.0,0]})})();
+exSwap('Generátor (28 V, 220 A)',{p:[exCyl(2.2,.78,-.33,.095,.22,'x',{col:'#b8382a',n:14}),exCyl(2.34,.78,-.33,.05,.05,'x',{col:'#222',n:10})],pt:1});
+/* Nyomatékváltó – Allison 3200 SP (bézs) */
+(function(){const c='#d8b98c',p=[exCyl(1.24,1.0,0,.33,.22,'x',{col:'#cfae80',n:26}),exCyl(.82,1.0,0,.27,.74,'x',{col:c,n:26}),exCyl(.46,1.0,0,.2,.14,'x',{col:'#c3a173',n:20}),exBox(.85,.7,0,.5,.08,.34,{col:'#b9996b'}),exBox(.9,.95,-.3,.5,.2,.1,{col:'#c9a97c'}),exBox(.62,1.06,.26,.2,.12,.1,{col:'#a98a5e'})];
+ for(let k=0;k<6;k++)p.push(exCyl(.55+k*.12,1.0,0,.285,.03,'x',{col:'#c0a070',n:26}));
+ for(let k=0;k<10;k++){const a=k/10*Math.PI*2;p.push(exBox(1.36,1.0+.3*Math.sin(a),.3*Math.cos(a),.02,.04,.04,{col:'#8c7a5a'}))}
+ exSwap('Automata nyomatékváltó (Allison 3200 SP)',{col:c,p,pt:1})})();
+/* Osztómű – GHM MTC60 (zöld, oldalra eltolva) */
+(function(){const g='#2f9a4a',p=[exBox(0,.78,.18,.62,.42,.5,{col:g}),exBox(-.02,1.01,.18,.5,.06,.4,{col:'#26853d'}),exCyl(.38,.62,.18,.085,.07,'x',{col:'#5a5f67',n:14}),exCyl(-.38,.62,.18,.085,.07,'x',{col:'#5a5f67',n:14}),exCyl(.36,.92,.06,.1,.08,'x',{col:'#6e737b',n:14}),exCyl(0,.98,.46,.05,.18,'z',{col:'#c7ccd2',n:10}),exBox(0,.62,.46,.4,.1,.04,{col:'#21703a'})];
+ for(let k=0;k<5;k++)p.push(exBox(-.22+k*.11,.8,.45,.04,.3,.04,{col:'#27853f'}));
+ exSwap('Osztómű',{col:g,p,pt:1})})();
+/* Kardántengelyek + kardánkeresztek */
+function exShaft(x0,x1,z,y){const L=Math.abs(x1-x0),c=(x0+x1)/2;return [exCyl(c,y,z,.055,L,'x',{col:'#4a5059',n:12}),exCyl(c,y,z,.07,.18,'x',{col:'#383d45',n:12}),exBox(x0,y,z,.09,.11,.11,{col:'#6a707a'}),exBox(x1,y,z,.09,.11,.11,{col:'#6a707a'}),exCyl(x0,y,z,.075,.04,'x',{col:'#8a909a',n:12}),exCyl(x1,y,z,.075,.04,'x',{col:'#8a909a',n:12})]}
+exSwap('Kardántengely – első',{p:exShaft(.5,1.6,.18,.6),pt:1,col:'#4a5059'});
+exSwap('Kardántengely – hátsó',{p:exShaft(-1.25,-.42,.18,.6),pt:1,col:'#4a5059'});
+/* Differenciálművek */
+function exDiffP(x,fr){const n=fr?-1:1,c='#8d949e';const p=[exBox(x,.59,0,.4,.36,.52,{col:c}),exCyl(x,.59,0,.19,.3,'x',{col:'#7b828c',n:20}),exCyl(x-n*.2,.59,0,.15,.06,'x',{col:'#a2a8b0',n:20}),exCyl(x+n*.26,.6,.18,.075,.14,'x',{col:'#6a7079',n:14}),exBox(x,.4,0,.3,.06,.3,{col:'#5d646d'}),exCyl(x,.8,.0,.03,.1,'y',{col:'#333',n:8})];
+ for(let k=0;k<8;k++){const a=k/8*Math.PI*2;p.push(exBox(x-n*.235,.59+.13*Math.sin(a),.13*Math.cos(a),.02,.03,.03,{col:'#444'}))}
+ for(const s of[-1,1])p.push(exCyl(x,.59,s*.34,.075,.2,'z',{col:'#6a7079',n:12}));return p}
+exSwap('Első kereszt-differenciálmű',{p:exDiffP(AF,true),pt:1,col:'#8d949e'});
+exSwap('Hátsó kereszt-differenciálmű',{p:exDiffP(AR,false),pt:1,col:'#8d949e'});
+/* Féltengelyek */
+function exHalf(x){const o=[];for(const s of[-1,1]){o.push(exCyl(x,.59,s*.56,.04,.5,'z',{col:'#9aa1ab',n:10}));o.push(exCyl(x,.59,s*.3,.085,.1,'z',{col:'#555b64',n:12}));o.push(exCyl(x,.59,s*.82,.09,.1,'z',{col:'#555b64',n:12}))}return o}
+exSwap('Féltengelyek – első',{p:exHalf(AF),pt:1});exSwap('Féltengelyek – hátsó',{p:exHalf(AR),pt:1});
+/* Felfüggesztés: háromszög keresztlengőkarok, csavarrugó gyűrűkkel, lengéscsillapító */
+function exSusp(x){const o=[];for(const s of[-1,1]){o.push(exProf([[x,s*.84],[x+.3,s*.3],[x-.3,s*.3]].map(q=>[q[0],q[1]]),.4,.46,'y',{col:'#4b5058'}));o.push(exProf([[x,s*.82],[x+.22,s*.38],[x-.22,s*.38]],.84,.88,'y',{col:'#565c64'}));
+  o.push(exCyl(x+.02,.8,s*.6,.035,.76,'y',{col:'#d9dde2',n:10}));o.push(exCyl(x+.02,.74,s*.6,.095,.5,'y',{col:'#c0482c',n:16}));
+  for(let k=0;k<6;k++)o.push(exCyl(x+.02,.52+k*.09,s*.6,.108,.022,'y',{col:'#e0654a',n:16}));
+  o.push(exBox(x+.02,1.06,s*.6,.18,.04,.18,{col:'#30343a'}));o.push(exBox(x,.59,s*.86,.1,.44,.1,{col:'#767d87'}))}return o}
+exSwap('Felfüggesztés – első',{p:exSusp(AF),pt:1,col:'#c0482c'});exSwap('Felfüggesztés – hátsó',{p:exSusp(AR),pt:1,col:'#c0482c'});
+/* Kerekek */
+exSwap('Kerék – bal első',{p:exWheel2(AF,-TZ),pt:1});exSwap('Kerék – jobb első',{p:exWheel2(AF,TZ),pt:1});
+exSwap('Kerék – bal hátsó',{p:exWheel2(AR,-TZ),pt:1});exSwap('Kerék – jobb hátsó',{p:exWheel2(AR,TZ),pt:1});
+/* Féktárcsák és kerékagyak */
+(function(){const p=[];for(const x of[AF,AR])for(const s of[-1,1]){p.push(exCyl(x,WR,s*.76,.3,.04,'z',{col:'#b3b8c0',n:26}));p.push(exCyl(x,WR,s*.8,.28,.04,'z',{col:'#9ea4ac',n:26}));p.push(exCyl(x,WR,s*.83,.14,.1,'z',{col:'#c7ccd2',n:16}));p.push(exBox(x+.3,WR+.0,s*.78,.11,.17,.1,{col:'#b8382a'}))}exSwap('Féktárcsák és kerékagyak',{p,pt:1})})();
+/* Kormánymű: kormánykerék (gyűrű, küllők), oszlop, kormányszerkezet, kormányrudak */
+(function(){const o='#d9822b',p=[];const cz=-.5,cy=1.45,cx=.72;
+ for(let k=0;k<20;k++){const a=k/20*Math.PI*2;p.push(exBox(cx,cy+.2*Math.sin(a),cz+.2*Math.cos(a),.035,.07,.07,{col:'#26282c'}))}
+ p.push(exBox(cx,cy,cz,.035,.03,.4,{col:'#2c2f34'}));p.push(exBox(cx,cy-.1,cz,.035,.2,.03,{col:'#2c2f34'}));p.push(exCyl(cx+.02,cy,cz,.06,.05,'x',{col:'#33363c',n:12}));
+ p.push(exBar(cx+.06,cy-.04,1.34,.92,.045,cz,.05,'#b9bec6'));p.push(exBox(1.36,.9,cz,.1,.1,.1,{col:'#33363c'}));
+ p.push(exBox(1.44,.78,cz,.26,.28,.3,{col:o}),exCyl(1.44,.58,cz,.04,.2,'y',{col:'#e29a49',n:10}),exBox(1.5,.54,cz+.2,.05,.05,.38,{col:'#e29a49'}));
+ p.push(exCyl(1.55,.54,0,.028,1.6,'z',{col:o,n:10}),exBox(1.55,.54,-.8,.1,.06,.08,{col:'#e29a49'}),exBox(1.55,.54,.8,.1,.06,.08,{col:'#e29a49'}));
+ exSwap('Kormánymű (kormánykerék, szervokormány)',{p,col:o,pt:1})})();
+exSwap('Kipufogó',{pt:1});exSwap('Hidraulika (tartály, szivattyú, vezetékek)',{pt:1});exSwap('Kompresszor és légszárító',{pt:1});
+/* Pótkerék: ugyanolyan terepgumi, hátul álló tengellyel (x tengely) */
+(function(){const p=[];const cx=-2.82,cz=.56,cy=1.72,R=.59;/* a rácsos futófelület a pótkeréken: egyszerűsített bordák */
+ p.push(exCyl(cx,cy,cz,.572,.4,'x',{col:'#1a1a1c',n:30}),exCyl(cx-.214,cy,cz,.36,.034,'x',{col:'#aab0b8',n:28}),exCyl(cx-.236,cy,cz,.27,.026,'x',{col:'#8b929b',n:24}),exCyl(cx-.258,cy,cz,.13,.03,'x',{col:'#d3d7dc',n:16}));
+ for(let k=0;k<8;k++){const a=k/8*Math.PI*2;p.push(exBox(cx-.262,cy+.185*Math.sin(a),cz+.185*Math.cos(a),.03,.034,.034,{col:'#4a4f57'}))}
+ for(let k=0;k<16;k++){const a=k/16*Math.PI*2;p.push(exBox(cx,cy+(R-.008)*Math.sin(a),cz+(R-.008)*Math.cos(a),.38,.07,.07,{col:'#242427'}))}
+ exSwap('Pótkerék',{p})})();
+
+/* ===== Külső megjelenés: élszerű páncél, sárvédők, lépcsők, terepszín-foltok, hűtőrács ===== */
+(function(){
+ const CM=['#3a4424','#6b5a3a','#242a1b','#5f6e3a'];/* zöld–barna–fekete terepszín */
+ function patches(list,mk){return list.map((q,i)=>mk(q,CM[i%4]))}
+ /* oldal foltok: [x,y,hossz,magasság] */
+ const sideP=[[.9,1.3,.9,.34],[-.5,1.9,.8,.4],[-1.7,1.35,1.0,.45],[-2.2,2.15,.6,.3],[-1.2,2.25,.8,.22],[.5,1.2,.5,.2]];
+ const hull=[exProf([[-.9,1.15],[.9,1.15],[1.0,1.35],[1.0,2.05],[.9,2.4],[-.9,2.4],[-1.0,2.05],[-1.0,1.35]],-2.62,.88,'x'),
+  exProf([[.88,1.15],[1.3,1.15],[1.3,1.85],[.88,2.4]],-.9,.9,'z'),exBox(-.7,.86,0,3.9,.6,1.74,{col:'#4a5733'})];
+ for(const s of[-1,1])patches(sideP,(q,c)=>exBox(q[0],q[1],s*1.007,q[2],q[3],.012,{col:c})).forEach(b=>hull.push(b));
+ /* szegecssor a lemezek mentén */
+ for(const s of[-1,1])for(let k=0;k<14;k++)hull.push(exBox(-2.5+k*.27,1.2,s*1.006,.03,.03,.02,{col:'#2e3622'}));
+ exSwap('Páncéltest (küzdőtér)',{p:hull});
+ const roof=[exBox(-.87,2.45,0,3.5,.1,1.8)];
+ [[-.3,2.0,.9,.7],[-1.5,2.2,1.0,.6],[-2.1,1.9,.5,.5]].forEach((q,i)=>0);
+ [[-.2,-.4,1.0,.6],[-1.5,.35,1.1,.7],[-2.2,-.5,.6,.6]].forEach((q,i)=>roof.push(exBox(q[0],2.506,q[1],q[2],.012,q[3],{col:CM[(i+1)%4]})));
+ exSwap('Tető (páncél)',{p:roof});
+ /* motorház: terepszín + hűtőrács */
+ const mh=[exProf([[1.3,1.15],[2.88,1.15],[2.93,1.7],[2.88,1.86],[1.3,1.86]],-.95,.95,'z'),exBox(2.0,.86,0,1.4,.6,1.5,{col:'#4a5733'}),exBox(2.945,1.4,0,.02,.6,1.3,{col:'#10130c'})];
+ for(let i=0;i<10;i++)mh.push(exBox(2.952,1.12+i*.058,0,.016,.03,1.18,{col:'#262b1d'}));
+ [[1.8,-.5,.8,.5],[2.4,.4,.6,.6]].forEach((q,i)=>mh.push(exBox(q[0],1.868,q[1],q[2],.012,q[3],{col:CM[i+1]})));
+ exSwap('Motorház (motorháztető és előlap)',{p:mh});
+ /* ajtók: terepszín folt */
+ for(const n of['Ajtó – bal első','Ajtó – bal hátsó','Ajtó – jobb első','Ajtó – jobb hátsó']){const i=EXP.findIndex(p=>p.n===n);const s=n.includes('bal')?-1:1,x=n.includes('első')?.4:-.3;EXP[i].p.push(exBox(x-.1,1.5,s*1.096,.4,.22,.012,{col:CM[1]}),exBox(x+.12,1.95,s*1.096,.25,.18,.012,{col:CM[2]}))}
+ /* sárvédők és lépcsők */
+ const fd=[];for(const s of[-1,1])for(const x of[AF,AR]){fd.push(exProf([[x-.62,1.2],[x+.62,1.2],[x+.55,1.3],[x-.55,1.3]],s*.84,s*1.28,'z',{col:'#56653a'}));fd.push(exBox(x,1.22,s*1.27,1.3,.1,.05,{col:'#3a4424'}))}
+ for(const s of[-1,1]){fd.push(exBox(-.35,.66,s*1.03,2.3,.04,.27,{col:'#5d646c'}));for(let k=0;k<11;k++)fd.push(exBox(-1.4+k*.22,.69,s*1.03,.04,.015,.26,{col:'#7d848d'}))}
+ const at=EXP.findIndex(p=>p.n==='Külső tükrök');EXP.splice(at,0,{n:'Sárvédők és lépcsők',g:'Páncél',col:'#56653a',ex:[0,-.5,0],ghost:0,p:fd,
+  d:'A kerekek feletti sárvédő-lemezek és az oldalsó lépcsők (küszöbök): a ki- és beszálláshoz. A páncéltest oldalán a lépcső mentén az ajtók, a szerszámosláda és az üzemanyagtartály fedele található.'});
+})();
+
+const EXSUB=['Haspáncél (V-alakú padlópáncél)','Páncéltest (küzdőtér)','Tető (páncél)','Motorház (motorháztető és előlap)'];
+function exSubdiv(fs,m){const out=[],L=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]),M=(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t];
+ for(const f of fs){if(f.length!==4){out.push(f);continue}const nu=Math.min(8,Math.max(1,Math.ceil(L(f[0],f[1])/m))),nv=Math.min(8,Math.max(1,Math.ceil(L(f[1],f[2])/m)));if(nu*nv===1){out.push(f);continue}
+  const P=(u,v)=>{const a=M(f[0],f[1],u),b=M(f[3],f[2],u);return M(a,b,v)};
+  for(let i=0;i<nu;i++)for(let j=0;j<nv;j++)out.push([P(i/nu,j/nv),P((i+1)/nu,j/nv),P((i+1)/nu,(j+1)/nv),P(i/nu,(j+1)/nv)])}return out}
+EXP.forEach((p,i)=>{p.i=i;p.f=[];p.cen=[0,0,0];let n=0;for(const pr of p.p){if(!pr||!pr.f)continue;pr.pcol=pr.col||p.col;if(EXSUB.includes(p.n)&&!pr.subd){pr.f=exSubdiv(pr.f,.8);pr.subd=1}pr.tn=.94+((i*7+n*3)%11)/90;for(let k=0;k<pr.f.length;k++){const ff=pr.f[k];let wy=0;for(const q of ff)wy+=q[1];p.f.push({v:ff,wy:wy/ff.length,pr,sm:(!!pr.cyl&&k<pr.f.length-2)||!!pr.subd});n++}p.cen[0]+=pr.c[0];p.cen[1]+=pr.c[1];p.cen[2]+=pr.c[2]}const m=p.p.filter(x=>x&&x.f).length||1;p.cen=p.cen.map(v=>v/m)});
+/* megjelenítés */
+function exHex(h){return [parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)]}
+function exOpen(){const el=$('#harc');el.hidden=false;document.body.classList.add('harcon');
+ el.innerHTML=`<div class="hbar"><div class="htitle">Gidrán <b>3D – szétszedhető</b></div><button class="hx" id="exClose" aria-label="Bezárás">✕</button></div>
+ <div class="exwrap"><div class="exscene"><canvas id="exCv"></canvas><canvas id="exOv"></canvas><div class="mnhud"><span class="dHud">Motor leállítva · 0 km/h · N</span></div><div class="exhint" id="exHint">Húzd el a forgatáshoz · csípd össze a nagyításhoz · érints meg egy alkatrészt</div></div>
+ <div class="exdrw" id="exDrw"></div>
+ <div class="exctl"><label class="exsl"><span>🔧 Szétszedés</span><input type="range" id="exSl" min="0" max="100" value="0" aria-label="Szétszedés mértéke"></label>
+  <div class="exbt"><button type="button" class="btn line sm" id="exAuto" aria-pressed="true">⟳ Forgás</button><button type="button" class="btn line sm" id="exGh" aria-pressed="false">👻 Páncél átlátszó</button><button type="button" class="btn line sm" id="exV1">Elöl</button><button type="button" class="btn line sm" id="exV2">Oldal</button><button type="button" class="btn line sm" id="exV3">Felül</button><button type="button" class="btn line sm" id="exPt" aria-pressed="false">⚙ Hajtáslánc</button><button type="button" class="btn line sm" id="exRst">↺ Alaphelyzet</button></div></div>
+ <div class="expanel" id="exPanel"></div><div class="exlist" id="exList"></div></div>`;
+ $('#exClose').onclick=exClose;$('#exDrw').innerHTML=exDrvHTML();exDrvWire($('#exDrw'));exSetup();exInfo(-1);exChips()}
+function exClose(){ENG.gasK=0;ENG.brkK=0;gClose(EX);exKick()}
+function exChips(){const L=$('#exList');if(!L)return;const gs=[];EXP.forEach(p=>{if(!gs.includes(p.g))gs.push(p.g)});L.innerHTML=gs.map(g=>`<div class="exg"><b>${g}</b>${EXP.filter(p=>p.g===g).map(p=>`<button type="button" class="exchip" data-i="${p.i}">${esc(p.n)}</button>`).join('')}</div>`).join('');
+ L.onclick=e=>{const b=e.target.closest('.exchip');if(!b)return;exSelect(+b.dataset.i)}}
+function exSelect(i){EX.sel=EX.sel===i?-1:i;exInfo(EX.sel);document.querySelectorAll('.exchip').forEach(b=>b.classList.toggle('on',+b.dataset.i===EX.sel));EX.auto=false;const a=$('#exAuto');if(a)a.setAttribute('aria-pressed','false')}
+function exInfo(i){const P=$('#exPanel');if(!P)return;if(i<0){P.innerHTML=`<div class="exempty"><b>Érints meg egy alkatrészt</b><span>A leírás itt jelenik meg. Csúsztasd a „Szétszedés” csúszkát, hogy a részek szétváljanak, a „Páncél átlátszó” gombbal belelátsz a járműbe.</span></div>`;return}
+ const p=EXP[i],hid=EX.hid.has(i);P.innerHTML=`<div class="exh"><span class="exg1">${esc(p.g)}</span><h4>${esc(p.n)}</h4></div><p>${esc(p.d)}</p><div class="exact"><button type="button" class="btn line sm" id="exHide">${hid?'👁 Megjelenít':'🙈 Elrejt'}</button><button type="button" class="btn line sm" id="exShowAll">Mind látszik</button></div>`;
+ $('#exHide').onclick=()=>{if(EX.hid.has(i))EX.hid.delete(i);else EX.hid.add(i);exInfo(i)};$('#exShowAll').onclick=()=>{EX.hid.clear();exInfo(i)}}
+function exView(ry,rx){EX.tv={ry,rx};EX.auto=false;const a=$('#exAuto');if(a)a.setAttribute('aria-pressed','false')}
+function exSetup(){Object.assign(EX,gCanvas('#exCv'));EX.ov=$('#exOv');EX.ovc=EX.ov.getContext('2d');EX.gl=exGLNew(EX.cv);if(!EX.gl)EX.c=EX.cv.getContext('2d');EX.rs=1;EX.fe=0;EX.fn=0;EX.bd=0;EX.cap=0;EX.run=true;EX.last=performance.now();EX.sel=-1;EX.hid=new Set();EX.t=0;EX.tt=0;EX.ry=.75;EX.rx=.34;EX.zm=1;EX.auto=true;EX.ghost=false;EX.pt=false;EX.ptr=new Map();EX.tv=null;
+ const cv=EX.cv;
+ cv.addEventListener('pointerdown',e=>{try{cv.setPointerCapture(e.pointerId)}catch(_){}EX.ptr.set(e.pointerId,{x:e.clientX,y:e.clientY,x0:e.clientX,y0:e.clientY,mv:0});EX.tv=null;if(EX.ptr.size===2){const [a,b]=[...EX.ptr.values()];EX.pd=Math.hypot(a.x-b.x,a.y-b.y);EX.pz=EX.zm}});
+ cv.addEventListener('pointermove',e=>{const p=EX.ptr.get(e.pointerId);if(!p)return;const dx=e.clientX-p.x,dy=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;p.mv+=Math.abs(dx)+Math.abs(dy);
+  if(EX.ptr.size===1){if(p.mv>6){EX.ry+=dx*.009;EX.rx=Math.max(-.2,Math.min(1.45,EX.rx+dy*.007));EX.auto=false;const a=$('#exAuto');if(a)a.setAttribute('aria-pressed','false')}}
+  else if(EX.ptr.size===2){const [a,b]=[...EX.ptr.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);if(EX.pd)EX.zm=Math.max(.5,Math.min(3,EX.pz*d/EX.pd))}});
+ const up=e=>{const p=EX.ptr.get(e.pointerId);EX.ptr.delete(e.pointerId);if(p&&p.mv<=6&&EX.ptr.size===0&&e.type==='pointerup'){const r=cv.getBoundingClientRect();exPickAny(e.clientX-r.left,e.clientY-r.top)}};
+ cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+ cv.addEventListener('wheel',e=>{e.preventDefault();EX.zm=Math.max(.5,Math.min(3,EX.zm*(e.deltaY<0?1.1:.91)))},{passive:false});
+ $('#exSl').oninput=e=>{EX.tt=e.target.value/100};
+ $('#exAuto').onclick=()=>{EX.auto=!EX.auto;$('#exAuto').setAttribute('aria-pressed',EX.auto)};
+ $('#exGh').onclick=()=>{EX.ghost=!EX.ghost;$('#exGh').setAttribute('aria-pressed',EX.ghost)};
+ $('#exV1').onclick=()=>exView(Math.PI/2,.1);$('#exV2').onclick=()=>exView(0,.05);$('#exV3').onclick=()=>exView(0,1.4);
+ $('#exPt').onclick=()=>{EX.pt=!EX.pt;$('#exPt').setAttribute('aria-pressed',EX.pt);if(EX.pt){EX.zm=1.12;exView(Math.PI-.62,.42);EX.sel=-1;exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'))}else exView(.75,.34)};
+ $('#exRst').onclick=()=>{EX.pt=false;$('#exPt').setAttribute('aria-pressed','false');EX.tt=0;$('#exSl').value=0;EX.zm=1;EX.sel=-1;EX.hid.clear();exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'));exView(.75,.34);EX.auto=true;$('#exAuto').setAttribute('aria-pressed','true')};
+ EX.key=e=>{if(e.type==='keydown'&&e.key==='Escape')exClose();else exKeys(e)};addEventListener('keydown',EX.key);addEventListener('keyup',EX.key);
+ exKick()}
+function exDraw(){const rr=EX.cv.getBoundingClientRect();if(Math.abs(rr.width-EX.W)>1||Math.abs(rr.height-EX.H)>1){EX.W=rr.width;EX.H=rr.height;EX.cv.width=rr.width*EX.dpr;EX.cv.height=rr.height*EX.dpr}const c=EX.c,W=EX.W,H=EX.H;c.setTransform(EX.dpr,0,0,EX.dpr,0,0);
+ const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#26344a');g.addColorStop(.55,'#162030');g.addColorStop(1,'#0b0f15');c.fillStyle=g;c.fillRect(0,0,W,H);{const gl=c.createRadialGradient(W/2,H*.62,10,W/2,H*.62,W*.75);gl.addColorStop(0,'rgba(120,150,190,.16)');gl.addColorStop(1,'rgba(120,150,190,0)');c.fillStyle=gl;c.fillRect(0,0,W,H)}
+ const cy=Math.cos(EX.ry),sy=Math.sin(EX.ry),cx=Math.cos(EX.rx),sx=Math.sin(EX.rx),D=12,F=Math.min(W*1.5,H*2.0)*1.18*EX.zm/(1+.55*EX.t);const CY=1.5+EX.t*.45;
+ const proj=(p,off)=>{let x=p[0]+off[0],y=p[1]+off[1]-CY,z=p[2]+off[2];const x1=x*cy+z*sy,z1=-x*sy+z*cy;const y2=y*cx-z1*sx,z2=y*sx+z1*cx;const k=F/(D-z2);return [W/2+x1*k,H*.52-y2*k,z2,x1,y2,z2]};
+ /* talaj rács */
+ c.lineWidth=1;const off0=[0,0,0];
+ c.strokeStyle='rgba(255,255,255,.07)';c.beginPath();for(let i=-5;i<=5;i++){let a=proj([i,0,-5],off0),b=proj([i,0,5],off0);c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);a=proj([-5,0,i],off0);b=proj([5,0,i],off0);c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1])}c.stroke();
+ /* árnyék */
+ {const q=proj([0,0,0],off0),rx=F/D*3.5,ry=rx*(.18+.55*Math.abs(Math.sin(EX.rx)))*1.0;c.save();c.translate(q[0],q[1]);c.scale(1,ry/rx);const sg=c.createRadialGradient(0,0,rx*.1,0,0,rx);sg.addColorStop(0,'rgba(0,0,0,'+(.62*(1-EX.t*.5))+')');sg.addColorStop(.6,'rgba(0,0,0,'+(.3*(1-EX.t*.5))+')');sg.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=sg;c.beginPath();c.arc(0,0,rx,0,7);c.fill();c.restore()}
+ const faces=[],t=EX.t,L=[.45,.75,.5],ln=Math.hypot(...L);const Ln=L.map(v=>v/ln);const H0=[Ln[0],Ln[1],Ln[2]+1],hn=Math.hypot(...H0),HV=H0.map(v=>v/hn);const ghAmt=EX.ghost?1:Math.min(1,t*1.6);
+ const eye=[0,0,D];
+ for(const P of EXP){if(EX.hid.has(P.i))continue;if(EX.pt&&!P.pt)continue;const off=[P.ex[0]*t,P.ex[1]*t,P.ex[2]*t];const gh=P.ghost?Math.max(ghAmt,0):0;const isSel=P.i===EX.sel;
+  const alpha=P.glass?(.35+.3*(1-gh)):P.ghost?(isSel?.9:1-.78*gh):1;
+  for(const f of P.f){const pv=f.v.map(v=>proj(v,off));
+   /* kifelé mutató normális a kamera-térben */
+   const a=pv[0],b=pv[1],cc=pv[2];const ux=b[3]-a[3],uy=b[4]-a[4],uz=b[5]-a[5],vx=cc[3]-b[3],vy=cc[4]-b[4],vz=cc[5]-b[5];let nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx;const nl=Math.hypot(nx,ny,nz)||1;nx/=nl;ny/=nl;nz/=nl;
+   const pc=f.pr.c,pcp=proj(pc,off);let mx=0,my=0,mz=0;for(const q of pv){mx+=q[3];my+=q[4];mz+=q[5]}mx/=pv.length;my/=pv.length;mz/=pv.length;
+   if(nx*(mx-pcp[3])+ny*(my-pcp[4])+nz*(mz-pcp[5])<0){nx=-nx;ny=-ny;nz=-nz}
+   /* hátsó lap kiszűrése: a kamerából nézve (kamera a +z oldalon) */
+   if(nx*(eye[0]-mx)+ny*(eye[1]-my)+nz*(eye[2]-mz)<=0)continue;
+   faces.push({pv,d:mz,nx,ny,nz,P,pr:f.pr,al:alpha,sel:isSel,wy:f.wy+off[1]})}}
+ faces.sort((a,b)=>a.d-b.d);EX.faces=faces;
+ for(const f of faces){let ar=0;{const q=f.pv;for(let i=0,j=q.length-1;i<q.length;j=i++)ar+=(q[j][0]+q[i][0])*(q[j][1]-q[i][1]);ar=Math.abs(ar)/2}const lq=EX.lq||EX.ptr.size>0;if(ar<(lq?7:1.6)&&!f.sel)continue;const col=f.pr.hx||(f.pr.hx=exHex(f.pr.pcol||f.P.col));const dif=Math.max(0,f.nx*Ln[0]+f.ny*Ln[1]+f.nz*Ln[2]),hl=f.nx*HV[0]+f.ny*HV[1]+f.nz*HV[2],spec=hl>0?Math.pow(hl,28)*.16:0,rim=Math.pow(1-Math.max(0,f.nz),3)*.10;const ao=.74+.26*Math.min(1,Math.max(0,f.wy)/1.7);const sh=(.34+.66*dif+.07*Math.max(0,f.ny)+rim)*ao*(f.pr.tn||1);const k=f.sel?1.25:1;
+  const R=Math.min(255,col[0]*sh*k+spec*140)|0,G=Math.min(255,col[1]*sh*k+spec*140)|0,B=Math.min(255,col[2]*sh*k+spec*140)|0;const fc=`rgb(${R},${G},${B})`;c.globalAlpha=f.al;c.fillStyle=fc;c.beginPath();f.pv.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath();c.fill();
+  if(f.sel){c.lineWidth=1.8;c.strokeStyle='#ffd23f';c.stroke()}else if(ar<(lq?90:26)){}else if(f.sm){c.lineWidth=.8;c.strokeStyle=fc;c.stroke()}else{c.lineWidth=.6;c.strokeStyle=`rgba(${R*.42|0},${G*.42|0},${B*.42|0},.7)`;c.stroke()}}
+ c.globalAlpha=1;
+ if(EX.sel>=0&&!EX.hid.has(EX.sel)){const P=EXP[EX.sel],off=[P.ex[0]*t,P.ex[1]*t,P.ex[2]*t];const q=proj(P.cen,off);c.font='700 12px system-ui';const w=c.measureText(P.n).width+14,x=Math.max(4,Math.min(W-w-4,q[0]-w/2)),y=Math.max(18,q[1]-34);c.fillStyle='rgba(0,0,0,.72)';c.fillRect(x,y-14,w,20);c.strokeStyle='#ffd23f';c.lineWidth=1;c.strokeRect(x+.5,y-13.5,w-1,19);c.fillStyle='#ffe08a';c.textAlign='left';c.fillText(P.n,x+7,y);c.strokeStyle='#ffd23f';c.beginPath();c.moveTo(q[0],y+6);c.lineTo(q[0],q[1]);c.stroke();c.beginPath();c.arc(q[0],q[1],3,0,7);c.fillStyle='#ffd23f';c.fill()}}
+function exPick(x,y){const F=EX.faces;const inP=(pv)=>{let ins=false;for(let i=0,j=pv.length-1;i<pv.length;j=i++){const a=pv[i],b=pv[j];if((a[1]>y)!==(b[1]>y)&&x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0])ins=!ins}return ins};
+ let hit=-1,ghostHit=-1;for(let i=F.length-1;i>=0;i--){const f=F[i];if(!inP(f.pv))continue;if(f.al<.5){if(ghostHit<0)ghostHit=f.P.i;continue}hit=f.P.i;break}
+ if(hit<0)hit=ghostHit;if(hit>=0)exSelect(hit);else{EX.sel=-1;exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'))}
+ if(hit>=0){const ch=document.querySelector(`.exchip[data-i="${hit}"]`);if(ch&&EX.sel===hit)ch.scrollIntoView({block:'nearest',inline:'nearest'})}}
+/* ===== 3.4.0: WebGL megjelenítő (canvas2D tartalékkal) + élő motor és hajtáslánc ===== */
+const ENG={run:true,st:0,cr:0,rpm:0,ped:0,gasK:0,brkK:0,brk:0,gear:'N',rng:'H',g:0,v:0,wph:0,sph:0,fph:0,dist:0,sh:0,mute:false,snd:null,sm:[],t:0,emit:0,raf:0,last:0,hudT:0,hud:''};
+const EXGR=[3.51,1.91,1.43,1.0,.74,.64],EXAXLE=4.1,EXIDLE=700,EXTAIL=[-1.0,.9,1.1];
+const EXSPIN={'Kerék – bal első':{c:[AF,WR,-TZ],ax:2,k:'w'},'Kerék – jobb első':{c:[AF,WR,TZ],ax:2,k:'w'},'Kerék – bal hátsó':{c:[AR,WR,-TZ],ax:2,k:'w'},'Kerék – jobb hátsó':{c:[AR,WR,TZ],ax:2,k:'w'},
+ 'Féltengelyek – első':{c:[AF,.59,0],ax:2,k:'w'},'Féltengelyek – hátsó':{c:[AR,.59,0],ax:2,k:'w'},
+ 'Kardántengely – első':{c:[1.05,.6,.18],ax:1,k:'s'},'Kardántengely – hátsó':{c:[-.835,.6,.18],ax:1,k:'s'},'Ventilátor (hűtőventilátor)':{c:[2.46,1.2,0],ax:1,k:'f'}};
+const EXSHAKE={'Motor (Cummins ISL9E3)':1,'Hűtőradiátorok (tömbösített hűtő, ventilátor)':.5,'Ventilátor (hűtőventilátor)':.6,'Levegőszűrő':.7,'Kipufogó':.7,'Generátor (28 V, 220 A)':.8,'Automata nyomatékváltó (Allison 3200 SP)':.55,'Osztómű':.3,'Kiegyenlítő tartály':.5,'Motorház (motorháztető és előlap)':.25,'Műszerfal (kijelzők, kapcsolók)':.15};
+EXP.forEach(p=>{p.sp=EXSPIN[p.n]||null;p.shk=EXSHAKE[p.n]||0;p.spc=p.glass?.85:/kerék/i.test(p.n)?.05:p.col&&/^#(c|d|e|f)/i.test(p.col)?.3:.22});
+const MN={run:false,ry:.75,rx:.3,zm:.82,t:0,tt:0,sel:-1,auto:true,ghost:false,pt:false,hid:new Set(),ptr:new Map(),rs:1,tv:null,mini:true};
+/* ---------- fizika ---------- */
+const exClamp=(x,a,b)=>x<a?a:x>b?b:x;
+function exStep(dt){const E=ENG;E.t+=dt;const tr=E.rng==='L'?2.7:1;
+ E.ped+=((E.gasK?1:0)-E.ped)*Math.min(1,dt*(E.gasK?3.2:7));E.brk+=((E.brkK?1:0)-E.brk)*Math.min(1,dt*9);
+ const thr=E.ped,run=E.st===2;let v=E.v;const av=Math.abs(v);
+ if(E.st===1){E.cr-=dt;E.rpm+=(230+Math.sin(E.t*38)*30-E.rpm)*Math.min(1,dt*8);if(E.cr<=0){E.st=2;E.rpm=1150;exSmokePuff(10,1)}}
+ else if(E.st===0)E.rpm=Math.max(0,E.rpm-dt*1400);
+ /* automata váltó */
+ if(E.gear==='D'&&run){const mg=E.rng==='L'?3:5;const rg=g=>av/WR*30/Math.PI*EXGR[g]*EXAXLE*tr;E.sh=Math.max(0,E.sh-dt);
+  if(av<.4)E.g=0;else if(!E.sh){const up=thr>.6?2250:thr>.2?1900:1450;if(E.g<mg&&rg(E.g)>up){E.g++;E.sh=.35}else if(E.g>0&&rg(E.g)<(thr>.8?1500:900)){E.g--;E.sh=.35}}}
+ else if(E.gear!=='D'){E.g=0;E.sh=0}
+ const ratio=E.gear==='R'?4.8:EXGR[E.g],tot=ratio*EXAXLE*tr,wrpm=av/WR*30/Math.PI*tot;
+ let Fd=0;
+ if(run&&E.gear!=='N'){const dir=E.gear==='R'?-1:1;let k=E.rpm>2450?0:thr;if(E.sh>.2)k*=.25;
+  const Fm=Math.min(1000*tot/WR*.85,(E.gear==='R'?28000:36000)*tr,250000*.85/Math.max(av,2.5));
+  Fd=dir*k*Fm;if(thr<.03&&av<1.5&&!E.brk)Fd=dir*1800*(E.gear==='R'?.8:1)}
+ const Fr=3.5*v*Math.abs(v)+(av>.02?4400*Math.sign(v):0)+(av>.02?Math.sign(v)*E.brk*70000:0);
+ let vn;
+ if(av<.02){const lim=4400+E.brk*70000;vn=Math.abs(Fd)>lim?v+(Fd-Math.sign(Fd)*lim)/15000*dt:0}
+ else{vn=v+(Fd-Fr)/15000*dt;if(Math.sign(vn)!==Math.sign(v)&&Math.abs(Fd)<Math.abs(Fr))vn=0}
+ E.v=v=exClamp(vn,-5.5,36);
+ /* motorfordulat */
+ if(run){let tg;if(E.gear==='N')tg=EXIDLE+thr*1750;else tg=Math.max(wrpm*(wrpm>1250?1:1),EXIDLE+thr*(wrpm<1300?1300:90));tg=Math.min(2600,tg);E.rpm+=(tg-E.rpm)*Math.min(1,dt*(thr>.05?5:3.5));
+  if(Math.abs(E.rpm-EXIDLE)<30&&thr<.05)E.rpm+=Math.sin(E.t*9)*.5*dt*60}
+ const cl=(x,m)=>exClamp(x,-m,m);
+ E.wph+=cl(v/WR,26)*dt;E.sph+=cl(v/WR*EXAXLE,48)*dt;E.fph+=Math.min(24,E.rpm*.0105)*dt;E.dist+=v*dt;
+ exSmokeStep(dt);
+ if(E.hudT-=dt,E.hudT<=0){E.hudT=.07;exHudUpd()}}
+function exSmokePuff(n,dark){const E=ENG;for(let i=0;i<n&&E.sm.length<70;i++)E.sm.push({x:EXTAIL[0]+Math.random()*.1,y:EXTAIL[1]+Math.random()*.08,z:EXTAIL[2]+.05,vx:-(Math.random()*.4)-.3,vy:.35+Math.random()*.4,vz:.5+Math.random()*.6,a:0,L:1.1+Math.random()*.9,s:.05+Math.random()*.04,d:dark})}
+function exSmokeStep(dt){const E=ENG;if(E.st===2){E.emit+=dt*(7+E.rpm/90+E.ped*34);while(E.emit>1){E.emit--;const d=E.ped>.55&&E.rpm<2300?1:E.ped>.2?.5:0;exSmokePuff(1,d)}}
+ for(let i=E.sm.length-1;i>=0;i--){const p=E.sm[i];p.a+=dt;if(p.a>p.L){E.sm.splice(i,1);continue}p.x+=(p.vx-E.v*.85)*dt;p.y+=p.vy*dt;p.z+=p.vz*dt;p.vz*=1-dt*1.1;p.vy*=1-dt*.5;p.s+=dt*.2}}
+function exEngToggle(){const E=ENG;try{ac();AC&&AC.resume&&AC.resume()}catch(_){}
+ if(E.st===0){E.st=1;E.cr=1.05;if(Math.abs(E.v)<.3)E.gear='N';exCrank()}else if(E.st===2){E.st=0;E.gasK=0}exKick();exHudUpd(1)}
+function exCrank(){if(!SOUND||ENG.mute||!ac())return;try{const a=AC,t=a.currentTime,o=a.createOscillator(),g=a.createGain(),lf=a.createOscillator(),lg=a.createGain(),f=a.createBiquadFilter();o.type='sawtooth';o.frequency.setValueAtTime(70,t);o.frequency.linearRampToValueAtTime(95,t+1);f.type='lowpass';f.frequency.value=500;lf.frequency.value=9;lg.gain.value=.05;g.gain.value=.05;lf.connect(lg).connect(g.gain);o.connect(f).connect(g).connect(MASTER);g.gain.setTargetAtTime(0,t+.95,.06);o.start(t);lf.start(t);o.stop(t+1.3);lf.stop(t+1.3)}catch(_){}}
+function exSndSync(active){const E=ENG,want=active&&E.st===2&&!E.mute&&SOUND;
+ if(want&&!E.snd){E.run=true;gEngStart(E)}else if(!want&&E.snd)gEngStop(E);
+ if(E.snd)gEngTick(E,E.rpm,Math.min(1,E.ped*.9+.05),0)}
+function exGearLbl(){const E=ENG;return E.gear==='N'?'N':E.gear==='R'?'R':'D'+(E.g+1)}
+function exHudUpd(force){const E=ENG;const kmh=Math.round(Math.abs(E.v)*3.6),rpm=Math.round(E.rpm/10)*10;const s=(E.st===0?'Motor leállítva':E.st===1?'Indítás…':rpm+' f/p')+' · '+kmh+' km/h · '+exGearLbl()+(E.rng==='L'?' · terep':'');
+ const key=s+'|'+Math.round(E.rpm/60)+(E.st);if(key===E.hud&&!force)return;E.hud=key;
+ document.querySelectorAll('.dHud').forEach(h=>{h.textContent=s});document.querySelectorAll('.dBar i').forEach(b=>{b.style.width=Math.min(100,E.rpm/26)+'%';b.style.background=E.rpm>2200?'#ff5a3c':E.rpm>1800?'#ffb52e':'#5bd68c'});
+ document.querySelectorAll('.dEng').forEach(b=>{b.setAttribute('aria-pressed',E.st>0);b.textContent=E.st===0?'🔑 Motor indítás':E.st===1?'🔑 Indítás…':'🔑 Motor leállítása'});
+ document.querySelectorAll('.dgs button').forEach(b=>{b.classList.toggle('on',b.dataset.g===E.gear||b.dataset.r===E.rng)});
+ document.querySelectorAll('.dSnd').forEach(b=>{b.textContent=E.mute?'🔇':'🔊';b.setAttribute('aria-pressed',!E.mute)})}
+/* vezérlők (a teljes nézetben és a főképernyőn is) */
+function exDrvHTML(){return `<div class="exdv"><button type="button" class="btn line sm dEng" aria-pressed="false">🔑 Motor indítás</button>
+ <div class="dgs" role="group" aria-label="Sebességváltó"><button type="button" data-g="R">R</button><button type="button" data-g="N" class="on">N</button><button type="button" data-g="D">D</button></div>
+ <div class="dgs" role="group" aria-label="Osztómű"><button type="button" data-r="H" class="on">Úti</button><button type="button" data-r="L">Terep</button></div>
+ <button type="button" class="btn line sm dSnd" aria-label="Hang">🔊</button>
+ <div class="dpd"><button type="button" class="dPed dBrk">FÉK</button><button type="button" class="dPed dGas">GÁZ</button></div>
+ <div class="dBar" aria-hidden="true"><i></i></div></div>`}
+function exDrvWire(root){
+ root.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  if(b.classList.contains('dEng')){exEngToggle();return}
+  if(b.classList.contains('dSnd')){ENG.mute=!ENG.mute;exHudUpd(1);return}
+  if(b.dataset.g){ENG.gear=b.dataset.g;if(ENG.gear!=='D')ENG.g=0;exHudUpd(1)}
+  if(b.dataset.r){ENG.rng=b.dataset.r;exHudUpd(1)}});
+ const pedal=(sel,key)=>{const el=root.querySelector(sel);if(!el)return;
+  const dn=e=>{e.preventDefault();try{el.setPointerCapture(e.pointerId)}catch(_){}ENG[key]=1;el.classList.add('hold');try{ac();AC&&AC.resume&&AC.resume()}catch(_){}exKick()};
+  const upf=e=>{ENG[key]=0;el.classList.remove('hold')};
+  el.addEventListener('pointerdown',dn);el.addEventListener('pointerup',upf);el.addEventListener('pointercancel',upf);el.addEventListener('lostpointercapture',upf);el.addEventListener('contextmenu',e=>e.preventDefault())};
+ pedal('.dGas','gasK');pedal('.dBrk','brkK');exHudUpd(1)}
+const exKeys=e=>{const d=e.type==='keydown';const k=e.key;
+ if(k==='ArrowUp'||k==='w'||k==='W'){ENG.gasK=d?1:0;if(d)exKick()}else if(k==='ArrowDown'||k==='s'||k==='S'||k===' '){ENG.brkK=d?1:0;if(k===' ')e.preventDefault()}
+ else if(d&&(k==='e'||k==='E'))exEngToggle();else if(d&&(k==='r'||k==='R')){ENG.gear='R'}else if(d&&(k==='n'||k==='N')){ENG.gear='N'}else if(d&&(k==='d'||k==='D')){ENG.gear='D'}};
+/* ---------- geometria ---------- */
+let EXGEO=null;
+function exBuildGeo(){if(EXGEO)return EXGEO;const out=[],parts=[];
+ const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]],dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+ const key=v=>Math.round(v[0]*500)+','+Math.round(v[1]*500)+','+Math.round(v[2]*500);
+ const clip=(v,n)=>{const m=v.length;if(m===3)return[[0,1,2]];let ax=0;if(Math.abs(n[1])>Math.abs(n[ax]))ax=1;if(Math.abs(n[2])>Math.abs(n[ax]))ax=2;const a1=(ax+1)%3,a2=(ax+2)%3;const P=v.map(q=>[q[a1],q[a2]]);let ar=0;for(let i=0;i<m;i++){const j=(i+1)%m;ar+=P[i][0]*P[j][1]-P[j][0]*P[i][1]}
+  const idx=[];for(let i=0;i<m;i++)idx.push(i);if(ar<0)idx.reverse();const T=[];let g=0;
+  const cr=(a,b,c)=>(P[b][0]-P[a][0])*(P[c][1]-P[a][1])-(P[b][1]-P[a][1])*(P[c][0]-P[a][0]);
+  while(idx.length>3&&g++<200){let ok=false;for(let i=0;i<idx.length;i++){const a=idx[(i+idx.length-1)%idx.length],b=idx[i],c=idx[(i+1)%idx.length];if(cr(a,b,c)<=1e-12)continue;let inside=false;for(const d of idx){if(d===a||d===b||d===c)continue;if(cr(a,b,d)>=0&&cr(b,c,d)>=0&&cr(c,a,d)>=0){inside=true;break}}if(inside)continue;T.push([a,b,c]);idx.splice(i,1);ok=true;break}if(!ok)break}
+  if(idx.length===3)T.push([idx[0],idx[1],idx[2]]);return T};
+ EXP.forEach(P=>{const start=out.length/9;
+  for(const pr of P.p){if(!pr||!pr.f)continue;const col=pr.hx||(pr.hx=exHex(pr.pcol||P.col)),tn=pr.tn||1,cc=[Math.min(1,col[0]/255*tn),Math.min(1,col[1]/255*tn),Math.min(1,col[2]/255*tn)];
+   const tris=[],map=new Map();
+   for(const f of pr.f){const v=f;if(v.length<3)continue;let n=[0,0,0];for(let i=0;i<v.length;i++){const a=v[i],b=v[(i+1)%v.length];n[0]+=(a[1]-b[1])*(a[2]+b[2]);n[1]+=(a[2]-b[2])*(a[0]+b[0]);n[2]+=(a[0]-b[0])*(a[1]+b[1])}
+    const nl=Math.hypot(...n);if(nl<1e-10)continue;n=n.map(q=>q/nl);let mx=0,my=0,mz=0;for(const q of v){mx+=q[0];my+=q[1];mz+=q[2]}mx/=v.length;my/=v.length;mz/=v.length;
+    if(n[0]*(mx-pr.c[0])+n[1]*(my-pr.c[1])+n[2]*(mz-pr.c[2])<0)n=n.map(q=>-q);
+    for(const t of clip(v,n)){let A=v[t[0]],B=v[t[1]],C=v[t[2]];const cx=cross(sub(B,A),sub(C,A));if(dot(cx,n)<0){const s=B;B=C;C=s}const w=Math.hypot(...cx)/2;if(w<1e-9)continue;const tr={v:[A,B,C],n,w};tris.push(tr);for(const q of tr.v){const k=key(q);let l=map.get(k);if(!l){l=[];map.set(k,l)}l.push(tr)}}}
+   for(const tr of tris)for(const q of tr.v){const l=map.get(key(q));let sx=0,sy=0,sz=0;for(const o of l){if(dot(o.n,tr.n)>.82){sx+=o.n[0]*o.w;sy+=o.n[1]*o.w;sz+=o.n[2]*o.w}}const sl=Math.hypot(sx,sy,sz)||1;out.push(q[0],q[1],q[2],sx/sl,sy/sl,sz/sl,cc[0],cc[1],cc[2])}}
+  parts.push({o:start,n:out.length/9-start})});
+ EXGEO={buf:new Float32Array(out),parts};window.__EXV=out.length/9;return EXGEO}
+/* ---------- WebGL ---------- */
+const EXVS=`attribute vec3 aP;attribute vec3 aN;attribute vec3 aC;uniform vec3 uOff,uRc;uniform float uAng,uAx,uOut;uniform vec4 uR,uS;uniform vec2 uK;varying vec3 vN,vV,vC;varying float vWy;
+void main(){vec3 p=aP,n=aN;if(uAx>.5){vec3 q=p-uRc;float c=cos(uAng),s=sin(uAng);if(uAx<1.5){q=vec3(q.x,q.y*c-q.z*s,q.y*s+q.z*c);n=vec3(n.x,n.y*c-n.z*s,n.y*s+n.z*c);}else{q=vec3(q.x*c-q.y*s,q.x*s+q.y*c,q.z);n=vec3(n.x*c-n.y*s,n.x*s+n.y*c,n.z);}p=q+uRc;}
+p+=uOff+n*uOut;vWy=p.y;vec3 w=p;w.y-=uS.z;float x1=w.x*uR.x+w.z*uR.y,z1=-w.x*uR.y+w.z*uR.x,y2=w.y*uR.z-z1*uR.w,z2=w.y*uR.w+z1*uR.z,d=uS.w-z2;
+gl_Position=vec4(x1*uS.x,y2*uS.y-.04*d,uK.x*d+uK.y,d);float nx=n.x*uR.x+n.z*uR.y,nz=-n.x*uR.y+n.z*uR.x;vN=vec3(nx,n.y*uR.z-nz*uR.w,n.y*uR.w+nz*uR.z);vV=vec3(-x1,-y2,uS.w-z2);vC=aC;}`;
+const EXFS=`precision mediump float;varying vec3 vN,vV,vC;varying float vWy;uniform float uAlpha,uSel,uSpec,uMode,uPulse;uniform vec3 uId;
+void main(){if(uMode>.5&&uMode<1.5){gl_FragColor=vec4(uId,1.);return;}if(uMode>1.5){gl_FragColor=vec4(1.,.82,.25,1.);return;}
+vec3 n=normalize(vN);vec3 V=normalize(vV);if(dot(n,V)<0.)n=-n;vec3 L=normalize(vec3(.45,.75,.5)),L2=normalize(vec3(-.65,.25,.45));float dif=max(dot(n,L),0.),fil=max(dot(n,L2),0.);
+vec3 amb=mix(vec3(.17,.15,.13),vec3(.27,.31,.38),n.y*.5+.5);float ao=.7+.3*clamp(vWy/1.7,0.,1.);vec3 H=normalize(L+V);float sp=pow(max(dot(n,H),0.),34.)*uSpec;float fr=pow(1.-max(dot(n,V),0.),3.);
+vec3 r=reflect(-V,n);vec3 env=mix(vec3(.10,.09,.08),vec3(.55,.65,.78),smoothstep(-.3,.7,r.y));
+vec3 col=vC*(amb+dif*.8*vec3(1.,.96,.9)+fil*.15*vec3(.6,.7,1.))*ao+sp*vec3(1.,.97,.9)+env*fr*uSpec*.8+vec3(.5,.6,.8)*fr*.07;
+col=col*(1.+uSel*.18)+vec3(.9,.65,.1)*uSel*(.10+.12*uPulse);gl_FragColor=vec4(col,uAlpha);}`;
+const EXGVS=`attribute vec2 aP;uniform vec4 uR,uS;uniform vec2 uK;varying vec2 vX;void main(){vX=aP;vec3 w=vec3(aP.x,-uS.z,aP.y);float x1=w.x*uR.x+w.z*uR.y,z1=-w.x*uR.y+w.z*uR.x,y2=w.y*uR.z-z1*uR.w,z2=w.y*uR.w+z1*uR.z,d=uS.w-z2;gl_Position=vec4(x1*uS.x,y2*uS.y-.04*d,uK.x*d+uK.y,d);}`;
+const EXGFS=`precision mediump float;varying vec2 vX;uniform float uScroll,uFade;
+float sdb(vec2 p,vec2 b,float r){vec2 q=abs(p)-b+r;return length(max(q,0.))+min(max(q.x,q.y),0.)-r;}
+void main(){float sd=sdb(vX-vec2(.1,0.),vec2(3.15,1.2),.7);float sh=(1.-smoothstep(-.2,1.5,sd))*.62*uFade;float rr=length(vX);float fade=1.-smoothstep(2.5,9.,rr);
+float gx=abs(fract(vX.x+uScroll)-.5),gz=abs(fract(vX.y+.5)-.5);float ln=(1.-smoothstep(.0,.035,.5-gx))+(1.-smoothstep(.0,.035,.5-gz));
+float glow=(1.-smoothstep(0.,7.,rr))*.13;vec3 c=vec3(.47,.59,.75);float a=clamp(sh+ln*.075*fade+glow,0.,1.);vec3 col=mix(c,vec3(0.),sh/max(a,.001));gl_FragColor=vec4(col*a,a);}`;
+function exGLNew(cv){const ctxOpt={antialias:!window.__EXNOAA&&(devicePixelRatio||1)<2,alpha:true,premultipliedAlpha:true,powerPreference:'high-performance',failIfMajorPerformanceCaveat:!window.__EXGL_ANY};
+ let gl=null;try{gl=cv.getContext('webgl',ctxOpt)||cv.getContext('experimental-webgl',ctxOpt)}catch(_){}if(!gl)return null;
+ const mk=(t,s)=>{const h=gl.createShader(t);gl.shaderSource(h,s);gl.compileShader(h);if(!gl.getShaderParameter(h,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(h));return h};
+ const prog=(v,f)=>{const p=gl.createProgram();gl.attachShader(p,mk(gl.VERTEX_SHADER,v));gl.attachShader(p,mk(gl.FRAGMENT_SHADER,f));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(p));return p};
+ const uni=(p,names)=>{const o={};names.split(',').forEach(n=>{o[n]=gl.getUniformLocation(p,n)});return o};
+ let P1,P2,U1,U2,vb,gb,G,fbo=null,ft=null,fd=null,fw=0,fh=0;
+ try{P1=prog(EXVS,EXFS);P2=prog(EXGVS,EXGFS);U1=uni(P1,'uOff,uRc,uAng,uAx,uOut,uR,uS,uK,uAlpha,uSel,uSpec,uMode,uPulse,uId');U2=uni(P2,'uR,uS,uK,uScroll,uFade');
+  G=exBuildGeo();vb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,vb);gl.bufferData(gl.ARRAY_BUFFER,G.buf,gl.STATIC_DRAW);gb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,gb);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-10,-10,10,-10,-10,10,10,10]),gl.STATIC_DRAW)}catch(err){try{console.warn('GL',err)}catch(_){}return null}
+ const A1={P:gl.getAttribLocation(P1,'aP'),N:gl.getAttribLocation(P1,'aN'),C:gl.getAttribLocation(P1,'aC')},A2=gl.getAttribLocation(P2,'aP');
+ const o={gl,lost:false};
+ cv.addEventListener('webglcontextlost',e=>{e.preventDefault();o.lost=true});
+ cv.addEventListener('webglcontextrestored',()=>{const n=exGLNew(cv);if(n){Object.assign(o,n);o.lost=false}});
+ const cam=S=>{const cy=Math.cos(S.ry),sy=Math.sin(S.ry),cx=Math.cos(S.rx),sx=Math.sin(S.rx),D=12,W=S.W,H=S.H;const F=Math.min(W*1.5,H*2.0)*1.18*S.zm/(1+.55*S.t);return {R:[cy,sy,cx,sx],S:[F/(W/2),F/(H/2),1.5+S.t*.45,D],K:[41/39,-80/39]}};
+ const bindMain=()=>{gl.useProgram(P1);gl.bindBuffer(gl.ARRAY_BUFFER,vb);gl.enableVertexAttribArray(A1.P);gl.enableVertexAttribArray(A1.N);gl.enableVertexAttribArray(A1.C);gl.vertexAttribPointer(A1.P,3,gl.FLOAT,false,36,0);gl.vertexAttribPointer(A1.N,3,gl.FLOAT,false,36,12);gl.vertexAttribPointer(A1.C,3,gl.FLOAT,false,36,24)};
+ const setCam=(U,c)=>{gl.uniform4f(U.uR,c.R[0],c.R[1],c.R[2],c.R[3]);gl.uniform4f(U.uS,c.S[0],c.S[1],c.S[2],c.S[3]);gl.uniform2f(U.uK,c.K[0],c.K[1])};
+ const pstate=S=>{const E=ENG,t=S.t,gh=S.ghost?1:Math.min(1,t*1.6),amp=E.st===1?.02:E.st===2?.012+.02*Math.min(1,E.rpm/2400)+.014*E.ped:0,list=[];
+  EXP.forEach(P=>{if(S.hid.has(P.i))return;if(S.pt&&!P.pt)return;const sel=P.i===S.sel;let ox=P.ex[0]*t,oy=P.ex[1]*t,oz=P.ex[2]*t;
+   if(amp&&P.shk){const a=amp*P.shk;ox+=(Math.random()-.5)*a*.6;oy+=(Math.random()-.5)*a;oz+=(Math.random()-.5)*a}
+   let ang=0;if(P.sp){ang=P.sp.k==='w'?-E.wph:P.sp.k==='s'?-E.sph:E.fph}
+   const al=P.glass?(.35+.3*(1-(P.ghost?gh:0))):P.ghost?(sel?.9:1-.78*gh):1;
+   list.push({P,off:[ox,oy,oz],ang,al,sel})});return list};
+ const drawP=(U,s,mode,idc)=>{const P=s.P,G1=G.parts[P.i];if(!G1.n)return;gl.uniform3f(U.uOff,s.off[0],s.off[1],s.off[2]);
+  if(P.sp){gl.uniform1f(U.uAx,P.sp.ax);gl.uniform3f(U.uRc,P.sp.c[0],P.sp.c[1],P.sp.c[2]);gl.uniform1f(U.uAng,s.ang)}else gl.uniform1f(U.uAx,0);
+  if(mode===1){const q=(P.i+1)/255;gl.uniform3f(U.uId,q,0,0)}else{gl.uniform1f(U.uAlpha,s.al);gl.uniform1f(U.uSel,s.sel?1:0);gl.uniform1f(U.uSpec,P.spc)}
+  gl.drawArrays(gl.TRIANGLES,G1.o,G1.n)};
+ o.draw=function(S){if(o.lost)return;const W=S.W,H=S.H;if(W<2||H<2)return;const lim=Math.sqrt(2.3e6/(W*H*S.dpr*S.dpr)),rs=Math.min(S.rs||1,lim),pw=Math.max(2,Math.round(W*S.dpr*rs)),ph=Math.max(2,Math.round(H*S.dpr*rs));
+  if(cv.width!==pw||cv.height!==ph){cv.width=pw;cv.height=ph}
+  gl.viewport(0,0,pw,ph);gl.disable(gl.SCISSOR_TEST);gl.clearColor(0,0,0,0);gl.clearDepth(1);gl.depthMask(true);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  const c=cam(S),list=pstate(S);S.ps=list;
+  /* talaj + árnyék */
+  gl.disable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+  gl.useProgram(P2);setCam(U2,c);gl.uniform1f(U2.uScroll,-(ENG.dist%1));gl.uniform1f(U2.uFade,1-S.t*.5);gl.bindBuffer(gl.ARRAY_BUFFER,gb);gl.enableVertexAttribArray(A2);gl.vertexAttribPointer(A2,2,gl.FLOAT,false,0,0);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  /* járműtest */
+  bindMain();setCam(U1,c);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);gl.frontFace(gl.CCW);gl.disable(gl.BLEND);
+  gl.uniform1f(U1.uMode,0);gl.uniform1f(U1.uOut,0);gl.uniform1f(U1.uPulse,.5+.5*Math.sin(performance.now()/260));
+  for(const s of list)if(s.al>.999)drawP(U1,s,0);
+  const sel=list.find(s=>s.sel);if(sel&&sel.al>.999){gl.cullFace(gl.FRONT);gl.uniform1f(U1.uMode,2);gl.uniform1f(U1.uOut,.03);drawP(U1,sel,0);gl.uniform1f(U1.uMode,0);gl.uniform1f(U1.uOut,0);gl.cullFace(gl.BACK)}
+  const tl=list.filter(s=>s.al<=.999);if(tl.length){const cs=Math.cos(S.ry),ss=Math.sin(S.ry),cx=Math.cos(S.rx),sx=Math.sin(S.rx);const zz=s=>{const q=s.P.cen;const x=q[0]+s.off[0],y=q[1]+s.off[1]-1.5-S.t*.45,z=q[2]+s.off[2];const z1=-x*ss+z*cs;return y*sx+z1*cx};tl.sort((a,b)=>zz(a)-zz(b));
+   gl.enable(gl.BLEND);gl.depthMask(false);for(const s of tl){drawP(U1,s,0)}
+   if(sel&&sel.al<=.999){gl.disable(gl.BLEND);gl.cullFace(gl.FRONT);gl.uniform1f(U1.uMode,2);gl.uniform1f(U1.uOut,.03);drawP(U1,sel,0);gl.uniform1f(U1.uMode,0);gl.uniform1f(U1.uOut,0)}
+   gl.depthMask(true);gl.cullFace(gl.BACK)}
+  gl.disable(gl.BLEND)};
+ o.pick=function(S,x,y){if(o.lost||!S.ps)return -1;const pw=cv.width,ph=cv.height;
+  if(!fbo||fw!==pw||fh!==ph){if(fbo){gl.deleteFramebuffer(fbo);gl.deleteTexture(ft);gl.deleteRenderbuffer(fd)}fw=pw;fh=ph;fbo=gl.createFramebuffer();ft=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,ft);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,pw,ph,0,gl.RGBA,gl.UNSIGNED_BYTE,null);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);fd=gl.createRenderbuffer();gl.bindRenderbuffer(gl.RENDERBUFFER,fd);gl.renderbufferStorage(gl.RENDERBUFFER,gl.DEPTH_COMPONENT16,pw,ph);gl.bindFramebuffer(gl.FRAMEBUFFER,fbo);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,ft,0);gl.framebufferRenderbuffer(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.RENDERBUFFER,fd)}
+  const px=Math.floor(x/S.W*pw),py=Math.floor((S.H-y)/S.H*ph);if(px<0||py<0||px>=pw||py>=ph)return -1;
+  gl.bindFramebuffer(gl.FRAMEBUFFER,fbo);gl.viewport(0,0,pw,ph);gl.enable(gl.SCISSOR_TEST);gl.scissor(px,py,1,1);gl.disable(gl.BLEND);gl.enable(gl.DEPTH_TEST);gl.depthMask(true);gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);
+  const c=cam(S);bindMain();setCam(U1,c);gl.uniform1f(U1.uMode,1);gl.uniform1f(U1.uOut,0);
+  const rd=sub=>{gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);for(const s of S.ps)if(sub(s))drawP(U1,s,1);const b=new Uint8Array(4);gl.readPixels(px,py,1,1,gl.RGBA,gl.UNSIGNED_BYTE,b);return b[0]};
+  let id=rd(s=>s.al>=.5);if(!id)id=rd(s=>s.al<.5);
+  gl.disable(gl.SCISSOR_TEST);gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.viewport(0,0,pw,ph);return id-1};
+ return o}
+/* ---------- vetítés a tetején lévő rajzhoz (felirat, füst) ---------- */
+function exProjG(S,p,off){const cy=Math.cos(S.ry),sy=Math.sin(S.ry),cx=Math.cos(S.rx),sx=Math.sin(S.rx),D=12,W=S.W,H=S.H,F=Math.min(W*1.5,H*2.0)*1.18*S.zm/(1+.55*S.t),CY=1.5+S.t*.45;
+ const x=p[0]+off[0],y=p[1]+off[1]-CY,z=p[2]+off[2],x1=x*cy+z*sy,z1=-x*sy+z*cy,y2=y*cx-z1*sx,z2=y*sx+z1*cx,k=F/(D-z2);return [W/2+x1*k,H*.52-y2*k,k]}
+function exOverlay(S){const c=S.ovc;if(!c)return;const W=S.W,H=S.H,dp=Math.min(S.dpr,1.5);const ow=Math.round(W*dp),oh=Math.round(H*dp);if(S.ov.width!==ow||S.ov.height!==oh){S.ov.width=ow;S.ov.height=oh}
+ c.setTransform(dp,0,0,dp,0,0);c.clearRect(0,0,W,H);const t=S.t;
+ const exh=EXP.find(p=>p.n==='Kipufogó');const showSm=exh&&!S.hid.has(exh.i)&&!S.pt&&ENG.sm.length;
+ if(showSm){const off=[exh.ex[0]*t,exh.ex[1]*t,exh.ex[2]*t];for(const p of ENG.sm){const q=exProjG(S,[p.x,p.y,p.z],off),f=p.a/p.L,r=Math.max(1,p.s*q[2]*(1+f*3.2)),al=(1-f)*(1-f)*.5;const g=p.d>.7?30:p.d>.3?78:150;c.fillStyle=`rgba(${g},${g},${g+4},${al})`;c.beginPath();c.arc(q[0],q[1],r,0,7);c.fill()}}
+ if(S.sel>=0&&!S.hid.has(S.sel)&&!S.mini){const P=EXP[S.sel],off=[P.ex[0]*t,P.ex[1]*t,P.ex[2]*t];const q=exProjG(S,P.cen,off);c.font='700 12px system-ui';const w=c.measureText(P.n).width+14,x=Math.max(4,Math.min(W-w-4,q[0]-w/2)),y=Math.max(18,q[1]-34);c.fillStyle='rgba(0,0,0,.72)';c.fillRect(x,y-14,w,20);c.strokeStyle='#ffd23f';c.lineWidth=1;c.strokeRect(x+.5,y-13.5,w-1,19);c.fillStyle='#ffe08a';c.textAlign='left';c.fillText(P.n,x+7,y);c.strokeStyle='#ffd23f';c.beginPath();c.moveTo(q[0],y+6);c.lineTo(q[0],q[1]);c.stroke();c.beginPath();c.arc(q[0],q[1],3,0,7);c.fillStyle='#ffd23f';c.fill()}}
+function exPickAny(x,y){if(EX.gl){const i=EX.gl.pick(EX,x,y);if(i>=0)exSelect(i);else{EX.sel=-1;exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'))}
+  if(i>=0){const ch=document.querySelector(`.exchip[data-i="${i}"]`);if(ch&&EX.sel===i)ch.scrollIntoView({block:'nearest',inline:'nearest'})}}else exPick(x,y)}
+/* ---------- fő ciklus ---------- */
+function exKick(){if(!ENG.raf){ENG.last=performance.now();ENG.raf=requestAnimationFrame(exTick)}}
+function exTick(now){ENG.raf=0;const raw=Math.min(100,Math.max(0,now-(ENG.last||now)));ENG.last=now;const dt=Math.min(.05,raw/1000);
+ const S=EX.run?EX:MN.run?MN:null;if(!S){exSndSync(false);return}
+ {let rem=Math.min(.15,raw/1000);while(rem>1e-4){const h=Math.min(rem,.034);exStep(h);rem-=h}}exFrame(S,dt,now,raw);exSndSync(true);ENG.raf=requestAnimationFrame(exTick)}
+function exFrame(S,dt,now,raw){const rr=S.cv.getBoundingClientRect();S.W=rr.width;S.H=rr.height;S.dpr=Math.min(2,devicePixelRatio||1);
+ S.t+=(S.tt-S.t)*Math.min(1,dt*6);if(S.auto&&!S.ptr.size)S.ry+=dt*(S.mini?.22:.35);
+ if(S.tv&&!S.ptr.size){let d=S.tv.ry-S.ry;d=Math.atan2(Math.sin(d),Math.cos(d));S.ry+=d*Math.min(1,dt*5);S.rx+=(S.tv.rx-S.rx)*Math.min(1,dt*5)}
+ if(S.gl){S.fe=S.fe?S.fe*.93+raw*.07:raw;S.fn=(S.fn||0)+1;if(S.fn>45){S.bd=Math.min(S.bd||34,S.fe,34);if(now-(S.rsT||0)>900){if(S.fe>Math.max(21,S.bd*1.35)&&S.rs>.5){S.cap=S.rs;S.rs=Math.max(.5,S.rs-.12);S.rsT=now;S.fe=S.bd}else if(S.fe<S.bd*1.12&&S.rs<(S.cap?S.cap-.05:1)&&now-S.rsT>3500){S.rs=Math.min(1,S.rs+.06);S.rsT=now}}}
+  S.gl.draw(S);exOverlay(S)}
+ else if(S===EX){const t0=performance.now();exDraw();const dd=performance.now()-t0;EX.avg=(EX.avg||dd)*.9+dd*.1;if(EX.avg>26)EX.lq=true;else if(EX.avg<14)EX.lq=false;exOverlay(S)}}
+/* ---------- főképernyői kis nézet ---------- */
+function exMiniMount(box){if(!box||box.dataset.mn)return;box.dataset.mn=1;
+ box.innerHTML=`<div class="mnh"><b>🪖 Gidrán – élő 3D</b><small>Indítsd be a motort, és nézd, hogyan dolgozik a hajtáslánc</small></div>
+ <div class="mnsc"><canvas id="mnCv" aria-label="Gidrán 3D modell"></canvas><canvas id="mnOv"></canvas><div class="mnhud"><span class="dHud">Motor leállítva · 0 km/h · N</span></div></div>${exDrvHTML()}
+ <div class="mnbt"><button type="button" class="btn line sm" id="mnPt" aria-pressed="false">⚙ Hajtáslánc</button><button type="button" class="btn pri sm" id="mnFull">⤢ Teljes 3D nézet</button></div>`;
+ const cv=box.querySelector('#mnCv');MN.cv=cv;MN.ov=box.querySelector('#mnOv');MN.ovc=MN.ov.getContext('2d');MN.W=cv.clientWidth||300;MN.H=cv.clientHeight||190;MN.dpr=Math.min(2,devicePixelRatio||1);
+ MN.gl=exGLNew(cv);
+ if(!MN.gl){box.querySelector('.mnsc').innerHTML='<div class="mnno">A 3D nézet ezen az eszközön a teljes képernyős módban érhető el.</div>';box.querySelector('.exdv').style.display='none';const pb=box.querySelector('#mnPt');if(pb)pb.style.display='none'}
+ else{
+  cv.addEventListener('pointerdown',e=>{try{cv.setPointerCapture(e.pointerId)}catch(_){}MN.ptr.set(e.pointerId,{x:e.clientX,mv:0});MN.tv=null});
+  cv.addEventListener('pointermove',e=>{const p=MN.ptr.get(e.pointerId);if(!p)return;const dx=e.clientX-p.x;p.x=e.clientX;p.mv+=Math.abs(dx);MN.ry+=dx*.009;MN.auto=false});
+  const up=e=>{MN.ptr.delete(e.pointerId);setTimeout(()=>{if(!MN.ptr.size&&!MN.pt)MN.auto=true},3500)};cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+  exDrvWire(box);
+  box.querySelector('#mnPt').onclick=e=>{MN.pt=!MN.pt;e.currentTarget.setAttribute('aria-pressed',MN.pt);if(MN.pt){MN.tv={ry:Math.PI-.62,rx:.42};MN.auto=false;MN.zm=.95}else{MN.tv=null;MN.auto=true;MN.zm=.82}};
+  box.querySelector('#mnFull').onclick=()=>{exOpen()};
+  const vis=()=>{const r=box.getBoundingClientRect(),on=!document.hidden&&r.height>0&&r.bottom>0&&r.top<innerHeight&&!document.body.classList.contains('harcon');if(on&&!MN.run){MN.run=true;exKick()}else if(!on&&MN.run)MN.run=false};
+  if('IntersectionObserver' in window){new IntersectionObserver(vis,{threshold:.01}).observe(box)}
+  document.addEventListener('visibilitychange',vis);addEventListener('scroll',vis,{passive:true});setInterval(vis,700);vis()}
+ addEventListener('keydown',e=>{if(MN.run&&!EX.run&&!/INPUT|TEXTAREA/.test((e.target||{}).tagName||''))exKeys(e)});addEventListener('keyup',e=>{if(MN.run||EX.run)exKeys(e)})}
 /* ===== FIÓK + ÉLŐ RANGLISTA (Firebase, a M.E.D.V.E. Arcade közös fiókjaival) ===== */
 const RANKS=['','honvéd','őrvezető','tizedes','szakaszvezető','őrmester','törzsőrmester','főtörzsőrmester','zászlós','törzszászlós','főtörzszászlós','hadnagy','főhadnagy','százados','őrnagy','alezredes','ezredes','dandártábornok','civil'];
 const RANKG=[['terep','Gidrán Terep','gmBest','medve-gm-best',true,v=>gtFmt(v/1000),'🏔️','Terep-maraton 16 km: CTIS, mocsár, hó, jég, csörlő, autópálya + konvoj.'],
@@ -1521,6 +2081,7 @@ function hubHTML(){if(TIPI<0)tipNext();
   <div class="hub"><p class="hubsub">Elfáradtál a tanulásban? Pihenj egyet – a Gidrán közben is a fejedben marad. 😉</p>
    <div class="hgames" id="hubGames">${RANKG.map(hubCard).join('')}</div>
    <div class="hgame"><button type="button" class="hgbtn" data-play="bemutato"><span class="hgic">🎪</span><span class="hgt"><b>Gidrán bemutató</b><small>Válaszolj a látogatók kérdéseire – bácsik, gyerekek, leendő katonák</small></span><span class="hggo">▶</span></button></div>
+   <div class="hgame"><button type="button" class="hgbtn" data-play="explode"><span class="hgic">🔧</span><span class="hgt"><b>Gidrán 3D – szétszedhető</b><small>Forgasd körbe, szedd szét, érints meg egy alkatrészt – leírás a tananyag alapján</small></span><span class="hggo">▶</span></button></div>
    <div class="hcard tipbox" id="tipBox"><div class="tiph"><b>💡 Tudtad-e?</b><span class="tipn" id="tipN"></span></div><div id="tipBody">${tipHTML(TIPI)}</div><div class="tipbtns"><button type="button" class="btn line sm" id="tipNext">Következő ▶</button><button type="button" class="btn line sm" id="tipAll">Összes (${TIPS.length})</button></div></div>
    <div class="hcard" id="authBox">${authInner()}</div></div>`}
 function gHubShow(){const el=$('#harc');el.hidden=false;document.body.classList.add('harcon');el.innerHTML=hubHTML()}
@@ -1552,7 +2113,7 @@ document.addEventListener('click',e=>{const t=e.target.closest?e.target:null;if(
   if(t.closest('#auOut')){if(confirm('Kijelentkezel?'))AUTH.signOut();return}
   if(t.closest('#auRetry')){FB_BOOT=0;FB_FAIL=false;AUTHREADY=false;hubRefresh();fbBoot();return}
   if(t.closest('#hubX')){hubClose();return}
-  if(b=t.closest('[data-play]')){const g=b.dataset.play;if(g==='terep')gtOpen();else if(g==='konvoj')gvOpen();else if(g==='bemutato')gbOpen();else ghOpen();return}
+  if(b=t.closest('[data-play]')){const g=b.dataset.play;if(g==='terep')gtOpen();else if(g==='konvoj')gvOpen();else if(g==='bemutato')gbOpen();else if(g==='explode')exOpen();else ghOpen();return}
   if(b=t.closest('[data-rank]')){rankOpen(b.dataset.rank);return}
   if(b=t.closest('[data-rg]')){rankFill(b.dataset.rg);return}
   if(b=t.closest('[data-close]')){const o=document.getElementById(b.dataset.close);if(o)o.hidden=true;return}
@@ -1561,9 +2122,9 @@ document.addEventListener('click',e=>{const t=e.target.closest?e.target:null;if(
   if(b=t.closest('[data-tf]')){tipsAll(b.dataset.tf);return}});
 document.addEventListener('change',e=>{if(e.target.id==='auRankEd'&&UID){const r=e.target.value;if(RANKS.includes(r))DB.doc('users/'+UID).update({rank:r}).then(()=>toast('Rendfokozat mentve')).catch(()=>toast('Nem sikerült menteni'))}});
 addEventListener('online',()=>{if(HUB&&!FB_ON){FB_BOOT=0;FB_FAIL=false;fbBoot()}});
-window.GIDGAMES={bemutato:gbOpen,open:hubOpen,close:hubClose,tips:()=>{hubOpen();tipsAll('*')},ver:GAMES_VER};
+window.GIDGAMES={bemutato:gbOpen,explode:exOpen,mini:exMiniMount,open:hubOpen,close:hubClose,tips:()=>{hubOpen();tipsAll('*')},ver:GAMES_VER};
 if(!document.getElementById('harc')){const h=document.createElement('div');h.id='harc';h.hidden=true;document.body.appendChild(h)}
 if(!document.getElementById('gdToast')){const h=document.createElement('div');h.id='gdToast';document.body.appendChild(h)}
 
-window.__G={gtOpen,gvOpen,ghOpen,gbOpen,GB,gbEval,GB_Q,GT,GV,GH,gtG,gtPhys,gtSeg,gtWinch,gtSurf,gtGame,ghUpdate,ghSpawn,hubOpen,TIPS};
+window.__G={exOpen,EX,EXP,exDraw,ENG,MN,exStep,exMiniMount,exGLNew,gtOpen,gvOpen,ghOpen,gbOpen,GB,gbEval,GB_Q,GT,GV,GH,gtG,gtPhys,gtSeg,gtWinch,gtSurf,gtGame,ghUpdate,ghSpawn,hubOpen,TIPS};
 })();
