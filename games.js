@@ -1821,6 +1821,11 @@ exSwap('Kipufogó',{pt:1});exSwap('Hidraulika (tartály, szivattyú, vezetékek)
  (function(){const P=by('Motor szerelőnyílásai');P.col='#52603a';for(const pr of P.p)pr.col='#52603a';
   const H=by('Motorház (motorháztető és előlap)');H.p.push(exBox(2.9,.9,0,.1,.5,1.72,{col:'#4a5733'}),exBox(2.945,.9,0,.02,.3,1.3,{col:BLK}));for(let i=0;i<4;i++)H.p.push(exBox(2.96,.78+i*.08,0,.015,.03,1.2,{col:'#2b3025'}))})();
  by('Szélvédő').spc=.45;
+ /* ---- finom részletek a fotók alapján: csörlő a lökhárító alatt, fényszóró-keret, tetőperem, ajtó-zsanérok, kerékjárat-élek ---- */
+ (function(){const B=by('Első lökhárító, vonószemek, lánc');B.p.push(exBox(2.9,.55,0,.2,.2,.62,{col:'#2b2e33'}),exCyl(2.93,.55,0,.07,.5,'z',{col:'#70757c',n:12}),exBox(3.0,.55,0,.05,.12,.24,{col:'#b9bec6'}),exBox(2.97,.45,-.34,.06,.05,.1,{col:BLK}),exBox(2.97,.45,.34,.06,.05,.1,{col:BLK}));
+  const R=by('Tető (páncél)');for(const sz of[-1,1])R.p.push(exBox(-.87,2.52,sz*.9,3.5,.05,.04,{col:DKG}));R.p.push(exBox(.88,2.52,0,.04,.05,1.8,{col:DKG}));
+  for(const n of['Ajtó – bal első','Ajtó – bal hátsó','Ajtó – jobb első','Ajtó – jobb hátsó']){const P=by(n),sg=n.includes('bal')?-1:1,x=n.includes('első')?.4:-.3;for(const dy of[2.25,1.5])P.p.push(exBox(x-.3,dy,sg*1.13,.05,.1,.05,{col:'#2b3025'}))}
+  const M=by('Motorház (motorháztető és előlap)');M.p.push(exBox(1.4,1.88,-.85,.12,.03,.1,{col:BLK}),exBox(1.4,1.88,.85,.12,.03,.1,{col:BLK}),exBox(2.9,1.88,0,.04,.03,1.4,{col:DKG}))})();
  /* ---- szélvédő: sötét üveg + keret + középoszlop ---- */
  (function(){const P=by('Szélvédő');const q=[[1.31,1.86],[.89,2.4],[.87,2.38],[1.29,1.84]];const sh=(dx,dy)=>q.map(v=>[v[0]+dx,v[1]+dy]);
   const bars=[[-.95,-.89],[-.03,.03],[.89,.95]].map(r=>exProf(sh(.028,.022),r[0],r[1],'z',{col:DKG}));
@@ -1857,19 +1862,20 @@ EXP.forEach((p,i)=>{p.i=i;p.f=[];p.cen=[0,0,0];let n=0;for(const pr of p.p){if(!
 function exHex(h){return [parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)]}
 function exOpen(){const el=$('#harc');el.hidden=false;document.body.classList.add('harcon');
  el.innerHTML=`<div class="hbar"><div class="htitle">Gidrán <b>3D – szétszedhető</b></div><button class="hx" id="exClose" aria-label="Bezárás">✕</button></div>
- <div class="exwrap"><div class="exscene"><canvas id="exCv"></canvas><canvas id="exOv"></canvas><div class="mnhud"><span class="dHud">Motor leállítva · 0 km/h · N</span></div><div class="exhint" id="exHint">Húzd el a forgatáshoz · csípd össze a nagyításhoz · érints meg egy alkatrészt</div></div>
- <div class="excp" id="exCp"><div class="extabs" role="tablist"><button type="button" role="tab" data-tab="drive" class="on">🚙 Vezetés</button><button type="button" role="tab" data-tab="light">💡 Fények</button><button type="button" role="tab" data-tab="view">🔧 Szétszedés</button></div>
- <div class="extp" data-p="drive">${exDrvHTML()}</div><div class="extp" data-p="light" hidden>${exLtHTML()}</div><div class="extp" data-p="view" hidden><div class="exctl"><label class="exsl"><span>🔧 Szétszedés</span><input type="range" id="exSl" min="0" max="100" value="0" aria-label="Szétszedés mértéke"></label>
+ <div class="exwrap"><div class="exscene"><canvas id="exCv"></canvas><canvas id="exOv"></canvas><div class="mnhud"><span class="dHud">Motor leállítva · 0 km/h · N</span></div><div class="expanel" id="exPanel" hidden></div><div class="exhint" id="exHint">Húzd el a forgatáshoz · csípd össze a nagyításhoz · érints meg egy alkatrészt</div></div>
+ <div class="excp" id="exCp"><div class="extabs" role="tablist"><button type="button" role="tab" data-tab="drive" class="on">🚙 Vezetés</button><button type="button" role="tab" data-tab="light">💡 Fények</button><button type="button" role="tab" data-tab="view">🔧 Szétszedés</button><button type="button" role="tab" data-tab="parts">📋 Alkatrészek</button></div>
+ <div class="extp" data-p="drive">${exDrvHTML()}</div><div class="extp" data-p="light" hidden>${exLtHTML()}</div><div class="extp" data-p="parts" hidden><div class="exlist" id="exList"></div></div><div class="extp" data-p="view" hidden><div class="exctl"><label class="exsl"><span>🔧 Szétszedés</span><input type="range" id="exSl" min="0" max="100" value="0" aria-label="Szétszedés mértéke"></label>
   <div class="exbt"><button type="button" class="btn line sm" id="exAuto" aria-pressed="true">⟳ Forgás</button><button type="button" class="btn line sm" id="exGh" aria-pressed="false">👻 Páncél átlátszó</button><button type="button" class="btn line sm" id="exV1">Elöl</button><button type="button" class="btn line sm" id="exV2">Oldal</button><button type="button" class="btn line sm" id="exV3">Felül</button><button type="button" class="btn line sm" id="exPt" aria-pressed="false">⚙ Hajtáslánc</button><button type="button" class="btn line sm" id="exRst">↺ Alaphelyzet</button></div></div></div></div>
- <div class="expanel" id="exPanel"></div><div class="exlist" id="exList"></div></div>`;
+ </div>`;
  $('#exClose').onclick=exClose;exDrvWire($('#exCp'));exTabs($('#exCp'));exSetup();exInfo(-1);exChips()}
-function exClose(){ENG.gasK=0;ENG.brkK=0;gClose(EX);exKick()}
+function exClose(){ENG.gasK=0;ENG.brkK=0;ENG.satK=0;gClose(EX);exKick()}
 function exChips(){const L=$('#exList');if(!L)return;const gs=[];EXP.forEach(p=>{if(!gs.includes(p.g))gs.push(p.g)});L.innerHTML=gs.map(g=>`<div class="exg"><b>${g}</b>${EXP.filter(p=>p.g===g).map(p=>`<button type="button" class="exchip" data-i="${p.i}">${esc(p.n)}</button>`).join('')}</div>`).join('');
  L.onclick=e=>{const b=e.target.closest('.exchip');if(!b)return;exSelect(+b.dataset.i)}}
 function exSelect(i){EX.sel=EX.sel===i?-1:i;exInfo(EX.sel);document.querySelectorAll('.exchip').forEach(b=>b.classList.toggle('on',+b.dataset.i===EX.sel));EX.auto=false;const a=$('#exAuto');if(a)a.setAttribute('aria-pressed','false')}
-function exInfo(i){const P=$('#exPanel');if(!P)return;if(i<0){P.innerHTML=`<div class="exempty"><b>Érints meg egy alkatrészt</b><span>A leírás itt jelenik meg. Csúsztasd a „Szétszedés” csúszkát, hogy a részek szétváljanak, a „Páncél átlátszó” gombbal belelátsz a járműbe.</span></div>`;return}
- const p=EXP[i],hid=EX.hid.has(i);P.innerHTML=`<div class="exh"><span class="exg1">${esc(p.g)}</span><h4>${esc(p.n)}</h4></div><p>${esc(p.d)}</p><div class="exact"><button type="button" class="btn line sm" id="exHide">${hid?'👁 Megjelenít':'🙈 Elrejt'}</button><button type="button" class="btn line sm" id="exShowAll">Mind látszik</button></div>`;
- $('#exHide').onclick=()=>{if(EX.hid.has(i))EX.hid.delete(i);else EX.hid.add(i);exInfo(i)};$('#exShowAll').onclick=()=>{EX.hid.clear();exInfo(i)}}
+function exInfo(i){const P=$('#exPanel');if(!P)return;if(i<0){P.innerHTML='';P.hidden=true;return}P.hidden=false;
+ const p=EXP[i],hid=EX.hid.has(i);P.innerHTML=`<div class="exh"><span class="exg1">${esc(p.g)}</span><h4>${esc(p.n)}</h4><button type="button" class="exxb" id="exInfoX" aria-label="Bezár">✕</button></div><p class="exd" id="exD">${esc(p.d)}</p><div class="exact"><button type="button" class="btn line sm" id="exMore">▾ Több</button><button type="button" class="btn line sm" id="exHide">${hid?'👁 Megjelenít':'🙈 Elrejt'}</button><button type="button" class="btn line sm" id="exShowAll">Mind látszik</button></div>`;
+ const D=$('#exD'),M=$('#exMore');M.onclick=()=>{const o=D.classList.toggle('open');M.textContent=o?'▴ Kevesebb':'▾ Több'};D.onclick=M.onclick;
+ $('#exInfoX').onpointerdown=e=>{e.preventDefault();e.stopPropagation();EX.sel=-1;exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'))};$('#exHide').onclick=()=>{if(EX.hid.has(i))EX.hid.delete(i);else EX.hid.add(i);exInfo(i)};$('#exShowAll').onclick=()=>{EX.hid.clear();exInfo(i)}}
 function exView(ry,rx){EX.tv={ry,rx};EX.auto=false;const a=$('#exAuto');if(a)a.setAttribute('aria-pressed','false')}
 function exSetup(){Object.assign(EX,gCanvas('#exCv'));EX.ov=$('#exOv');EX.ovc=EX.ov.getContext('2d');EX.gl=exGLNew(EX.cv);if(!EX.gl){const nc=EX.cv.cloneNode(false);EX.cv.replaceWith(nc);EX.cv=nc;EX.cv.width=Math.round(EX.W*EX.dpr);EX.cv.height=Math.round(EX.H*EX.dpr);EX.c=nc.getContext('2d')}EX.rs=1;EX.fe=0;EX.fn=0;EX.bd=0;EX.cap=0;EX.run=true;EX.last=performance.now();EX.sel=-1;EX.hid=new Set();EX.t=0;EX.tt=0;EX.ry=.75;EX.rx=.34;EX.zm=1;EX.auto=true;EX.ghost=false;EX.pt=false;EX.ptr=new Map();EX.tv=null;
  const cv=EX.cv;
@@ -1886,7 +1892,7 @@ function exSetup(){Object.assign(EX,gCanvas('#exCv'));EX.ov=$('#exOv');EX.ovc=EX
  $('#exV1').onclick=()=>exView(-Math.PI/2,.1);$('#exV2').onclick=()=>exView(0,.05);$('#exV3').onclick=()=>exView(0,1.4);
  $('#exPt').onclick=()=>{EX.pt=!EX.pt;$('#exPt').setAttribute('aria-pressed',EX.pt);if(EX.pt){EX.zm=1.12;exView(Math.PI-.62,.42);EX.sel=-1;exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'))}else exView(.75,.34)};
  $('#exRst').onclick=()=>{EX.pt=false;$('#exPt').setAttribute('aria-pressed','false');EX.tt=0;$('#exSl').value=0;EX.zm=1;EX.sel=-1;EX.hid.clear();exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'));exView(.75,.34);EX.auto=true;$('#exAuto').setAttribute('aria-pressed','true')};
- EX.key=e=>{if(e.type==='keydown'&&e.key==='Escape')exClose();else exKeys(e)};addEventListener('keydown',EX.key);addEventListener('keyup',EX.key);
+ EX.key=e=>{if(e.type==='keydown'&&e.key==='Escape'){const x=document.getElementById('exInfoX');if(x&&!document.getElementById('exPanel').hidden)x.dispatchEvent(new PointerEvent('pointerdown',{cancelable:true}));else exClose()}else exKeys(e)};addEventListener('keydown',EX.key);addEventListener('keyup',EX.key);
  exKick()}
 function exDraw(){const rr=EX.cv.getBoundingClientRect();if(Math.abs(rr.width-EX.W)>1||Math.abs(rr.height-EX.H)>1){EX.W=rr.width;EX.H=rr.height;EX.cv.width=rr.width*EX.dpr;EX.cv.height=rr.height*EX.dpr}const c=EX.c,W=EX.W,H=EX.H;c.setTransform(EX.dpr,0,0,EX.dpr,0,0);
  const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#26344a');g.addColorStop(.55,'#162030');g.addColorStop(1,'#0b0f15');c.fillStyle=g;c.fillRect(0,0,W,H);{const gl=c.createRadialGradient(W/2,H*.62,10,W/2,H*.62,W*.75);gl.addColorStop(0,'rgba(120,150,190,.16)');gl.addColorStop(1,'rgba(120,150,190,0)');c.fillStyle=gl;c.fillRect(0,0,W,H)}
@@ -1920,15 +1926,15 @@ function exPick(x,y){const F=EX.faces;const inP=(pv)=>{let ins=false;for(let i=0
  if(hit<0)hit=ghostHit;if(hit>=0)exSelect(hit);else{EX.sel=-1;exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'))}
  if(hit>=0){const ch=document.querySelector(`.exchip[data-i="${hit}"]`);if(ch&&EX.sel===hit)ch.scrollIntoView({block:'nearest',inline:'nearest'})}}
 /* ===== 3.4.0: WebGL megjelenítő (canvas2D tartalékkal) + élő motor és hajtáslánc ===== */
-const ENG={run:true,st:0,cr:0,rpm:0,ped:0,gasK:0,brkK:0,brk:0,gear:'N',rng:'H',g:0,v:0,wph:0,sph:0,fph:0,dist:0,sh:0,mute:false,snd:null,sm:[],t:0,emit:0,raf:0,last:0,hudT:0,hud:''};
+const ENG={pitch:0,pv:0,acc:0,vp:0,sat:0,satK:0,lock:false,skL:0,skOff:0,skS:null,run:true,st:0,cr:0,rpm:0,ped:0,gasK:0,brkK:0,brk:0,gear:'N',rng:'H',g:0,v:0,wph:0,sph:0,fph:0,dist:0,sh:0,mute:false,snd:null,sm:[],t:0,emit:0,raf:0,last:0,hudT:0,hud:''};
 const EXGR=[3.51,1.91,1.43,1.0,.74,.64],EXAXLE=4.1,EXIDLE=700,EXTAIL=[-1.0,.9,1.1];
 const EXSPIN={'Kerék – bal első':{c:[AF,WR,-TZ],ax:2,k:'w'},'Kerék – jobb első':{c:[AF,WR,TZ],ax:2,k:'w'},'Kerék – bal hátsó':{c:[AR,WR,-TZ],ax:2,k:'w'},'Kerék – jobb hátsó':{c:[AR,WR,TZ],ax:2,k:'w'},
  'Féltengelyek – első':{c:[AF,.59,0],ax:2,k:'w'},'Féltengelyek – hátsó':{c:[AR,.59,0],ax:2,k:'w'},
  'Kardántengely – első':{c:[1.05,.6,.18],ax:1,k:'s'},'Kardántengely – hátsó':{c:[-.835,.6,.18],ax:1,k:'s'},'Ventilátor (hűtőventilátor)':{c:[2.46,1.2,0],ax:1,k:'f'}};
 const EXSHAKE={'Motor (Cummins ISL9E3)':1,'Hűtőradiátorok (tömbösített hűtő, ventilátor)':.5,'Ventilátor (hűtőventilátor)':.6,'Levegőszűrő':.7,'Kipufogó':.7,'Generátor (28 V, 220 A)':.8,'Automata nyomatékváltó (Allison 3200 SP)':.55,'Osztómű':.3,'Kiegyenlítő tartály':.5,'Motorház (motorháztető és előlap)':.25,'Műszerfal (kijelzők, kapcsolók)':.15};
-EXP.forEach(p=>{p.sp=EXSPIN[p.n]||null;p.shk=EXSHAKE[p.n]||0;p.spc=p.glass?.5:/kerék/i.test(p.n)?.05:p.col&&/^#(c|d|e|f)/i.test(p.col)?.3:.22});
+EXP.forEach(p=>{p.uns=/^(Kerék|Féltengelyek|Féktárcsák)/.test(p.n);p.sp=EXSPIN[p.n]||null;p.shk=EXSHAKE[p.n]||0;p.spc=p.glass?.5:/kerék/i.test(p.n)?.05:p.col&&/^#(c|d|e|f)/i.test(p.col)?.3:.22});
 const LT={mode:0,search:false,beacon:false,hazard:false};
-function exLights(){const E=ENG,t=performance.now()/1000,hz=LT.hazard?(Math.sin(t*9)>0?1:0):0,head=LT.mode>0?(LT.mode===2?1:.7):0,tail=LT.mode>0?.35:0,brk=E.brk>.25?1:0,rev=(E.gear==='R'&&E.st===2)?1:0,bc=LT.beacon?.5+.5*Math.sin(t*10):0,bc2=LT.beacon?.5-.5*Math.sin(t*10):0,br=Math.max(brk,tail);
+function exLights(){const E=ENG,t=performance.now()/1000,hz=LT.hazard?(Math.sin(t*9)>0?1:0):0,head=LT.mode>0?(LT.mode===2?1:.7):0,tail=LT.mode>0?.35:0,brk=(E.brk>.25||E.sat>.25)?1:0,rev=(E.gear==='R'&&E.st===2)?1:0,bc=LT.beacon?.5+.5*Math.sin(t*10):0,bc2=LT.beacon?.5-.5*Math.sin(t*10):0,br=Math.max(brk,tail);
  return {head,high:LT.mode===2?1:0,brk:br,rev,hz,a:[head,hz,br,rev],b:[bc,LT.search?1:0,tail,bc2],k:{head,hz,brk:br,rev,bl:bc,rd:bc2,sr:LT.search?1:0}}}
 const EXLAMP=[];[-1,1].forEach(s=>{EXLAMP.push({p:[2.97,1.68,s*.74],n:[.7,0,s*.71],k:'head',c:'255,240,150',r:.36},{p:[2.86,1.38,s*.82],n:[.7,0,s*.71],k:'hz',c:'255,170,30',r:.16},{p:[-2.73,1.12,s*.9],n:[-1,0,0],k:'hz',c:'255,170,30',r:.16},{p:[-2.73,1.22,s*.9],n:[-1,0,0],k:'brk',c:'255,40,30',r:.22},{p:[-2.73,1.02,s*.9],n:[-1,0,0],k:'rev',c:'255,250,230',r:.18},{p:[.9,2.62,s*.78],n:null,k:'bl',c:'70,150,255',r:.38},{p:[.86,2.5,s*.45],n:null,k:'rd',c:'255,60,40',r:.24})});
 EXLAMP.push({p:[-2.5,2.62,-.8],n:null,k:'bl',c:'70,150,255',r:.38},{p:[.9,2.72,.88],n:[1,0,0],k:'sr',c:'255,245,190',r:.5});
@@ -1936,7 +1942,7 @@ const MN={run:false,ry:.75,rx:.3,zm:.82,t:0,tt:0,sel:-1,auto:true,ghost:false,pt
 /* ---------- fizika ---------- */
 const exClamp=(x,a,b)=>x<a?a:x>b?b:x;
 function exStep(dt){const E=ENG;E.t+=dt;const tr=E.rng==='L'?2.7:1;
- E.ped+=((E.gasK?1:0)-E.ped)*Math.min(1,dt*(E.gasK?3.2:7));E.brk+=((E.brkK?1:0)-E.brk)*Math.min(1,dt*9);
+ E.ped+=((E.gasK?1:0)-E.ped)*Math.min(1,dt*(E.gasK?3.2:7));E.brk=exClamp(E.brk+(E.brkK?dt*1.7:-dt*6),0,1);E.sat=exClamp(E.sat+(E.satK?dt*14:-dt*8),0,1);
  const thr=E.ped,run=E.st===2;let v=E.v;const av=Math.abs(v);
  if(E.st===1){E.cr-=dt;E.rpm+=(230+Math.sin(E.t*38)*30-E.rpm)*Math.min(1,dt*8);if(E.cr<=0){E.st=2;E.rpm=1150;exSmokePuff(10,1)}}
  else if(E.st===0)E.rpm=Math.max(0,E.rpm-dt*1400);
@@ -1947,27 +1953,35 @@ function exStep(dt){const E=ENG;E.t+=dt;const tr=E.rng==='L'?2.7:1;
  const ratio=E.gear==='R'?4.8:EXGR[E.g],tot=ratio*EXAXLE*tr,wrpm=av/WR*30/Math.PI*tot;
  let Fd=0;
  if(run&&E.gear!=='N'){const dir=E.gear==='R'?-1:1;let k=E.rpm>2450?0:thr;if(E.sh>.2)k*=.25;
-  const Fm=Math.min(1000*tot/WR*.85,(E.gear==='R'?28000:36000)*tr,250000*.85/Math.max(av,2.5));
+  const Fm=Math.min(1500*tot/WR*.88,(E.gear==='R'?28000:36000)*tr,300000*.9/Math.max(av,2.5));
   Fd=dir*k*Fm;if(thr<.03&&av<1.5&&!E.brk)Fd=dir*1800*(E.gear==='R'?.8:1)}
- const Fr=3.5*v*Math.abs(v)+(av>.02?4400*Math.sign(v):0)+(av>.02?Math.sign(v)*E.brk*70000:0);
+ const wasLock=E.lock;E.lock=E.sat>.6&&av>3.2;if(E.lock&&!wasLock){E.skL=0;E.skOff=0}
+ const FB=E.lock?88000:Math.max(E.brk*70000,E.sat*100000);
+ const Fr=2.8*v*Math.abs(v)+(av>.02?3300*Math.sign(v):0)+(av>.02?Math.sign(v)*FB:0);
  let vn;
- if(av<.02){const lim=4400+E.brk*70000;vn=Math.abs(Fd)>lim?v+(Fd-Math.sign(Fd)*lim)/15000*dt:0}
- else{vn=v+(Fd-Fr)/15000*dt;if(Math.sign(vn)!==Math.sign(v)&&Math.abs(Fd)<Math.abs(Fr))vn=0}
- E.v=v=exClamp(vn,-5.5,36);
+ if(av<.02){const lim=3300+FB;vn=Math.abs(Fd)>lim?v+(Fd-Math.sign(Fd)*lim)/13000*dt:0}
+ else{vn=v+(Fd-Fr)/13000*dt;if(Math.sign(vn)!==Math.sign(v)&&Math.abs(Fd)<Math.abs(Fr))vn=0}
+ const v0=E.v;E.v=v=exClamp(vn,-5.5,36.5);E.acc+=((v-v0)/Math.max(dt,1e-3)-E.acc)*Math.min(1,dt*7);
+ const tg0=exClamp(E.acc*.0055,-.05,.045);E.pv+=(-38*(E.pitch-tg0)-7*E.pv)*dt;E.pitch+=E.pv*dt;
  /* motorfordulat */
  if(run){let tg;if(E.gear==='N')tg=EXIDLE+thr*1750;else tg=Math.max(wrpm*(wrpm>1250?1:1),EXIDLE+thr*(wrpm<1300?1300:90));tg=Math.min(2600,tg);E.rpm+=(tg-E.rpm)*Math.min(1,dt*(thr>.05?5:3.5));
   if(Math.abs(E.rpm-EXIDLE)<30&&thr<.05)E.rpm+=Math.sin(E.t*9)*.5*dt*60}
  const cl=(x,m)=>exClamp(x,-m,m);
- E.wph+=cl(v/WR,26)*dt;E.sph+=cl(v/WR*EXAXLE,48)*dt;E.fph+=Math.min(24,E.rpm*.0105)*dt;E.dist+=v*dt;
+ if(!E.lock){E.wph+=cl(v/WR,26)*dt;E.sph+=cl(v/WR*EXAXLE,48)*dt}
+ if(E.lock)E.skL+=v*dt;else if(E.skL>0){E.skOff+=Math.max(v,0)*dt;if(E.skOff>30||(Math.abs(v)<.05&&false)){E.skL=0;E.skOff=0}}E.fph+=Math.min(24,E.rpm*.0105)*dt;E.dist+=v*dt;
  exSmokeStep(dt);
  if(E.hudT-=dt,E.hudT<=0){E.hudT=.07;exHudUpd()}}
-function exSmokePuff(n,dark){const E=ENG;for(let i=0;i<n&&E.sm.length<70;i++)E.sm.push({x:EXTAIL[0]+Math.random()*.1,y:EXTAIL[1]+Math.random()*.08,z:EXTAIL[2]+.05,vx:-(Math.random()*.4)-.3,vy:.35+Math.random()*.4,vz:.5+Math.random()*.6,a:0,L:1.1+Math.random()*.9,s:.05+Math.random()*.04,d:dark})}
-function exSmokeStep(dt){const E=ENG;if(E.st===2){E.emit+=dt*(7+E.rpm/90+E.ped*34);while(E.emit>1){E.emit--;const d=E.ped>.55&&E.rpm<2300?1:E.ped>.2?.5:0;exSmokePuff(1,d)}}
+function exSmokePuff(n,dark){const E=ENG;for(let i=0;i<n&&E.sm.length<110;i++)E.sm.push({x:EXTAIL[0]+Math.random()*.1,y:EXTAIL[1]+Math.random()*.08,z:EXTAIL[2]+.05,vx:-(Math.random()*.4)-.3,vy:.35+Math.random()*.4,vz:.5+Math.random()*.6,a:0,L:1.1+Math.random()*.9,s:.05+Math.random()*.04,d:dark})}
+function exTireSmoke(dt){const E=ENG;E.tsE=(E.tsE||0)+dt*46;while(E.tsE>1){E.tsE--;for(const [x,z] of[[AF,-TZ],[AF,TZ],[AR,-TZ],[AR,TZ]])if(E.sm.length<110)E.sm.push({x:x+(Math.random()-.5)*.3,y:.08,z:z+(Math.random()-.5)*.3,vx:-.3+Math.random()*.3,vy:.35+Math.random()*.35,vz:Math.sign(z)*(.15+Math.random()*.35),a:0,L:1.1+Math.random()*.7,s:.16+Math.random()*.08,d:0,w:1})}}
+function exSmokeStep(dt){const E=ENG;if(E.lock)exTireSmoke(dt);if(E.st===2){E.emit+=dt*(7+E.rpm/90+E.ped*34);while(E.emit>1){E.emit--;const d=E.ped>.55&&E.rpm<2300?1:E.ped>.2?.5:0;exSmokePuff(1,d)}}
  for(let i=E.sm.length-1;i>=0;i--){const p=E.sm[i];p.a+=dt;if(p.a>p.L){E.sm.splice(i,1);continue}p.x+=(p.vx-E.v*.85)*dt;p.y+=p.vy*dt;p.z+=p.vz*dt;p.vz*=1-dt*1.1;p.vy*=1-dt*.5;p.s+=dt*.03}}
 function exEngToggle(){const E=ENG;try{ac();AC&&AC.resume&&AC.resume()}catch(_){}
  if(E.st===0){E.st=1;E.cr=1.05;if(Math.abs(E.v)<.3)E.gear='N';exCrank()}else if(E.st===2){E.st=0;E.gasK=0}exKick();exHudUpd(1)}
 function exCrank(){if(!SOUND||ENG.mute||!ac())return;try{const a=AC,t=a.currentTime,o=a.createOscillator(),g=a.createGain(),lf=a.createOscillator(),lg=a.createGain(),f=a.createBiquadFilter();o.type='sawtooth';o.frequency.setValueAtTime(70,t);o.frequency.linearRampToValueAtTime(95,t+1);f.type='lowpass';f.frequency.value=500;lf.frequency.value=9;lg.gain.value=.05;g.gain.value=.05;lf.connect(lg).connect(g.gain);o.connect(f).connect(g).connect(MASTER);g.gain.setTargetAtTime(0,t+.95,.06);o.start(t);lf.start(t);o.stop(t+1.3);lf.stop(t+1.3)}catch(_){}}
-function exSndSync(active){const E=ENG,want=active&&E.st===2&&!E.mute&&SOUND;
+function exSkidSnd(on){const E=ENG;if(on&&!E.skS){if(!ac()||typeof NOISE==='undefined')return;try{const a=AC,n=a.createBufferSource();n.buffer=NOISE;n.loop=true;const f=a.createBiquadFilter();f.type='bandpass';f.frequency.value=1300;f.Q.value=2.5;const g=a.createGain();g.gain.value=0;n.connect(f).connect(g).connect(MASTER);n.start();g.gain.setTargetAtTime(.2,a.currentTime,.05);E.skS={n,g,f}}catch(_){}}
+ else if(!on&&E.skS){const S=E.skS;E.skS=null;try{S.g.gain.setTargetAtTime(0,AC.currentTime,.08);setTimeout(()=>{try{S.n.stop()}catch(_){}},400)}catch(_){}}
+ else if(on&&E.skS){try{E.skS.f.frequency.setTargetAtTime(900+Math.min(1,Math.abs(E.v)/25)*900,AC.currentTime,.1)}catch(_){}}}
+function exSndSync(active){const E=ENG,want=active&&E.st===2&&!E.mute&&SOUND;exSkidSnd(active&&E.lock&&!E.mute&&SOUND);
  if(want&&!E.snd){E.run=true;gEngStart(E)}else if(!want&&E.snd)gEngStop(E);
  if(E.snd)gEngTick(E,E.rpm,Math.min(1,E.ped*.9+.05),0)}
 function exGearLbl(){const E=ENG;return E.gear==='N'?'N':E.gear==='R'?'R':'D'+(E.g+1)}
@@ -1978,14 +1992,14 @@ function exHudUpd(force){const E=ENG;const kmh=Math.round(Math.abs(E.v)*3.6),rpm
  document.querySelectorAll('.dgs button').forEach(b=>{b.classList.toggle('on',b.dataset.g===E.gear||b.dataset.r===E.rng)});
  document.querySelectorAll('.dSnd').forEach(b=>{b.textContent=E.mute?'🔇':'🔊';b.setAttribute('aria-pressed',!E.mute)});
  document.querySelectorAll('[data-lt]').forEach(b=>{const k=b.dataset.lt,on=k==='dip'?LT.mode===1:k==='high'?LT.mode===2:k==='search'?LT.search:k==='beacon'?LT.beacon:k==='hazard'?LT.hazard:k==='cycle'?LT.mode>0:false;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);if(k==='cycle')b.textContent=['💡 Fény: ki','💡 Tompított','🔆 Távolsági'][LT.mode]});
- const hint=E.st===0?'① Indítsd be a motort a „Motor indítás” gombbal.':E.st===1?'Indítás…':E.gear==='N'?'② Válts D-be (előre) vagy R-be (hátra).':(Math.abs(E.v)<.3&&E.ped<.05)?'③ Nyomd a GÁZ gombot, a FÉK-kel lassítasz.':'';
+ const hint=E.st===0?'① Indítsd be a motort a „Motor indítás” gombbal.':E.st===1?'Indítás…':E.gear==='N'?'② Válts D-be (előre) vagy R-be (hátra).':(Math.abs(E.v)<.3&&E.ped<.05)?'③ GÁZ: gyorsítás · FÉK: fokozatos lassítás · SATUFÉK: vészfékezés (blokkoló kerekek)':'';
  document.querySelectorAll('.dHint').forEach(h=>{if(h.textContent!==hint)h.textContent=hint})}
 /* vezérlők (a teljes nézetben és a főképernyőn is) */
 function exDrvHTML(){return `<div class="exdv"><div class="xhn dHint"></div>
  <div class="drow"><button type="button" class="btn line dEng" aria-pressed="false">🔑 Motor indítás</button><button type="button" class="btn line sm dSnd" aria-label="Hang be/ki">🔊</button></div>
  <div class="drow"><div class="dgrp"><span>Váltó</span><div class="dgs" role="group" aria-label="Sebességváltó"><button type="button" data-g="R">R</button><button type="button" data-g="N" class="on">N</button><button type="button" data-g="D">D</button></div></div>
  <div class="dgrp"><span>Osztómű</span><div class="dgs" role="group" aria-label="Osztómű"><button type="button" data-r="H" class="on">Úti</button><button type="button" data-r="L">Terep</button></div></div></div>
- <div class="dpd"><button type="button" class="dPed dBrk">FÉK</button><button type="button" class="dPed dGas">GÁZ</button></div>
+ <div class="dpd"><button type="button" class="dPed dBrk">FÉK</button><button type="button" class="dPed dSat">SATUFÉK</button><button type="button" class="dPed dGas">GÁZ</button></div>
  <div class="dBar" aria-hidden="true"><i></i></div></div>`}
 function exLtHTML(){const B=(k,ic,t)=>`<button type="button" class="ltb" data-lt="${k}" aria-pressed="false"><i aria-hidden="true">${ic}</i><b>${t}</b></button>`;
  return `<div class="exdv exlt"><div class="xhn">A fék- és a tolatólámpa magától világít. A fényeket a vezetés közben is bekapcsolhatod.</div><div class="ltg">${B('dip','💡','Tompított')}${B('high','🔆','Távolsági')}${B('search','🔦','Keresőlámpa')}${B('beacon','🔵','Kék-piros villogó')}${B('hazard','⚠️','Vészvillogó')}${B('off','⏻','Mind ki')}</div></div>`}
@@ -2003,9 +2017,10 @@ function exDrvWire(root){
   const dn=e=>{e.preventDefault();try{el.setPointerCapture(e.pointerId)}catch(_){}ENG[key]=1;el.classList.add('hold');try{ac();AC&&AC.resume&&AC.resume()}catch(_){}exKick()};
   const upf=e=>{ENG[key]=0;el.classList.remove('hold')};
   el.addEventListener('pointerdown',dn);el.addEventListener('pointerup',upf);el.addEventListener('pointercancel',upf);el.addEventListener('lostpointercapture',upf);el.addEventListener('contextmenu',e=>e.preventDefault())};
- pedal('.dGas','gasK');pedal('.dBrk','brkK');exHudUpd(1)}
+ pedal('.dGas','gasK');pedal('.dBrk','brkK');pedal('.dSat','satK');exHudUpd(1)}
 const exKeys=e=>{const d=e.type==='keydown';const k=e.key;
- if(k==='ArrowUp'||k==='w'||k==='W'){ENG.gasK=d?1:0;if(d)exKick()}else if(k==='ArrowDown'||k==='s'||k==='S'||k===' '){ENG.brkK=d?1:0;if(k===' ')e.preventDefault()}
+ if(d&&k==='Escape'){const x=document.getElementById('exInfoX');if(x&&!document.getElementById('exPanel').hidden){x.dispatchEvent(new PointerEvent('pointerdown',{cancelable:true}));return}}
+ if(k==='ArrowUp'||k==='w'||k==='W'){ENG.gasK=d?1:0;if(d)exKick()}else if(k==='ArrowDown'||k==='s'||k==='S'){ENG.brkK=d?1:0}else if(k===' '){ENG.satK=d?1:0;e.preventDefault()}
  else if(d&&(k==='e'||k==='E'))exEngToggle();else if(d&&(k==='r'||k==='R')){ENG.gear='R'}else if(d&&(k==='n'||k==='N')){ENG.gear='N'}else if(d&&(k==='d'||k==='D')){ENG.gear='D'}};
 /* ---------- geometria ---------- */
 let EXGEO=null;
@@ -2028,9 +2043,9 @@ function exBuildGeo(){if(EXGEO)return EXGEO;const out=[],parts=[];
   parts.push({o:start,n:out.length/10-start})});
  EXGEO={buf:new Float32Array(out),parts};window.__EXV=out.length/10;return EXGEO}
 /* ---------- WebGL ---------- */
-const EXVS=`attribute vec3 aP;attribute vec3 aN;attribute vec3 aC;attribute float aE;varying float vE;uniform vec3 uOff,uRc;uniform float uAng,uAx,uOut;uniform vec4 uR,uS;uniform vec2 uK;varying vec3 vN,vV,vC;varying float vWy;
+const EXVS=`attribute vec3 aP;attribute vec3 aN;attribute vec3 aC;attribute float aE;varying float vE;uniform vec3 uOff,uRc;uniform float uAng,uAx,uOut,uPit,uSpr;uniform vec4 uR,uS;uniform vec2 uK;varying vec3 vN,vV,vC;varying float vWy;
 void main(){vec3 p=aP,n=aN;if(uAx>.5){vec3 q=p-uRc;float c=cos(uAng),s=sin(uAng);if(uAx<1.5){q=vec3(q.x,q.y*c-q.z*s,q.y*s+q.z*c);n=vec3(n.x,n.y*c-n.z*s,n.y*s+n.z*c);}else{q=vec3(q.x*c-q.y*s,q.x*s+q.y*c,q.z);n=vec3(n.x*c-n.y*s,n.x*s+n.y*c,n.z);}p=q+uRc;}
-p+=uOff+n*uOut;vWy=p.y;vec3 w=p;w.y-=uS.z;float x1=w.x*uR.x+w.z*uR.y,z1=-w.x*uR.y+w.z*uR.x,y2=w.y*uR.z-z1*uR.w,z2=w.y*uR.w+z1*uR.z,d=uS.w-z2;
+p+=uOff+n*uOut;if(uSpr>.5){float c2=cos(uPit),s2=sin(uPit);vec3 q2=p-vec3(.2,.6,0.);p=vec3(q2.x*c2-q2.y*s2,q2.x*s2+q2.y*c2,q2.z)+vec3(.2,.6,0.);n=vec3(n.x*c2-n.y*s2,n.x*s2+n.y*c2,n.z);}vWy=p.y;vec3 w=p;w.y-=uS.z;float x1=w.x*uR.x+w.z*uR.y,z1=-w.x*uR.y+w.z*uR.x,y2=w.y*uR.z-z1*uR.w,z2=w.y*uR.w+z1*uR.z,d=uS.w-z2;
 gl_Position=vec4(x1*uS.x,y2*uS.y-.04*d,uK.x*d+uK.y,d);float nx=n.x*uR.x+n.z*uR.y,nz=-n.x*uR.y+n.z*uR.x;vN=vec3(nx,n.y*uR.z-nz*uR.w,n.y*uR.w+nz*uR.z);vV=vec3(-x1,-y2,uS.w-z2);vC=aC;vE=aE;}`;
 const EXFS=`precision mediump float;varying vec3 vN,vV,vC;varying float vWy,vE;uniform vec4 uLA,uLB;uniform float uAlpha,uSel,uSpec,uMode,uPulse;uniform vec3 uId;
 void main(){if(uMode>.5&&uMode<1.5){gl_FragColor=vec4(uId,1.);return;}if(uMode>1.5){gl_FragColor=vec4(1.,.82,.25,1.);return;}
@@ -2040,20 +2055,22 @@ vec3 r=reflect(-V,n);vec3 env=mix(vec3(.10,.09,.08),vec3(.55,.65,.78),smoothstep
 vec3 col=vC*(amb+dif*.8*vec3(1.,.96,.9)+fil*.15*vec3(.6,.7,1.))*ao+sp*vec3(1.,.97,.9)+env*fr*uSpec*.8+vec3(.5,.6,.8)*fr*.07;
 col=col*(1.+uSel*.18)+vec3(.9,.65,.1)*uSel*(.10+.12*uPulse);float LE=vE<.5?0.:vE<1.5?uLA.x:vE<2.5?uLA.y:vE<3.5?uLA.z:vE<4.5?uLA.w:vE<5.5?uLB.x:vE<6.5?uLB.y:vE<7.5?uLB.z:uLB.w;col=mix(col,vC*1.5+vec3(.25),clamp(LE,0.,1.))*(1.+LE*.6);gl_FragColor=vec4(col,uAlpha);}`;
 const EXGVS=`attribute vec2 aP;uniform vec4 uR,uS;uniform vec2 uK;varying vec2 vX;void main(){vX=aP;vec3 w=vec3(aP.x,-uS.z,aP.y);float x1=w.x*uR.x+w.z*uR.y,z1=-w.x*uR.y+w.z*uR.x,y2=w.y*uR.z-z1*uR.w,z2=w.y*uR.w+z1*uR.z,d=uS.w-z2;gl_Position=vec4(x1*uS.x,y2*uS.y-.04*d,uK.x*d+uK.y,d);}`;
-const EXGFS=`precision mediump float;varying vec2 vX;uniform float uScroll,uFade;uniform vec3 uBm,uBm2;
+const EXGFS=`precision mediump float;varying vec2 vX;uniform float uScroll,uFade;uniform vec3 uBm,uBm2,uSk;
 float sdb(vec2 p,vec2 b,float r){vec2 q=abs(p)-b+r;return length(max(q,0.))+min(max(q.x,q.y),0.)-r;}
-void main(){float sd=sdb(vX-vec2(.1,0.),vec2(3.15,1.2),.7);float sh=(1.-smoothstep(-.2,1.5,sd))*.62*uFade;float rr=length(vX);float fade=1.-smoothstep(2.5,9.,rr);
-float gx=abs(fract(vX.x+uScroll)-.5),gz=abs(fract(vX.y+.5)-.5);float ln=(1.-smoothstep(.0,.035,.5-gx))+(1.-smoothstep(.0,.035,.5-gz));
-float glow=(1.-smoothstep(0.,7.,rr))*.13;vec3 c=vec3(.47,.59,.75);float a=clamp(sh+ln*.075*fade+glow,0.,1.);vec3 col=mix(c,vec3(0.),sh/max(a,.001));float bx=vX.x-2.95,bm=0.;if(bx>0.){float len=2.6+uBm.y*5.4;float fd=smoothstep(0.,.6,bx)*(1.-smoothstep(len*.35,len,bx));float w=.32+bx*.2;float d1=(vX.y-.72)/w,d2=(vX.y+.72)/w;bm=(exp(-d1*d1*1.4)+exp(-d2*d2*1.4))*fd*uBm.x*.34;}
+void main(){float sd=sdb(vX-vec2(.1,0.),vec2(3.15,1.2),.7);float sh=(1.-smoothstep(-.2,1.5,sd))*.62*uFade;float rr=length(vX);float fade=1.-smoothstep(2.5,9.,rr);float fade2=1.-smoothstep(5.,9.,rr);
+vec2 q=vec2(vX.x+uScroll,vX.y);float gx=abs(fract(q.x)-.5),gz=abs(fract(q.y+.5)-.5);float ln=(1.-smoothstep(.0,.035,.5-gx))*.5+(1.-smoothstep(.0,.035,.5-gz))*.5;
+vec2 cq=floor(q*7.);float hs=fract(sin(dot(cq,vec2(12.9898,78.233)))*43758.5453);vec2 lf=fract(q*7.)-.5-(vec2(hs,fract(hs*7.3))-.5)*.4;float sp=step(.8,hs)*(1.-smoothstep(.04,.2,length(lf)))*fade*.1;float rut=(1.-smoothstep(.0,.2,abs(abs(vX.y)-.9)))*.07*fade;
+float glow=(1.-smoothstep(0.,7.,rr))*.13;vec3 c=vec3(.47,.59,.75);float a=clamp(sh+ln*.05*fade+glow+sp+rut,0.,1.);vec3 col=mix(c,vec3(0.),sh/max(a,.001));float bx=vX.x-2.95,bm=0.;if(bx>0.){float len=2.6+uBm.y*5.4;float fd=smoothstep(0.,.6,bx)*(1.-smoothstep(len*.35,len,bx));float w=.32+bx*.2;float d1=(vX.y-.72)/w,d2=(vX.y+.72)/w;bm=(exp(-d1*d1*1.4)+exp(-d2*d2*1.4))*fd*uBm.x*.34;}
 float rx=-2.95-vX.x,rb=0.;vec3 rc=vec3(0.);if(rx>0.){float f=smoothstep(0.,.5,rx)*(1.-smoothstep(.4,2.2,rx));float zz=abs(vX.y)-.9;float g=exp(-zz*zz*3.5)*f;rc=vec3(1.,.12,.08)*g*uBm2.x*.38+vec3(1.,.97,.85)*g*uBm2.y*.4;rb=max(g*uBm2.x*.38,g*uBm2.y*.4);}
-float a2=clamp(a+bm+rb,0.,1.);vec3 rgb=col*a+vec3(1.,.93,.7)*bm+rc;gl_FragColor=vec4(min(rgb,vec3(a2)),a2);}`;
+float skm=0.;{float L=uSk.x,off=uSk.y;if(L>0.){for(int i=0;i<2;i++){float ax=i==0?1.8:-1.455;float x0=ax-off;float inx=step(x0-L,vX.x)*step(vX.x,x0);float lane=1.-smoothstep(.1,.2,abs(abs(vX.y)-1.0545));skm+=inx*lane;}}}skm=min(skm,1.)*.4*fade2;
+float a2=clamp(a+bm+rb+skm,0.,1.);vec3 rgb=col*a+vec3(1.,.93,.7)*bm+rc-vec3(skm);rgb=max(rgb,vec3(0.));gl_FragColor=vec4(min(rgb,vec3(a2)),a2);}`;
 function exGLNew(cv){const ctxOpt={antialias:!window.__EXNOAA&&(devicePixelRatio||1)<2,alpha:true,premultipliedAlpha:true,powerPreference:'high-performance',failIfMajorPerformanceCaveat:!window.__EXGL_ANY};
  let gl=null;try{gl=cv.getContext('webgl',ctxOpt)||cv.getContext('experimental-webgl',ctxOpt)}catch(_){}if(!gl)return null;
  const mk=(t,s)=>{const h=gl.createShader(t);gl.shaderSource(h,s);gl.compileShader(h);if(!gl.getShaderParameter(h,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(h));return h};
  const prog=(v,f)=>{const p=gl.createProgram();gl.attachShader(p,mk(gl.VERTEX_SHADER,v));gl.attachShader(p,mk(gl.FRAGMENT_SHADER,f));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(p));return p};
  const uni=(p,names)=>{const o={};names.split(',').forEach(n=>{o[n]=gl.getUniformLocation(p,n)});return o};
  let P1,P2,U1,U2,vb,gb,G,fbo=null,ft=null,fd=null,fw=0,fh=0;
- try{P1=prog(EXVS,EXFS);P2=prog(EXGVS,EXGFS);U1=uni(P1,'uOff,uRc,uAng,uAx,uOut,uR,uS,uK,uAlpha,uSel,uSpec,uMode,uPulse,uId,uLA,uLB');U2=uni(P2,'uR,uS,uK,uScroll,uFade,uBm,uBm2');
+ try{P1=prog(EXVS,EXFS);P2=prog(EXGVS,EXGFS);U1=uni(P1,'uOff,uRc,uAng,uAx,uOut,uPit,uSpr,uR,uS,uK,uAlpha,uSel,uSpec,uMode,uPulse,uId,uLA,uLB');U2=uni(P2,'uR,uS,uK,uScroll,uFade,uBm,uBm2,uSk');
   G=exBuildGeo();vb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,vb);gl.bufferData(gl.ARRAY_BUFFER,G.buf,gl.STATIC_DRAW);gb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,gb);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-10,-10,10,-10,-10,10,10,10]),gl.STATIC_DRAW)}catch(err){try{console.warn('GL',err)}catch(_){}return null}
  const A1={P:gl.getAttribLocation(P1,'aP'),N:gl.getAttribLocation(P1,'aN'),C:gl.getAttribLocation(P1,'aC'),E:gl.getAttribLocation(P1,'aE')},A2=gl.getAttribLocation(P2,'aP');
  const o={gl,lost:false};
@@ -2061,14 +2078,14 @@ function exGLNew(cv){const ctxOpt={antialias:!window.__EXNOAA&&(devicePixelRatio
  cv.addEventListener('webglcontextrestored',()=>{const n=exGLNew(cv);if(n){Object.assign(o,n);o.lost=false}});
  const cam=S=>{const cy=Math.cos(S.ry),sy=Math.sin(S.ry),cx=Math.cos(S.rx),sx=Math.sin(S.rx),D=12,W=S.W,H=S.H;const F=Math.min(W*1.5,H*2.0)*1.18*S.zm/(1+.55*S.t);return {R:[cy,sy,cx,sx],S:[F/(W/2),F/(H/2),1.5+S.t*.45,D],K:[41/39,-80/39]}};
  const bindMain=()=>{gl.useProgram(P1);gl.bindBuffer(gl.ARRAY_BUFFER,vb);gl.enableVertexAttribArray(A1.P);gl.enableVertexAttribArray(A1.N);gl.enableVertexAttribArray(A1.C);gl.enableVertexAttribArray(A1.E);gl.vertexAttribPointer(A1.P,3,gl.FLOAT,false,40,0);gl.vertexAttribPointer(A1.N,3,gl.FLOAT,false,40,12);gl.vertexAttribPointer(A1.C,3,gl.FLOAT,false,40,24);gl.vertexAttribPointer(A1.E,1,gl.FLOAT,false,40,36)};
- const setCam=(U,c)=>{gl.uniform4f(U.uR,c.R[0],c.R[1],c.R[2],c.R[3]);gl.uniform4f(U.uS,c.S[0],c.S[1],c.S[2],c.S[3]);gl.uniform2f(U.uK,c.K[0],c.K[1])};
+ const setCam=(U,c)=>{gl.uniform4f(U.uR,c.R[0],c.R[1],c.R[2],c.R[3]);gl.uniform4f(U.uS,c.S[0],c.S[1],c.S[2],c.S[3]);gl.uniform2f(U.uK,c.K[0],c.K[1]);if(U.uPit)gl.uniform1f(U.uPit,ENG.pitch)};
  const pstate=S=>{const E=ENG,t=S.t,gh=S.ghost?1:Math.min(1,t*1.6),amp=E.st===1?.02:E.st===2?.012+.02*Math.min(1,E.rpm/2400)+.014*E.ped:0,list=[];
   EXP.forEach(P=>{if(S.hid.has(P.i))return;if(S.pt&&!P.pt)return;const sel=P.i===S.sel;let ox=P.ex[0]*t,oy=P.ex[1]*t,oz=P.ex[2]*t;
    if(amp&&P.shk){const a=amp*P.shk;ox+=(Math.random()-.5)*a*.6;oy+=(Math.random()-.5)*a;oz+=(Math.random()-.5)*a}
    let ang=0;if(P.sp){ang=P.sp.k==='w'?-E.wph:P.sp.k==='s'?-E.sph:E.fph}
    const al=P.glass?(.35+.3*(1-(P.ghost?gh:0))):P.ghost?(sel?.9:1-.78*gh):1;
    list.push({P,off:[ox,oy,oz],ang,al,sel})});return list};
- const drawP=(U,s,mode,idc)=>{const P=s.P,G1=G.parts[P.i];if(!G1.n)return;gl.uniform3f(U.uOff,s.off[0],s.off[1],s.off[2]);
+ const drawP=(U,s,mode,idc)=>{const P=s.P,G1=G.parts[P.i];if(!G1.n)return;gl.uniform1f(U.uSpr,P.uns?0:1);gl.uniform3f(U.uOff,s.off[0],s.off[1],s.off[2]);
   if(P.sp){gl.uniform1f(U.uAx,P.sp.ax);gl.uniform3f(U.uRc,P.sp.c[0],P.sp.c[1],P.sp.c[2]);gl.uniform1f(U.uAng,s.ang)}else gl.uniform1f(U.uAx,0);
   if(mode===1){const q=(P.i+1)/255;gl.uniform3f(U.uId,q,0,0)}else{gl.uniform1f(U.uAlpha,s.al);gl.uniform1f(U.uSel,s.sel?1:0);gl.uniform1f(U.uSpec,P.spc)}
   gl.drawArrays(gl.TRIANGLES,G1.o,G1.n)};
@@ -2078,7 +2095,7 @@ function exGLNew(cv){const ctxOpt={antialias:!window.__EXNOAA&&(devicePixelRatio
   const c=cam(S),list=pstate(S);S.ps=list;
   /* talaj + árnyék */
   gl.disable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
-  gl.useProgram(P2);setCam(U2,c);gl.uniform1f(U2.uScroll,-(ENG.dist%1));gl.uniform1f(U2.uFade,1-S.t*.5);const lg=exLights(),bf=1-Math.min(1,S.t*2);gl.uniform3f(U2.uBm,lg.head*bf,lg.high,0);gl.uniform3f(U2.uBm2,lg.brk*bf,lg.rev*bf,0);gl.bindBuffer(gl.ARRAY_BUFFER,gb);gl.enableVertexAttribArray(A2);gl.vertexAttribPointer(A2,2,gl.FLOAT,false,0,0);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  gl.useProgram(P2);setCam(U2,c);gl.uniform1f(U2.uScroll,ENG.dist);gl.uniform1f(U2.uFade,1-S.t*.5);const lg=exLights(),bf=1-Math.min(1,S.t*2);gl.uniform3f(U2.uSk,ENG.skL,ENG.skOff,0);gl.uniform3f(U2.uBm,lg.head*bf,lg.high,0);gl.uniform3f(U2.uBm2,lg.brk*bf,lg.rev*bf,0);gl.bindBuffer(gl.ARRAY_BUFFER,gb);gl.enableVertexAttribArray(A2);gl.vertexAttribPointer(A2,2,gl.FLOAT,false,0,0);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
   /* járműtest */
   bindMain();setCam(U1,c);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);gl.frontFace(gl.CCW);gl.disable(gl.BLEND);
   gl.uniform1f(U1.uMode,0);gl.uniform1f(U1.uOut,0);gl.uniform1f(U1.uPulse,.5+.5*Math.sin(performance.now()/260));gl.uniform4f(U1.uLA,lg.a[0],lg.a[1],lg.a[2],lg.a[3]);gl.uniform4f(U1.uLB,lg.b[0],lg.b[1],lg.b[2],lg.b[3]);
@@ -2106,8 +2123,8 @@ function exOverlay(S){const c=S.ovc;if(!c)return;const W=S.W,H=S.H,dp=Math.min(S
  {const lg=exLights();if(!S.pt&&t<.05){const cx=Math.cos(S.rx),sx=Math.sin(S.rx),sy=Math.sin(S.ry),cy=Math.cos(S.ry),V=[-cx*sy,sx,cx*cy];let on=0;c.globalCompositeOperation='lighter';
   for(const L of EXLAMP){const it=lg.k[L.k];if(it<.03)continue;let fc=1;if(L.n){fc=L.n[0]*V[0]+L.n[1]*V[1]+L.n[2]*V[2];if(fc<.12)continue;fc=Math.min(1,fc*1.5)}const q=exProjG(S,L.p,[0,0,0]),r=Math.max(4,L.r*q[2]*(.7+.5*it)),g=c.createRadialGradient(q[0],q[1],0,q[0],q[1],r);const al=.62*it*fc;g.addColorStop(0,`rgba(${L.c},${al})`);g.addColorStop(.35,`rgba(${L.c},${al*.35})`);g.addColorStop(1,`rgba(${L.c},0)`);c.fillStyle=g;c.beginPath();c.arc(q[0],q[1],r,0,7);c.fill()}
   c.globalCompositeOperation='source-over'}}
- const exh=EXP.find(p=>p.n==='Kipufogó');const showSm=exh&&!S.hid.has(exh.i)&&!S.pt&&ENG.sm.length;
- if(showSm){const off=[exh.ex[0]*t,exh.ex[1]*t,exh.ex[2]*t];for(const p of ENG.sm){const q=exProjG(S,[p.x,p.y,p.z],off),f=p.a/p.L,r=Math.max(1.5,p.s*q[2]*(1+f*2.2)),al=(1-f)*(1-f)*.34;const g=p.d>.7?30:p.d>.3?78:150;const gr=c.createRadialGradient(q[0],q[1],0,q[0],q[1],r);gr.addColorStop(0,`rgba(${g},${g},${g+4},${al})`);gr.addColorStop(1,`rgba(${g},${g},${g+4},0)`);c.fillStyle=gr;c.beginPath();c.arc(q[0],q[1],r,0,7);c.fill()}}
+ const exh=EXP.find(p=>p.n==='Kipufogó');const showEx=exh&&!S.hid.has(exh.i),showSm=!S.pt&&ENG.sm.length;
+ if(showSm){const off=[exh.ex[0]*t,exh.ex[1]*t,exh.ex[2]*t];for(const p of ENG.sm){if(!p.w&&!showEx)continue;const q=exProjG(S,[p.x,p.y,p.z],p.w?[0,0,0]:off),f=p.a/p.L,r=Math.max(1.5,p.s*q[2]*(1+f*2.2)),al=(1-f)*(1-f)*.34;const g=p.w?205:p.d>.7?30:p.d>.3?78:150;const gr=c.createRadialGradient(q[0],q[1],0,q[0],q[1],r);gr.addColorStop(0,`rgba(${g},${g},${g+4},${al})`);gr.addColorStop(1,`rgba(${g},${g},${g+4},0)`);c.fillStyle=gr;c.beginPath();c.arc(q[0],q[1],r,0,7);c.fill()}}
  if(S.sel>=0&&!S.hid.has(S.sel)&&!S.mini){const P=EXP[S.sel],off=[P.ex[0]*t,P.ex[1]*t,P.ex[2]*t];const q=exProjG(S,P.cen,off);c.font='700 12px system-ui';const w=c.measureText(P.n).width+14,x=Math.max(4,Math.min(W-w-4,q[0]-w/2)),y=Math.max(18,q[1]-34);c.fillStyle='rgba(0,0,0,.72)';c.fillRect(x,y-14,w,20);c.strokeStyle='#ffd23f';c.lineWidth=1;c.strokeRect(x+.5,y-13.5,w-1,19);c.fillStyle='#ffe08a';c.textAlign='left';c.fillText(P.n,x+7,y);c.strokeStyle='#ffd23f';c.beginPath();c.moveTo(q[0],y+6);c.lineTo(q[0],q[1]);c.stroke();c.beginPath();c.arc(q[0],q[1],3,0,7);c.fillStyle='#ffd23f';c.fill()}}
 function exPickAny(x,y){if(EX.gl){const i=EX.gl.pick(EX,x,y);if(i>=0)exSelect(i);else{EX.sel=-1;exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'))}
   if(i>=0){const ch=document.querySelector(`.exchip[data-i="${i}"]`);if(ch&&EX.sel===i)ch.scrollIntoView({block:'nearest',inline:'nearest'})}}else exPick(x,y)}

@@ -277,3 +277,45 @@ body.harcon{overflow:hidden}
 .ltb i{font-style:normal;font-size:22px;line-height:1}.ltb b{font-size:11.5px;text-align:center;line-height:1.15}
 .ltb.on{background:#ffb52e;color:#1a1204;border-color:#ffb52e;box-shadow:0 0 14px rgba(255,181,46,.45)}
 .mn3 .mnbt .btn[data-lt].on{background:#ffb52e;color:#1a1204;border-color:#ffb52e}
+/* 3.6.0 – nagyobb jármű-nézet, kompakt vezérlők, fekvő elrendezés */
+#harc .exscene{flex:1 1 auto;min-height:50vh}
+#harc .exwrap{min-height:0}
+.excp{max-height:36vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.extabs{padding:4px 6px 0;gap:3px}.extabs button{min-height:36px;font-size:12px;padding:0 2px}
+.extp{min-height:0!important}
+.exdv{padding:5px 8px;gap:5px}.exdv .btn{min-height:38px}.drow .dEng{min-height:40px}
+.dgs button{min-height:34px;min-width:34px}
+.dPed{min-height:42px}.dpd{gap:6px}
+.xhn{padding:4px 8px;font-size:12px}
+.ltb{min-height:50px}.ltb i{font-size:18px}.ltg{gap:6px}
+#harc .exctl{padding:5px 8px}#harc .exbt .btn{min-height:32px;padding:4px 8px}
+#harc .exlist{max-height:none;background:transparent;padding:6px}
+#harc .expanel{position:absolute;left:8px;right:8px;bottom:34px;max-height:30%;overflow:auto;background:rgba(10,14,20,.78);backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:6px 10px;z-index:3;font-size:12.5px;line-height:1.35}
+#harc .expanel[hidden]{display:none}
+#harc .expanel h4{font-size:14px;margin:0 0 3px}#harc .expanel p{margin:0 0 5px}
+#harc .expanel .exh{display:flex;gap:8px;align-items:center}#harc .expanel .exact .btn{min-height:30px;padding:3px 8px;font-size:12px}
+.mnhud{bottom:6px}
+.mn3 .mnsc{aspect-ratio:4/3;max-height:46vh}
+@media (orientation:landscape) and (max-height:620px){
+ #harc .exwrap{display:grid;grid-template-columns:minmax(0,1fr) min(310px,40vw);grid-template-rows:minmax(0,1fr)}
+ #harc .exscene{grid-column:1;grid-row:1;min-height:0}
+ .excp{grid-column:2;grid-row:1;max-height:none;height:100%;border-top:0;border-left:1px solid rgba(255,255,255,.1)}
+ #harc .expanel{right:auto;width:min(300px,46%);bottom:8px;max-height:48%;background:rgba(10,14,20,.6)}
+ #harc .exhint{display:none}
+ #harc .hbar{padding-top:2px;padding-bottom:2px}
+ .mn3 .mnsc{aspect-ratio:16/9}
+}
+#harc .expanel{font-size:12px;line-height:1.3;max-height:26%;padding:5px 9px}
+#harc .expanel p{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+#harc .expanel:active p,#harc .expanel.open p{-webkit-line-clamp:unset}
+@media (orientation:landscape) and (max-height:620px){#harc .expanel{width:min(270px,38%);max-height:42%;font-size:11.5px;background:rgba(10,14,20,.55)}#harc .expanel p{-webkit-line-clamp:5}}
+@media (orientation:landscape) and (max-height:620px){#harc .expanel{max-height:none;overflow:visible;bottom:10px}#harc .expanel p{-webkit-line-clamp:3}}
+.dSat{background:linear-gradient(180deg,#d9741a,#9a4a0c);flex:1.15;font-size:12.5px}
+
+/* 3.8.0 alkatrész-panel */
+#harc .expanel .exh{position:relative;padding-right:44px;min-height:34px}
+#harc .expanel .exxb{position:absolute;right:-4px;top:-4px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);color:#fff;font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#harc .expanel .exxb:active{background:rgba(255,255,255,.3)}
+#harc .expanel .exd{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
+#harc .expanel .exd.open{display:block;-webkit-line-clamp:unset;max-height:22vh;overflow:auto}
+@media (orientation:landscape) and (max-height:620px){#harc .expanel .exd{-webkit-line-clamp:2}#harc .expanel .exxb{width:34px;height:34px}}
