@@ -1741,6 +1741,112 @@ exSwap('Kipufogó',{pt:1});exSwap('Hidraulika (tartály, szivattyú, vezetékek)
   d:'A kerekek feletti sárvédő-lemezek és az oldalsó lépcsők (küszöbök): a ki- és beszálláshoz. A páncéltest oldalán a lépcső mentén az ajtók, a szerszámosláda és az üzemanyagtartály fedele található.'});
 })();
 
+/* ===== 3.4.1: a valódi Gidrán vonásai a fotók alapján: rácsos front, szögletes sarkok, lámpatestek, tükrök, terepszín, fekete felnik ===== */
+(function(){
+ const GL='#456579',CREAM='#c9bb8d',OLV='#5b6b45',DKG='#38422a',BLK='#17191c',BLK2='#24272b';
+ const by=n=>EXP.find(p=>p.n===n);
+ const T=(o,id)=>{o.em=id;return o};
+ /* ablak-színek sötétebbre (a valódi üveg sötét tónusú) */
+ EXP.forEach(P=>{if(P.col===EXC.glass)P.col=GL;for(const pr of P.p)if(pr&&pr.col===EXC.glass)pr.col=GL});
+ /* terepszín-folt generátor: szabálytalan sokszög */
+ function blob(cx,cy,rx,ry,seed,n){n=n||9;const pts=[];for(let k=0;k<n;k++){const a=k/n*Math.PI*2,j=.72+.5*Math.abs(Math.sin(seed*7.1+k*2.3)*Math.cos(seed*3.7+k*1.1));pts.push([cx+Math.cos(a)*rx*j,cy+Math.sin(a)*ry*j])}return pts}
+ /* ---- motorház: nyolcszög alaprajz (levágott sarkok), rácsos front, sarokpajzsok lámpákkal ---- */
+ (function(){
+  const mh=[exProf([[1.3,-.95],[2.5,-.95],[2.93,-.52],[2.93,.52],[2.5,.95],[1.3,.95]],1.15,1.86,'y',{col:OLV}),exBox(2.0,.86,0,1.4,.6,1.5,{col:'#4a5733'})];
+  /* felső terepszín foltok (krém + sötétzöld) */
+  mh.push(exProf(blob(2.05,.35,.5,.3,1.3),1.862,1.872,'y',{col:CREAM}),exProf(blob(1.6,-.5,.4,.3,2.1),1.862,1.872,'y',{col:CREAM}),exProf(blob(2.5,-.4,.3,.25,4.4),1.862,1.872,'y',{col:DKG}),exProf(blob(1.7,.5,.25,.22,5.2),1.862,1.872,'y',{col:DKG}));
+  /* hűtőmaszk: széles keret + 11 ferde állású lamella, 3 szegmensben (homok / olíva / sötétzöld terepszín) */
+  mh.push(exBox(2.95,1.38,0,.03,.9,1.2,{col:BLK}));
+  for(let i=0;i<11;i++){const y=1.0+i*.08;for(let sg=0;sg<3;sg++){const z0=-.57+sg*.38;let col=i%2?OLV:CREAM;if((sg===0&&i>5)||(sg===1&&i>8)||(sg===2&&i<2))col=DKG;
+    mh.push(exProf([[2.93,y-.03],[3.0,y-.012],[3.0,y+.028],[2.93,y+.036]],z0,z0+.38,'z',{col}))}}
+  mh.push(exBox(2.995,1.55,-.38,.02,.15,.18,{col:'#2b3025'}),exBox(3.0,1.55,-.38,.01,.09,.11,{col:'#9a8a5a'}),exBox(2.9,1.9,.4,.1,.04,.34,{col:CREAM}));
+  /* sarokpajzsok: felül a fényszóró (két sárga sáv rácsos védővel), alul jelzőlámpák + szellőzőrács */
+  for(const s of[-1,1]){const cx=2.715,cz=s*.735,a=Math.atan2(s*.43,-.43),nx=.7,nz=s*.714,tx=Math.cos(a),tz=Math.sin(a);
+   const E=(u,w,y0,y1,col,d,em)=>{const o=exProf(exRot(cx+nx*d+tx*u,cz+nz*d+tz*u,a,w,.012),y0,y1,'y',{col});if(em)o.em=em;mh.push(o)};
+   E(0,.19,1.54,1.84,'#1c1f1a',.012);/* fényszóró-ház */
+   E(0,.15,1.6,1.67,'#fff4a0',.026,1);E(0,.15,1.7,1.77,'#fff4a0',.026,1);/* lencsék */
+   for(let k=-4;k<=4;k++)E(k*.034,.005,1.58,1.79,'#2b2f29',.034);/* védőrács */
+   E(0,.19,1.15,1.46,'#1c1f1a',.012);/* alsó panel */
+   E(.09,.045,1.34,1.42,'#f0a21c',.026,2);E(-.03,.035,1.34,1.42,'#2fa84f',.026,7);/* irányjelző + helyzetjelző */
+   E(0,.14,1.18,1.3,'#3a3f38',.026);for(let k=-3;k<=3;k++)E(k*.04,.004,1.19,1.29,'#0e100d',.034);/* szellőzőrács */
+   E(0,.1,1.8,1.84,CREAM,.014)}
+  /* sárhányó lemez + vonókampó tartó */
+  mh.push(exBox(2.96,.98,-.62,.04,.18,.12,{col:BLK}),exBox(2.96,.98,.62,.04,.18,.12,{col:BLK}));
+  exSwap('Motorház (motorháztető és előlap)',{p:mh.filter(x=>x&&x.f)});
+ })();
+ /* ---- lökhárító: keret, csörlő, lánc, kampók ---- */
+ (function(){const p=[exBox(2.93,.86,0,.07,.16,1.9,{col:DKG}),exCyl(2.95,.78,-.78,.05,.2,'x',{col:'#c98a1a',n:8}),exCyl(2.95,.78,.78,.05,.2,'x',{col:'#c98a1a',n:8}),exBox(2.97,.9,0,.04,.12,.7,{col:BLK}),exBox(2.99,.88,0,.04,.05,.26,{col:'#9aa0a6'})];
+  for(let k=0;k<17;k++){const z=-.85+k*.106,y=.86-.42*Math.sin(k/16*Math.PI);p.push(exBox(2.99,y,z,.03,k%2?.06:.035,k%2?.035:.06,{col:k%2?'#2a2c30':'#3c3f44'}))}
+  p.push(exCyl(2.98,.55,.58,.045,.12,'x',{col:'#2a2c30',n:8}),exBox(2.99,.5,.62,.03,.1,.06,{col:BLK}));exSwap('Első lökhárító, vonószemek, lánc',{p})})();
+ /* ---- lámpatestek ---- */
+ (function(){const p=[];
+  /* elöl a sarokpajzsokon lévő fényszórók a motorházban vannak; itt a kiegészítők: tetőszéli kék/piros villogók */
+  for(const [z,c] of[[-.7,'#1f6ed8'],[-.45,'#d92a1f'],[.45,'#d92a1f'],[.7,'#1f6ed8']])p.push(T(exBox(.86,2.47,z,.07,.07,.16,{col:c}),c==='#1f6ed8'?5:8),exBox(.83,2.47,z,.02,.04,.1,{col:'#e9f1ff'}));
+  /* hátul: nagy lámpatest: fék (piros), irányjelző (borostyán), tolató (fehér) */
+  for(const s of[-1,1]){const z=s*.9;p.push(exBox(-2.67,1.12,z,.08,.34,.16,{col:'#20231f'}),T(exBox(-2.715,1.22,z,.02,.1,.12,{col:'#c8221f'}),3),T(exBox(-2.715,1.12,z,.02,.08,.12,{col:'#f0a21c'}),2),T(exBox(-2.715,1.02,z,.02,.08,.12,{col:'#eef0ea'}),4))}
+  p.push(T(exBox(-2.68,.98,.5,.05,.12,.12,{col:'#eef0ea'}),7),exBox(-2.7,.98,.5,.03,.05,.06,{col:'#2fa84f'}),T(exBox(-2.68,2.2,0,.04,.06,.4,{col:'#d92a1f'}),3));
+  for(const [x,z] of[[.9,.78],[.9,-.78],[-2.5,-.8]])p.push(T(exCyl(x,2.54,z,.09,.12,'y',{col:'#2f7fe0',n:12}),5),exCyl(x,2.47,z,.1,.03,'y',{col:'#1c1f18',n:12}));
+
+  /* oldalsó helyzetjelzők */
+  for(const s of[-1,1])for(const x of[.95,-2.3])p.push(T(exBox(x,1.4,s*1.0,.08,.05,.03,{col:'#f0a21c'}),2));
+  exSwap('Fényszórók és hátsó lámpák',{p,col:'#f0e6a8'})})();
+ /* ---- keresőlámpa: szerkezet + védőketrec ---- */
+ (function(){const x=.78,z=.88,p=[exBox(x,2.53,z,.14,.1,.14,{col:BLK2}),exCyl(x,2.7,z,.12,.22,'x',{col:'#2b3025',n:16}),T(exCyl(x+.115,2.7,z,.1,.02,'x',{col:'#efe9b8',n:16}),6),exCyl(x,2.7,z,.04,.24,'y',{col:BLK2,n:8})];
+  for(const [dx,dz] of[[.15,.15],[.15,-.15],[-.15,.15],[-.15,-.15]])p.push(exBox(x+dx,2.7,z+dz,.012,.34,.012,{col:'#1c1f18'}));p.push(exBox(x,2.88,z,.34,.012,.34,{col:'#1c1f18'}),exBox(x,2.78,z,.34,.012,.34,{col:'#1c1f18'}));
+  exSwap('Mellső keresőlámpa',{p,col:'#2b3025'})})();
+ /* ---- tükrök: oldalanként nagy főtükör (hátrébb, magasabban) + kiegészítő tükör (előrébb, alacsonyabban), közös tartókerettel ---- */
+ (function(){const p=[];for(const s of[-1,1]){
+   p.push(exBox(1.55,1.47,s*1.1,.22,.05,.2,{col:BLK}),exCyl(1.53,1.9,s*1.12,.024,.85,'y',{col:'#1c1f1a',n:8}),exCyl(1.61,1.9,s*1.12,.024,.85,'y',{col:'#1c1f1a',n:8}),
+     exCyl(1.57,2.24,s*1.26,.02,.3,'z',{col:'#1c1f1a',n:8}),/* főtükör kar */
+     exCyl(1.82,1.76,s*1.12,.02,.55,'x',{col:'#1c1f1a',n:8}),exCyl(2.08,1.9,s*1.12,.02,.3,'y',{col:'#1c1f1a',n:8}),exCyl(2.08,1.99,s*1.24,.02,.26,'z',{col:'#1c1f1a',n:8}));/* kiegészítő tükör: előre nyúló kar */
+   p.push(exBox(1.59,2.24,s*1.42,.05,.4,.28,{col:BLK}),exBox(1.562,2.24,s*1.42,.012,.36,.24,{col:'#7f949f'}));
+   p.push(exBox(2.1,1.99,s*1.36,.05,.36,.26,{col:BLK}),exBox(2.072,1.99,s*1.36,.012,.32,.22,{col:'#7f949f'}))}
+  exSwap('Külső tükrök',{p})})();
+ exSwap('APU (fedélzeti áramforrás)',{p:[exBox(-2.8,1.55,-.68,.36,1.05,.56,{col:'#4a5733'}),exBox(-2.985,1.55,-.68,.012,.9,.44,{col:'#2a2f3a'})].concat([0,1,2,3,4,5,6,7,8].map(k=>exBox(-2.99,1.15+k*.1,-.68,.012,.04,.44,{col:'#1b1e22'})))});
+ /* ---- sárvédők: ívelt kerékjárat, ferde felső lemez ---- */
+ (function(){const P=by('Sárvédők és lépcsők'),p=[];
+  function fender(X,front){const zs=[[.86,1.29]];const o=[];for(const s of[-1,1]){const z0=s>0?.86:-1.29,z1=s>0?1.29:-.86;
+    /* íves kerékjárat-perem: 0.75–0.83 sugarú gyűrű, 14 trapéz */
+    const n=14,a0=Math.PI*.14,a1=Math.PI*.86;for(let k=0;k<n;k++){const A=a0+(a1-a0)*k/n,B=a0+(a1-a0)*(k+1)/n;const q=(a,r)=>[X+Math.cos(a)*r,WR+Math.sin(a)*r];o.push(exProf([q(A,.76),q(B,.76),q(B,.86),q(A,.86)],z0,z1,'z',{col:'#56653a'}))}
+    /* felső lemez: elöl ferdén lejt, hátul rövid */
+    const f=front?1:-1;const top=front?[[X-.85,1.32],[X-.3,1.46],[X+.95,1.46],[X+1.17,1.08],[X+.9,1.08],[X-.3,1.3]]:[[X+.9,1.28],[X+.4,1.46],[X-.7,1.46],[X-.95,1.2],[X-.7,1.2],[X+.4,1.3]];
+    o.push(exProf(top.slice(0,4),z0,z1,'z',{col:'#56653a'}));
+    /* oldalsó előtét: a perem két végén */
+    o.push(exProf([[X-.86,1.32],[X-.7,1.32],[X-.7,1.0],[X-.86,1.0]],z0,z1,'z',{col:'#4a5733'}),exProf([[X+.7,1.08],[X+.86,1.08],[X+1.17,1.08],[X+.86,1.0]],z0,z1,'z',{col:'#4a5733'}))}return o}
+  fender(AF,true).forEach(q=>p.push(q));fender(AR,false).forEach(q=>p.push(q));
+  for(const s of[-1,1]){p.push(exBox(-.35,.66,s*1.03,2.3,.04,.27,{col:'#202327'}));for(let k=0;k<11;k++)p.push(exBox(-1.4+k*.22,.69,s*1.03,.04,.015,.26,{col:'#363a40'}));p.push(exBox(-.35,.8,s*1.0,2.3,.02,.04,{col:'#1b1e22'}))}
+  P.p=p})();
+ (function(){const R=by('Hűtőradiátorok (tömbösített hűtő, ventilátor)');for(const pr of R.p){if(pr&&pr.c&&pr.c[0]>2.7&&Math.abs(Math.abs(pr.c[2])-.64)<.02){for(const f of pr.f)for(const v of f)v[0]-=.18;pr.c[0]-=.18}}})();
+ /* ---- szerelőnyílások: a valóságban a motorházzal egyszínűek; első alsó lemez a hűtő előtt ---- */
+ (function(){const P=by('Motor szerelőnyílásai');P.col='#52603a';for(const pr of P.p)pr.col='#52603a';
+  const H=by('Motorház (motorháztető és előlap)');H.p.push(exBox(2.9,.9,0,.1,.5,1.72,{col:'#4a5733'}),exBox(2.945,.9,0,.02,.3,1.3,{col:BLK}));for(let i=0;i<4;i++)H.p.push(exBox(2.96,.78+i*.08,0,.015,.03,1.2,{col:'#2b3025'}))})();
+ by('Szélvédő').spc=.45;
+ /* ---- szélvédő: sötét üveg + keret + középoszlop ---- */
+ (function(){const P=by('Szélvédő');const q=[[1.31,1.86],[.89,2.4],[.87,2.38],[1.29,1.84]];const sh=(dx,dy)=>q.map(v=>[v[0]+dx,v[1]+dy]);
+  const bars=[[-.95,-.89],[-.03,.03],[.89,.95]].map(r=>exProf(sh(.028,.022),r[0],r[1],'z',{col:DKG}));
+  bars.push(exBox(1.33,1.84,0,.05,.05,1.9,{col:DKG}),exBox(.875,2.4,0,.05,.05,1.9,{col:DKG}));P.p=P.p.concat(bars)})();
+ /* ---- ajtók: ablak-keret, szegecsek, markolat ---- */
+ for(const n of['Ajtó – bal első','Ajtó – bal hátsó','Ajtó – jobb első','Ajtó – jobb hátsó']){const P=by(n),s=n.includes('bal')?-1:1,x=n.includes('első')?.4:-.3,z=s*1.125;
+  P.p.push(exBox(x,2.3,z,.52,.045,.045,{col:DKG}),exBox(x,1.94,z,.52,.045,.045,{col:DKG}),exBox(x-.245,2.12,z,.045,.4,.045,{col:DKG}),exBox(x+.245,2.12,z,.045,.4,.045,{col:DKG}));
+  for(const [dx,dy] of[[-.245,2.3],[.245,2.3],[-.245,1.94],[.245,1.94],[0,2.3],[0,1.94]])P.p.push(exBox(x+dx,dy,z+s*.02,.035,.035,.02,{col:'#262c1e'}));
+  P.p.push(exBox(x-.27,1.55,s*1.125,.05,.55,.05,{col:BLK}),exBox(x+.2,1.5,s*1.125,.14,.04,.05,{col:BLK}))}
+ /* ---- kerekek: fekete felni (a fotókon sötét tárcsás), sötét csavarok ---- */
+ const RIMC={'#aab0b8':'#202226','#8b929b':'#2c2f34','#d3d7dc':'#3b3e44','#4a4f57':'#5a5f66','#a2a8b0':'#202226'};
+ for(const n of['Kerék – bal első','Kerék – jobb első','Kerék – bal hátsó','Kerék – jobb hátsó','Pótkerék'])for(const pr of by(n).p)if(pr&&RIMC[pr.col])pr.col=RIMC[pr.col];
+ for(const n of['Kerék – bal első','Kerék – jobb első','Kerék – bal hátsó','Kerék – jobb hátsó','Pótkerék'])for(const pr of by(n).p)if(pr&&pr.col==='#1a1a1c')pr.col='#222420';
+ /* ---- oldalfal: nagy krém/zöld terepszín foltok ---- */
+ (function(){const P=by('Páncéltest (küzdőtér)');
+  const B=[[-2.0,1.72,.62,.3,CREAM],[-1.3,1.56,.4,.14,DKG],[-1.05,1.82,.3,.2,CREAM],[-.35,1.5,.28,.12,CREAM],[.98,1.66,.22,.22,CREAM],[-2.35,1.5,.2,.15,DKG]];
+  B.forEach((b,i)=>{for(const s of[-1,1]){const bb=blob(b[0]*(s>0?1:.96)+(s>0?0:.1),b[1],b[2],b[3],i*1.7+(s>0?0:5.3));P.p.push(exProf(bb,s>0?1.012:-1.026,s>0?1.026:-1.012,'z',{col:b[4]}))}})})();
+ /* ---- sárvédők: sötétebb lépcső ---- */
+ (function(){const P=by('Sárvédők és lépcsők');for(const pr of P.p){if(pr&&pr.col==='#5d646c')pr.col='#202327';else if(pr&&pr.col==='#7d848d')pr.col='#363a40'}})();
+ /* ---- tető: füstgránátvetők, függőleges cső, antenna, SARP ponyva ---- */
+ (function(){const P=by('Tető (páncél)');for(const zs of[-1,1])for(let k=0;k<4;k++)P.p.push(exCyl(-1.55+k*.17,2.64,zs*.74,.055,.22,'y',{col:'#2b3025',n:10}),exCyl(-1.55+k*.17,2.76,zs*.74,.045,.02,'y',{col:'#0f110d',n:10}));
+  P.p.push(exCyl(-.5,2.9,.15,.06,.8,'y',{col:OLV,n:12}),exCyl(-.5,3.31,.15,.075,.04,'y',{col:'#2b3025',n:12}),exCyl(.86,2.78,-.8,.012,.55,'y',{col:'#1c1f18',n:6}),exCyl(.86,2.52,-.8,.04,.08,'y',{col:'#2b3025',n:8}),exBox(-.6,2.54,.2,.2,.06,.5,{col:BLK2}))})();
+ (function(){const P=by('SARP II fegyverplatform (RWS)');const tarp=exProf([[-.15,2.62],[.85,2.62],[.8,3.0],[.55,3.32],[.28,3.5],[.05,3.45],[-.12,3.1]],-.45,.45,'z',{col:'#5d6c40'});
+  P.p=P.p.map(pr=>pr&&pr.col==='#3a4226'?tarp:pr);P.p.push(exBox(.3,3.52,0,.16,.12,.22,{col:'#4d5a35'}))})();
+})();
+
 const EXSUB=['Haspáncél (V-alakú padlópáncél)','Páncéltest (küzdőtér)','Tető (páncél)','Motorház (motorháztető és előlap)'];
 function exSubdiv(fs,m){const out=[],L=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]),M=(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t];
  for(const f of fs){if(f.length!==4){out.push(f);continue}const nu=Math.min(8,Math.max(1,Math.ceil(L(f[0],f[1])/m))),nv=Math.min(8,Math.max(1,Math.ceil(L(f[1],f[2])/m)));if(nu*nv===1){out.push(f);continue}
@@ -1752,11 +1858,11 @@ function exHex(h){return [parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),pa
 function exOpen(){const el=$('#harc');el.hidden=false;document.body.classList.add('harcon');
  el.innerHTML=`<div class="hbar"><div class="htitle">Gidrán <b>3D – szétszedhető</b></div><button class="hx" id="exClose" aria-label="Bezárás">✕</button></div>
  <div class="exwrap"><div class="exscene"><canvas id="exCv"></canvas><canvas id="exOv"></canvas><div class="mnhud"><span class="dHud">Motor leállítva · 0 km/h · N</span></div><div class="exhint" id="exHint">Húzd el a forgatáshoz · csípd össze a nagyításhoz · érints meg egy alkatrészt</div></div>
- <div class="exdrw" id="exDrw"></div>
- <div class="exctl"><label class="exsl"><span>🔧 Szétszedés</span><input type="range" id="exSl" min="0" max="100" value="0" aria-label="Szétszedés mértéke"></label>
-  <div class="exbt"><button type="button" class="btn line sm" id="exAuto" aria-pressed="true">⟳ Forgás</button><button type="button" class="btn line sm" id="exGh" aria-pressed="false">👻 Páncél átlátszó</button><button type="button" class="btn line sm" id="exV1">Elöl</button><button type="button" class="btn line sm" id="exV2">Oldal</button><button type="button" class="btn line sm" id="exV3">Felül</button><button type="button" class="btn line sm" id="exPt" aria-pressed="false">⚙ Hajtáslánc</button><button type="button" class="btn line sm" id="exRst">↺ Alaphelyzet</button></div></div>
+ <div class="excp" id="exCp"><div class="extabs" role="tablist"><button type="button" role="tab" data-tab="drive" class="on">🚙 Vezetés</button><button type="button" role="tab" data-tab="light">💡 Fények</button><button type="button" role="tab" data-tab="view">🔧 Szétszedés</button></div>
+ <div class="extp" data-p="drive">${exDrvHTML()}</div><div class="extp" data-p="light" hidden>${exLtHTML()}</div><div class="extp" data-p="view" hidden><div class="exctl"><label class="exsl"><span>🔧 Szétszedés</span><input type="range" id="exSl" min="0" max="100" value="0" aria-label="Szétszedés mértéke"></label>
+  <div class="exbt"><button type="button" class="btn line sm" id="exAuto" aria-pressed="true">⟳ Forgás</button><button type="button" class="btn line sm" id="exGh" aria-pressed="false">👻 Páncél átlátszó</button><button type="button" class="btn line sm" id="exV1">Elöl</button><button type="button" class="btn line sm" id="exV2">Oldal</button><button type="button" class="btn line sm" id="exV3">Felül</button><button type="button" class="btn line sm" id="exPt" aria-pressed="false">⚙ Hajtáslánc</button><button type="button" class="btn line sm" id="exRst">↺ Alaphelyzet</button></div></div></div></div>
  <div class="expanel" id="exPanel"></div><div class="exlist" id="exList"></div></div>`;
- $('#exClose').onclick=exClose;$('#exDrw').innerHTML=exDrvHTML();exDrvWire($('#exDrw'));exSetup();exInfo(-1);exChips()}
+ $('#exClose').onclick=exClose;exDrvWire($('#exCp'));exTabs($('#exCp'));exSetup();exInfo(-1);exChips()}
 function exClose(){ENG.gasK=0;ENG.brkK=0;gClose(EX);exKick()}
 function exChips(){const L=$('#exList');if(!L)return;const gs=[];EXP.forEach(p=>{if(!gs.includes(p.g))gs.push(p.g)});L.innerHTML=gs.map(g=>`<div class="exg"><b>${g}</b>${EXP.filter(p=>p.g===g).map(p=>`<button type="button" class="exchip" data-i="${p.i}">${esc(p.n)}</button>`).join('')}</div>`).join('');
  L.onclick=e=>{const b=e.target.closest('.exchip');if(!b)return;exSelect(+b.dataset.i)}}
@@ -1765,7 +1871,7 @@ function exInfo(i){const P=$('#exPanel');if(!P)return;if(i<0){P.innerHTML=`<div 
  const p=EXP[i],hid=EX.hid.has(i);P.innerHTML=`<div class="exh"><span class="exg1">${esc(p.g)}</span><h4>${esc(p.n)}</h4></div><p>${esc(p.d)}</p><div class="exact"><button type="button" class="btn line sm" id="exHide">${hid?'👁 Megjelenít':'🙈 Elrejt'}</button><button type="button" class="btn line sm" id="exShowAll">Mind látszik</button></div>`;
  $('#exHide').onclick=()=>{if(EX.hid.has(i))EX.hid.delete(i);else EX.hid.add(i);exInfo(i)};$('#exShowAll').onclick=()=>{EX.hid.clear();exInfo(i)}}
 function exView(ry,rx){EX.tv={ry,rx};EX.auto=false;const a=$('#exAuto');if(a)a.setAttribute('aria-pressed','false')}
-function exSetup(){Object.assign(EX,gCanvas('#exCv'));EX.ov=$('#exOv');EX.ovc=EX.ov.getContext('2d');EX.gl=exGLNew(EX.cv);if(!EX.gl)EX.c=EX.cv.getContext('2d');EX.rs=1;EX.fe=0;EX.fn=0;EX.bd=0;EX.cap=0;EX.run=true;EX.last=performance.now();EX.sel=-1;EX.hid=new Set();EX.t=0;EX.tt=0;EX.ry=.75;EX.rx=.34;EX.zm=1;EX.auto=true;EX.ghost=false;EX.pt=false;EX.ptr=new Map();EX.tv=null;
+function exSetup(){Object.assign(EX,gCanvas('#exCv'));EX.ov=$('#exOv');EX.ovc=EX.ov.getContext('2d');EX.gl=exGLNew(EX.cv);if(!EX.gl){const nc=EX.cv.cloneNode(false);EX.cv.replaceWith(nc);EX.cv=nc;EX.cv.width=Math.round(EX.W*EX.dpr);EX.cv.height=Math.round(EX.H*EX.dpr);EX.c=nc.getContext('2d')}EX.rs=1;EX.fe=0;EX.fn=0;EX.bd=0;EX.cap=0;EX.run=true;EX.last=performance.now();EX.sel=-1;EX.hid=new Set();EX.t=0;EX.tt=0;EX.ry=.75;EX.rx=.34;EX.zm=1;EX.auto=true;EX.ghost=false;EX.pt=false;EX.ptr=new Map();EX.tv=null;
  const cv=EX.cv;
  cv.addEventListener('pointerdown',e=>{try{cv.setPointerCapture(e.pointerId)}catch(_){}EX.ptr.set(e.pointerId,{x:e.clientX,y:e.clientY,x0:e.clientX,y0:e.clientY,mv:0});EX.tv=null;if(EX.ptr.size===2){const [a,b]=[...EX.ptr.values()];EX.pd=Math.hypot(a.x-b.x,a.y-b.y);EX.pz=EX.zm}});
  cv.addEventListener('pointermove',e=>{const p=EX.ptr.get(e.pointerId);if(!p)return;const dx=e.clientX-p.x,dy=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;p.mv+=Math.abs(dx)+Math.abs(dy);
@@ -1777,7 +1883,7 @@ function exSetup(){Object.assign(EX,gCanvas('#exCv'));EX.ov=$('#exOv');EX.ovc=EX
  $('#exSl').oninput=e=>{EX.tt=e.target.value/100};
  $('#exAuto').onclick=()=>{EX.auto=!EX.auto;$('#exAuto').setAttribute('aria-pressed',EX.auto)};
  $('#exGh').onclick=()=>{EX.ghost=!EX.ghost;$('#exGh').setAttribute('aria-pressed',EX.ghost)};
- $('#exV1').onclick=()=>exView(Math.PI/2,.1);$('#exV2').onclick=()=>exView(0,.05);$('#exV3').onclick=()=>exView(0,1.4);
+ $('#exV1').onclick=()=>exView(-Math.PI/2,.1);$('#exV2').onclick=()=>exView(0,.05);$('#exV3').onclick=()=>exView(0,1.4);
  $('#exPt').onclick=()=>{EX.pt=!EX.pt;$('#exPt').setAttribute('aria-pressed',EX.pt);if(EX.pt){EX.zm=1.12;exView(Math.PI-.62,.42);EX.sel=-1;exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'))}else exView(.75,.34)};
  $('#exRst').onclick=()=>{EX.pt=false;$('#exPt').setAttribute('aria-pressed','false');EX.tt=0;$('#exSl').value=0;EX.zm=1;EX.sel=-1;EX.hid.clear();exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'));exView(.75,.34);EX.auto=true;$('#exAuto').setAttribute('aria-pressed','true')};
  EX.key=e=>{if(e.type==='keydown'&&e.key==='Escape')exClose();else exKeys(e)};addEventListener('keydown',EX.key);addEventListener('keyup',EX.key);
@@ -1820,7 +1926,12 @@ const EXSPIN={'Kerék – bal első':{c:[AF,WR,-TZ],ax:2,k:'w'},'Kerék – jobb
  'Féltengelyek – első':{c:[AF,.59,0],ax:2,k:'w'},'Féltengelyek – hátsó':{c:[AR,.59,0],ax:2,k:'w'},
  'Kardántengely – első':{c:[1.05,.6,.18],ax:1,k:'s'},'Kardántengely – hátsó':{c:[-.835,.6,.18],ax:1,k:'s'},'Ventilátor (hűtőventilátor)':{c:[2.46,1.2,0],ax:1,k:'f'}};
 const EXSHAKE={'Motor (Cummins ISL9E3)':1,'Hűtőradiátorok (tömbösített hűtő, ventilátor)':.5,'Ventilátor (hűtőventilátor)':.6,'Levegőszűrő':.7,'Kipufogó':.7,'Generátor (28 V, 220 A)':.8,'Automata nyomatékváltó (Allison 3200 SP)':.55,'Osztómű':.3,'Kiegyenlítő tartály':.5,'Motorház (motorháztető és előlap)':.25,'Műszerfal (kijelzők, kapcsolók)':.15};
-EXP.forEach(p=>{p.sp=EXSPIN[p.n]||null;p.shk=EXSHAKE[p.n]||0;p.spc=p.glass?.85:/kerék/i.test(p.n)?.05:p.col&&/^#(c|d|e|f)/i.test(p.col)?.3:.22});
+EXP.forEach(p=>{p.sp=EXSPIN[p.n]||null;p.shk=EXSHAKE[p.n]||0;p.spc=p.glass?.5:/kerék/i.test(p.n)?.05:p.col&&/^#(c|d|e|f)/i.test(p.col)?.3:.22});
+const LT={mode:0,search:false,beacon:false,hazard:false};
+function exLights(){const E=ENG,t=performance.now()/1000,hz=LT.hazard?(Math.sin(t*9)>0?1:0):0,head=LT.mode>0?(LT.mode===2?1:.7):0,tail=LT.mode>0?.35:0,brk=E.brk>.25?1:0,rev=(E.gear==='R'&&E.st===2)?1:0,bc=LT.beacon?.5+.5*Math.sin(t*10):0,bc2=LT.beacon?.5-.5*Math.sin(t*10):0,br=Math.max(brk,tail);
+ return {head,high:LT.mode===2?1:0,brk:br,rev,hz,a:[head,hz,br,rev],b:[bc,LT.search?1:0,tail,bc2],k:{head,hz,brk:br,rev,bl:bc,rd:bc2,sr:LT.search?1:0}}}
+const EXLAMP=[];[-1,1].forEach(s=>{EXLAMP.push({p:[2.97,1.68,s*.74],n:[.7,0,s*.71],k:'head',c:'255,240,150',r:.36},{p:[2.86,1.38,s*.82],n:[.7,0,s*.71],k:'hz',c:'255,170,30',r:.16},{p:[-2.73,1.12,s*.9],n:[-1,0,0],k:'hz',c:'255,170,30',r:.16},{p:[-2.73,1.22,s*.9],n:[-1,0,0],k:'brk',c:'255,40,30',r:.22},{p:[-2.73,1.02,s*.9],n:[-1,0,0],k:'rev',c:'255,250,230',r:.18},{p:[.9,2.62,s*.78],n:null,k:'bl',c:'70,150,255',r:.38},{p:[.86,2.5,s*.45],n:null,k:'rd',c:'255,60,40',r:.24})});
+EXLAMP.push({p:[-2.5,2.62,-.8],n:null,k:'bl',c:'70,150,255',r:.38},{p:[.9,2.72,.88],n:[1,0,0],k:'sr',c:'255,245,190',r:.5});
 const MN={run:false,ry:.75,rx:.3,zm:.82,t:0,tt:0,sel:-1,auto:true,ghost:false,pt:false,hid:new Set(),ptr:new Map(),rs:1,tv:null,mini:true};
 /* ---------- fizika ---------- */
 const exClamp=(x,a,b)=>x<a?a:x>b?b:x;
@@ -1852,7 +1963,7 @@ function exStep(dt){const E=ENG;E.t+=dt;const tr=E.rng==='L'?2.7:1;
  if(E.hudT-=dt,E.hudT<=0){E.hudT=.07;exHudUpd()}}
 function exSmokePuff(n,dark){const E=ENG;for(let i=0;i<n&&E.sm.length<70;i++)E.sm.push({x:EXTAIL[0]+Math.random()*.1,y:EXTAIL[1]+Math.random()*.08,z:EXTAIL[2]+.05,vx:-(Math.random()*.4)-.3,vy:.35+Math.random()*.4,vz:.5+Math.random()*.6,a:0,L:1.1+Math.random()*.9,s:.05+Math.random()*.04,d:dark})}
 function exSmokeStep(dt){const E=ENG;if(E.st===2){E.emit+=dt*(7+E.rpm/90+E.ped*34);while(E.emit>1){E.emit--;const d=E.ped>.55&&E.rpm<2300?1:E.ped>.2?.5:0;exSmokePuff(1,d)}}
- for(let i=E.sm.length-1;i>=0;i--){const p=E.sm[i];p.a+=dt;if(p.a>p.L){E.sm.splice(i,1);continue}p.x+=(p.vx-E.v*.85)*dt;p.y+=p.vy*dt;p.z+=p.vz*dt;p.vz*=1-dt*1.1;p.vy*=1-dt*.5;p.s+=dt*.2}}
+ for(let i=E.sm.length-1;i>=0;i--){const p=E.sm[i];p.a+=dt;if(p.a>p.L){E.sm.splice(i,1);continue}p.x+=(p.vx-E.v*.85)*dt;p.y+=p.vy*dt;p.z+=p.vz*dt;p.vz*=1-dt*1.1;p.vy*=1-dt*.5;p.s+=dt*.03}}
 function exEngToggle(){const E=ENG;try{ac();AC&&AC.resume&&AC.resume()}catch(_){}
  if(E.st===0){E.st=1;E.cr=1.05;if(Math.abs(E.v)<.3)E.gear='N';exCrank()}else if(E.st===2){E.st=0;E.gasK=0}exKick();exHudUpd(1)}
 function exCrank(){if(!SOUND||ENG.mute||!ac())return;try{const a=AC,t=a.currentTime,o=a.createOscillator(),g=a.createGain(),lf=a.createOscillator(),lg=a.createGain(),f=a.createBiquadFilter();o.type='sawtooth';o.frequency.setValueAtTime(70,t);o.frequency.linearRampToValueAtTime(95,t+1);f.type='lowpass';f.frequency.value=500;lf.frequency.value=9;lg.gain.value=.05;g.gain.value=.05;lf.connect(lg).connect(g.gain);o.connect(f).connect(g).connect(MASTER);g.gain.setTargetAtTime(0,t+.95,.06);o.start(t);lf.start(t);o.stop(t+1.3);lf.stop(t+1.3)}catch(_){}}
@@ -1865,20 +1976,29 @@ function exHudUpd(force){const E=ENG;const kmh=Math.round(Math.abs(E.v)*3.6),rpm
  document.querySelectorAll('.dHud').forEach(h=>{h.textContent=s});document.querySelectorAll('.dBar i').forEach(b=>{b.style.width=Math.min(100,E.rpm/26)+'%';b.style.background=E.rpm>2200?'#ff5a3c':E.rpm>1800?'#ffb52e':'#5bd68c'});
  document.querySelectorAll('.dEng').forEach(b=>{b.setAttribute('aria-pressed',E.st>0);b.textContent=E.st===0?'🔑 Motor indítás':E.st===1?'🔑 Indítás…':'🔑 Motor leállítása'});
  document.querySelectorAll('.dgs button').forEach(b=>{b.classList.toggle('on',b.dataset.g===E.gear||b.dataset.r===E.rng)});
- document.querySelectorAll('.dSnd').forEach(b=>{b.textContent=E.mute?'🔇':'🔊';b.setAttribute('aria-pressed',!E.mute)})}
+ document.querySelectorAll('.dSnd').forEach(b=>{b.textContent=E.mute?'🔇':'🔊';b.setAttribute('aria-pressed',!E.mute)});
+ document.querySelectorAll('[data-lt]').forEach(b=>{const k=b.dataset.lt,on=k==='dip'?LT.mode===1:k==='high'?LT.mode===2:k==='search'?LT.search:k==='beacon'?LT.beacon:k==='hazard'?LT.hazard:k==='cycle'?LT.mode>0:false;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);if(k==='cycle')b.textContent=['💡 Fény: ki','💡 Tompított','🔆 Távolsági'][LT.mode]});
+ const hint=E.st===0?'① Indítsd be a motort a „Motor indítás” gombbal.':E.st===1?'Indítás…':E.gear==='N'?'② Válts D-be (előre) vagy R-be (hátra).':(Math.abs(E.v)<.3&&E.ped<.05)?'③ Nyomd a GÁZ gombot, a FÉK-kel lassítasz.':'';
+ document.querySelectorAll('.dHint').forEach(h=>{if(h.textContent!==hint)h.textContent=hint})}
 /* vezérlők (a teljes nézetben és a főképernyőn is) */
-function exDrvHTML(){return `<div class="exdv"><button type="button" class="btn line sm dEng" aria-pressed="false">🔑 Motor indítás</button>
- <div class="dgs" role="group" aria-label="Sebességváltó"><button type="button" data-g="R">R</button><button type="button" data-g="N" class="on">N</button><button type="button" data-g="D">D</button></div>
- <div class="dgs" role="group" aria-label="Osztómű"><button type="button" data-r="H" class="on">Úti</button><button type="button" data-r="L">Terep</button></div>
- <button type="button" class="btn line sm dSnd" aria-label="Hang">🔊</button>
+function exDrvHTML(){return `<div class="exdv"><div class="xhn dHint"></div>
+ <div class="drow"><button type="button" class="btn line dEng" aria-pressed="false">🔑 Motor indítás</button><button type="button" class="btn line sm dSnd" aria-label="Hang be/ki">🔊</button></div>
+ <div class="drow"><div class="dgrp"><span>Váltó</span><div class="dgs" role="group" aria-label="Sebességváltó"><button type="button" data-g="R">R</button><button type="button" data-g="N" class="on">N</button><button type="button" data-g="D">D</button></div></div>
+ <div class="dgrp"><span>Osztómű</span><div class="dgs" role="group" aria-label="Osztómű"><button type="button" data-r="H" class="on">Úti</button><button type="button" data-r="L">Terep</button></div></div></div>
  <div class="dpd"><button type="button" class="dPed dBrk">FÉK</button><button type="button" class="dPed dGas">GÁZ</button></div>
  <div class="dBar" aria-hidden="true"><i></i></div></div>`}
+function exLtHTML(){const B=(k,ic,t)=>`<button type="button" class="ltb" data-lt="${k}" aria-pressed="false"><i aria-hidden="true">${ic}</i><b>${t}</b></button>`;
+ return `<div class="exdv exlt"><div class="xhn">A fék- és a tolatólámpa magától világít. A fényeket a vezetés közben is bekapcsolhatod.</div><div class="ltg">${B('dip','💡','Tompított')}${B('high','🔆','Távolsági')}${B('search','🔦','Keresőlámpa')}${B('beacon','🔵','Kék-piros villogó')}${B('hazard','⚠️','Vészvillogó')}${B('off','⏻','Mind ki')}</div></div>`}
+function exLt(k){if(k==='dip')LT.mode=LT.mode===1?0:1;else if(k==='high')LT.mode=LT.mode===2?0:2;else if(k==='search')LT.search=!LT.search;else if(k==='beacon')LT.beacon=!LT.beacon;else if(k==='hazard')LT.hazard=!LT.hazard;else if(k==='off'){LT.mode=0;LT.search=LT.beacon=LT.hazard=false}else if(k==='cycle')LT.mode=(LT.mode+1)%3;exHudUpd(1)}
+function exTabs(root){const set=t=>{root.querySelectorAll('.extabs button').forEach(b=>{const on=b.dataset.tab===t;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});root.querySelectorAll('.extp').forEach(p=>{p.hidden=p.dataset.p!==t});EX.tab=t};
+ root.querySelector('.extabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)set(b.dataset.tab)});set(EX.tab||'drive')}
 function exDrvWire(root){
  root.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
   if(b.classList.contains('dEng')){exEngToggle();return}
   if(b.classList.contains('dSnd')){ENG.mute=!ENG.mute;exHudUpd(1);return}
   if(b.dataset.g){ENG.gear=b.dataset.g;if(ENG.gear!=='D')ENG.g=0;exHudUpd(1)}
-  if(b.dataset.r){ENG.rng=b.dataset.r;exHudUpd(1)}});
+  if(b.dataset.r){ENG.rng=b.dataset.r;exHudUpd(1)}
+  if(b.dataset.lt)exLt(b.dataset.lt)});
  const pedal=(sel,key)=>{const el=root.querySelector(sel);if(!el)return;
   const dn=e=>{e.preventDefault();try{el.setPointerCapture(e.pointerId)}catch(_){}ENG[key]=1;el.classList.add('hold');try{ac();AC&&AC.resume&&AC.resume()}catch(_){}exKick()};
   const upf=e=>{ENG[key]=0;el.classList.remove('hold')};
@@ -1897,48 +2017,50 @@ function exBuildGeo(){if(EXGEO)return EXGEO;const out=[],parts=[];
   const cr=(a,b,c)=>(P[b][0]-P[a][0])*(P[c][1]-P[a][1])-(P[b][1]-P[a][1])*(P[c][0]-P[a][0]);
   while(idx.length>3&&g++<200){let ok=false;for(let i=0;i<idx.length;i++){const a=idx[(i+idx.length-1)%idx.length],b=idx[i],c=idx[(i+1)%idx.length];if(cr(a,b,c)<=1e-12)continue;let inside=false;for(const d of idx){if(d===a||d===b||d===c)continue;if(cr(a,b,d)>=0&&cr(b,c,d)>=0&&cr(c,a,d)>=0){inside=true;break}}if(inside)continue;T.push([a,b,c]);idx.splice(i,1);ok=true;break}if(!ok)break}
   if(idx.length===3)T.push([idx[0],idx[1],idx[2]]);return T};
- EXP.forEach(P=>{const start=out.length/9;
+ EXP.forEach(P=>{const start=out.length/10;
   for(const pr of P.p){if(!pr||!pr.f)continue;const col=pr.hx||(pr.hx=exHex(pr.pcol||P.col)),tn=pr.tn||1,cc=[Math.min(1,col[0]/255*tn),Math.min(1,col[1]/255*tn),Math.min(1,col[2]/255*tn)];
    const tris=[],map=new Map();
    for(const f of pr.f){const v=f;if(v.length<3)continue;let n=[0,0,0];for(let i=0;i<v.length;i++){const a=v[i],b=v[(i+1)%v.length];n[0]+=(a[1]-b[1])*(a[2]+b[2]);n[1]+=(a[2]-b[2])*(a[0]+b[0]);n[2]+=(a[0]-b[0])*(a[1]+b[1])}
     const nl=Math.hypot(...n);if(nl<1e-10)continue;n=n.map(q=>q/nl);let mx=0,my=0,mz=0;for(const q of v){mx+=q[0];my+=q[1];mz+=q[2]}mx/=v.length;my/=v.length;mz/=v.length;
     if(n[0]*(mx-pr.c[0])+n[1]*(my-pr.c[1])+n[2]*(mz-pr.c[2])<0)n=n.map(q=>-q);
     for(const t of clip(v,n)){let A=v[t[0]],B=v[t[1]],C=v[t[2]];const cx=cross(sub(B,A),sub(C,A));if(dot(cx,n)<0){const s=B;B=C;C=s}const w=Math.hypot(...cx)/2;if(w<1e-9)continue;const tr={v:[A,B,C],n,w};tris.push(tr);for(const q of tr.v){const k=key(q);let l=map.get(k);if(!l){l=[];map.set(k,l)}l.push(tr)}}}
-   for(const tr of tris)for(const q of tr.v){const l=map.get(key(q));let sx=0,sy=0,sz=0;for(const o of l){if(dot(o.n,tr.n)>.82){sx+=o.n[0]*o.w;sy+=o.n[1]*o.w;sz+=o.n[2]*o.w}}const sl=Math.hypot(sx,sy,sz)||1;out.push(q[0],q[1],q[2],sx/sl,sy/sl,sz/sl,cc[0],cc[1],cc[2])}}
-  parts.push({o:start,n:out.length/9-start})});
- EXGEO={buf:new Float32Array(out),parts};window.__EXV=out.length/9;return EXGEO}
+   for(const tr of tris)for(const q of tr.v){const l=map.get(key(q));let sx=0,sy=0,sz=0;for(const o of l){if(dot(o.n,tr.n)>.82){sx+=o.n[0]*o.w;sy+=o.n[1]*o.w;sz+=o.n[2]*o.w}}const sl=Math.hypot(sx,sy,sz)||1;out.push(q[0],q[1],q[2],sx/sl,sy/sl,sz/sl,cc[0],cc[1],cc[2],pr.em||0)}}
+  parts.push({o:start,n:out.length/10-start})});
+ EXGEO={buf:new Float32Array(out),parts};window.__EXV=out.length/10;return EXGEO}
 /* ---------- WebGL ---------- */
-const EXVS=`attribute vec3 aP;attribute vec3 aN;attribute vec3 aC;uniform vec3 uOff,uRc;uniform float uAng,uAx,uOut;uniform vec4 uR,uS;uniform vec2 uK;varying vec3 vN,vV,vC;varying float vWy;
+const EXVS=`attribute vec3 aP;attribute vec3 aN;attribute vec3 aC;attribute float aE;varying float vE;uniform vec3 uOff,uRc;uniform float uAng,uAx,uOut;uniform vec4 uR,uS;uniform vec2 uK;varying vec3 vN,vV,vC;varying float vWy;
 void main(){vec3 p=aP,n=aN;if(uAx>.5){vec3 q=p-uRc;float c=cos(uAng),s=sin(uAng);if(uAx<1.5){q=vec3(q.x,q.y*c-q.z*s,q.y*s+q.z*c);n=vec3(n.x,n.y*c-n.z*s,n.y*s+n.z*c);}else{q=vec3(q.x*c-q.y*s,q.x*s+q.y*c,q.z);n=vec3(n.x*c-n.y*s,n.x*s+n.y*c,n.z);}p=q+uRc;}
 p+=uOff+n*uOut;vWy=p.y;vec3 w=p;w.y-=uS.z;float x1=w.x*uR.x+w.z*uR.y,z1=-w.x*uR.y+w.z*uR.x,y2=w.y*uR.z-z1*uR.w,z2=w.y*uR.w+z1*uR.z,d=uS.w-z2;
-gl_Position=vec4(x1*uS.x,y2*uS.y-.04*d,uK.x*d+uK.y,d);float nx=n.x*uR.x+n.z*uR.y,nz=-n.x*uR.y+n.z*uR.x;vN=vec3(nx,n.y*uR.z-nz*uR.w,n.y*uR.w+nz*uR.z);vV=vec3(-x1,-y2,uS.w-z2);vC=aC;}`;
-const EXFS=`precision mediump float;varying vec3 vN,vV,vC;varying float vWy;uniform float uAlpha,uSel,uSpec,uMode,uPulse;uniform vec3 uId;
+gl_Position=vec4(x1*uS.x,y2*uS.y-.04*d,uK.x*d+uK.y,d);float nx=n.x*uR.x+n.z*uR.y,nz=-n.x*uR.y+n.z*uR.x;vN=vec3(nx,n.y*uR.z-nz*uR.w,n.y*uR.w+nz*uR.z);vV=vec3(-x1,-y2,uS.w-z2);vC=aC;vE=aE;}`;
+const EXFS=`precision mediump float;varying vec3 vN,vV,vC;varying float vWy,vE;uniform vec4 uLA,uLB;uniform float uAlpha,uSel,uSpec,uMode,uPulse;uniform vec3 uId;
 void main(){if(uMode>.5&&uMode<1.5){gl_FragColor=vec4(uId,1.);return;}if(uMode>1.5){gl_FragColor=vec4(1.,.82,.25,1.);return;}
 vec3 n=normalize(vN);vec3 V=normalize(vV);if(dot(n,V)<0.)n=-n;vec3 L=normalize(vec3(.45,.75,.5)),L2=normalize(vec3(-.65,.25,.45));float dif=max(dot(n,L),0.),fil=max(dot(n,L2),0.);
 vec3 amb=mix(vec3(.17,.15,.13),vec3(.27,.31,.38),n.y*.5+.5);float ao=.7+.3*clamp(vWy/1.7,0.,1.);vec3 H=normalize(L+V);float sp=pow(max(dot(n,H),0.),34.)*uSpec;float fr=pow(1.-max(dot(n,V),0.),3.);
 vec3 r=reflect(-V,n);vec3 env=mix(vec3(.10,.09,.08),vec3(.55,.65,.78),smoothstep(-.3,.7,r.y));
 vec3 col=vC*(amb+dif*.8*vec3(1.,.96,.9)+fil*.15*vec3(.6,.7,1.))*ao+sp*vec3(1.,.97,.9)+env*fr*uSpec*.8+vec3(.5,.6,.8)*fr*.07;
-col=col*(1.+uSel*.18)+vec3(.9,.65,.1)*uSel*(.10+.12*uPulse);gl_FragColor=vec4(col,uAlpha);}`;
+col=col*(1.+uSel*.18)+vec3(.9,.65,.1)*uSel*(.10+.12*uPulse);float LE=vE<.5?0.:vE<1.5?uLA.x:vE<2.5?uLA.y:vE<3.5?uLA.z:vE<4.5?uLA.w:vE<5.5?uLB.x:vE<6.5?uLB.y:vE<7.5?uLB.z:uLB.w;col=mix(col,vC*1.5+vec3(.25),clamp(LE,0.,1.))*(1.+LE*.6);gl_FragColor=vec4(col,uAlpha);}`;
 const EXGVS=`attribute vec2 aP;uniform vec4 uR,uS;uniform vec2 uK;varying vec2 vX;void main(){vX=aP;vec3 w=vec3(aP.x,-uS.z,aP.y);float x1=w.x*uR.x+w.z*uR.y,z1=-w.x*uR.y+w.z*uR.x,y2=w.y*uR.z-z1*uR.w,z2=w.y*uR.w+z1*uR.z,d=uS.w-z2;gl_Position=vec4(x1*uS.x,y2*uS.y-.04*d,uK.x*d+uK.y,d);}`;
-const EXGFS=`precision mediump float;varying vec2 vX;uniform float uScroll,uFade;
+const EXGFS=`precision mediump float;varying vec2 vX;uniform float uScroll,uFade;uniform vec3 uBm,uBm2;
 float sdb(vec2 p,vec2 b,float r){vec2 q=abs(p)-b+r;return length(max(q,0.))+min(max(q.x,q.y),0.)-r;}
 void main(){float sd=sdb(vX-vec2(.1,0.),vec2(3.15,1.2),.7);float sh=(1.-smoothstep(-.2,1.5,sd))*.62*uFade;float rr=length(vX);float fade=1.-smoothstep(2.5,9.,rr);
 float gx=abs(fract(vX.x+uScroll)-.5),gz=abs(fract(vX.y+.5)-.5);float ln=(1.-smoothstep(.0,.035,.5-gx))+(1.-smoothstep(.0,.035,.5-gz));
-float glow=(1.-smoothstep(0.,7.,rr))*.13;vec3 c=vec3(.47,.59,.75);float a=clamp(sh+ln*.075*fade+glow,0.,1.);vec3 col=mix(c,vec3(0.),sh/max(a,.001));gl_FragColor=vec4(col*a,a);}`;
+float glow=(1.-smoothstep(0.,7.,rr))*.13;vec3 c=vec3(.47,.59,.75);float a=clamp(sh+ln*.075*fade+glow,0.,1.);vec3 col=mix(c,vec3(0.),sh/max(a,.001));float bx=vX.x-2.95,bm=0.;if(bx>0.){float len=2.6+uBm.y*5.4;float fd=smoothstep(0.,.6,bx)*(1.-smoothstep(len*.35,len,bx));float w=.32+bx*.2;float d1=(vX.y-.72)/w,d2=(vX.y+.72)/w;bm=(exp(-d1*d1*1.4)+exp(-d2*d2*1.4))*fd*uBm.x*.34;}
+float rx=-2.95-vX.x,rb=0.;vec3 rc=vec3(0.);if(rx>0.){float f=smoothstep(0.,.5,rx)*(1.-smoothstep(.4,2.2,rx));float zz=abs(vX.y)-.9;float g=exp(-zz*zz*3.5)*f;rc=vec3(1.,.12,.08)*g*uBm2.x*.38+vec3(1.,.97,.85)*g*uBm2.y*.4;rb=max(g*uBm2.x*.38,g*uBm2.y*.4);}
+float a2=clamp(a+bm+rb,0.,1.);vec3 rgb=col*a+vec3(1.,.93,.7)*bm+rc;gl_FragColor=vec4(min(rgb,vec3(a2)),a2);}`;
 function exGLNew(cv){const ctxOpt={antialias:!window.__EXNOAA&&(devicePixelRatio||1)<2,alpha:true,premultipliedAlpha:true,powerPreference:'high-performance',failIfMajorPerformanceCaveat:!window.__EXGL_ANY};
  let gl=null;try{gl=cv.getContext('webgl',ctxOpt)||cv.getContext('experimental-webgl',ctxOpt)}catch(_){}if(!gl)return null;
  const mk=(t,s)=>{const h=gl.createShader(t);gl.shaderSource(h,s);gl.compileShader(h);if(!gl.getShaderParameter(h,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(h));return h};
  const prog=(v,f)=>{const p=gl.createProgram();gl.attachShader(p,mk(gl.VERTEX_SHADER,v));gl.attachShader(p,mk(gl.FRAGMENT_SHADER,f));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(p));return p};
  const uni=(p,names)=>{const o={};names.split(',').forEach(n=>{o[n]=gl.getUniformLocation(p,n)});return o};
  let P1,P2,U1,U2,vb,gb,G,fbo=null,ft=null,fd=null,fw=0,fh=0;
- try{P1=prog(EXVS,EXFS);P2=prog(EXGVS,EXGFS);U1=uni(P1,'uOff,uRc,uAng,uAx,uOut,uR,uS,uK,uAlpha,uSel,uSpec,uMode,uPulse,uId');U2=uni(P2,'uR,uS,uK,uScroll,uFade');
+ try{P1=prog(EXVS,EXFS);P2=prog(EXGVS,EXGFS);U1=uni(P1,'uOff,uRc,uAng,uAx,uOut,uR,uS,uK,uAlpha,uSel,uSpec,uMode,uPulse,uId,uLA,uLB');U2=uni(P2,'uR,uS,uK,uScroll,uFade,uBm,uBm2');
   G=exBuildGeo();vb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,vb);gl.bufferData(gl.ARRAY_BUFFER,G.buf,gl.STATIC_DRAW);gb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,gb);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-10,-10,10,-10,-10,10,10,10]),gl.STATIC_DRAW)}catch(err){try{console.warn('GL',err)}catch(_){}return null}
- const A1={P:gl.getAttribLocation(P1,'aP'),N:gl.getAttribLocation(P1,'aN'),C:gl.getAttribLocation(P1,'aC')},A2=gl.getAttribLocation(P2,'aP');
+ const A1={P:gl.getAttribLocation(P1,'aP'),N:gl.getAttribLocation(P1,'aN'),C:gl.getAttribLocation(P1,'aC'),E:gl.getAttribLocation(P1,'aE')},A2=gl.getAttribLocation(P2,'aP');
  const o={gl,lost:false};
  cv.addEventListener('webglcontextlost',e=>{e.preventDefault();o.lost=true});
  cv.addEventListener('webglcontextrestored',()=>{const n=exGLNew(cv);if(n){Object.assign(o,n);o.lost=false}});
  const cam=S=>{const cy=Math.cos(S.ry),sy=Math.sin(S.ry),cx=Math.cos(S.rx),sx=Math.sin(S.rx),D=12,W=S.W,H=S.H;const F=Math.min(W*1.5,H*2.0)*1.18*S.zm/(1+.55*S.t);return {R:[cy,sy,cx,sx],S:[F/(W/2),F/(H/2),1.5+S.t*.45,D],K:[41/39,-80/39]}};
- const bindMain=()=>{gl.useProgram(P1);gl.bindBuffer(gl.ARRAY_BUFFER,vb);gl.enableVertexAttribArray(A1.P);gl.enableVertexAttribArray(A1.N);gl.enableVertexAttribArray(A1.C);gl.vertexAttribPointer(A1.P,3,gl.FLOAT,false,36,0);gl.vertexAttribPointer(A1.N,3,gl.FLOAT,false,36,12);gl.vertexAttribPointer(A1.C,3,gl.FLOAT,false,36,24)};
+ const bindMain=()=>{gl.useProgram(P1);gl.bindBuffer(gl.ARRAY_BUFFER,vb);gl.enableVertexAttribArray(A1.P);gl.enableVertexAttribArray(A1.N);gl.enableVertexAttribArray(A1.C);gl.enableVertexAttribArray(A1.E);gl.vertexAttribPointer(A1.P,3,gl.FLOAT,false,40,0);gl.vertexAttribPointer(A1.N,3,gl.FLOAT,false,40,12);gl.vertexAttribPointer(A1.C,3,gl.FLOAT,false,40,24);gl.vertexAttribPointer(A1.E,1,gl.FLOAT,false,40,36)};
  const setCam=(U,c)=>{gl.uniform4f(U.uR,c.R[0],c.R[1],c.R[2],c.R[3]);gl.uniform4f(U.uS,c.S[0],c.S[1],c.S[2],c.S[3]);gl.uniform2f(U.uK,c.K[0],c.K[1])};
  const pstate=S=>{const E=ENG,t=S.t,gh=S.ghost?1:Math.min(1,t*1.6),amp=E.st===1?.02:E.st===2?.012+.02*Math.min(1,E.rpm/2400)+.014*E.ped:0,list=[];
   EXP.forEach(P=>{if(S.hid.has(P.i))return;if(S.pt&&!P.pt)return;const sel=P.i===S.sel;let ox=P.ex[0]*t,oy=P.ex[1]*t,oz=P.ex[2]*t;
@@ -1956,10 +2078,10 @@ function exGLNew(cv){const ctxOpt={antialias:!window.__EXNOAA&&(devicePixelRatio
   const c=cam(S),list=pstate(S);S.ps=list;
   /* talaj + árnyék */
   gl.disable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
-  gl.useProgram(P2);setCam(U2,c);gl.uniform1f(U2.uScroll,-(ENG.dist%1));gl.uniform1f(U2.uFade,1-S.t*.5);gl.bindBuffer(gl.ARRAY_BUFFER,gb);gl.enableVertexAttribArray(A2);gl.vertexAttribPointer(A2,2,gl.FLOAT,false,0,0);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  gl.useProgram(P2);setCam(U2,c);gl.uniform1f(U2.uScroll,-(ENG.dist%1));gl.uniform1f(U2.uFade,1-S.t*.5);const lg=exLights(),bf=1-Math.min(1,S.t*2);gl.uniform3f(U2.uBm,lg.head*bf,lg.high,0);gl.uniform3f(U2.uBm2,lg.brk*bf,lg.rev*bf,0);gl.bindBuffer(gl.ARRAY_BUFFER,gb);gl.enableVertexAttribArray(A2);gl.vertexAttribPointer(A2,2,gl.FLOAT,false,0,0);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
   /* járműtest */
   bindMain();setCam(U1,c);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);gl.frontFace(gl.CCW);gl.disable(gl.BLEND);
-  gl.uniform1f(U1.uMode,0);gl.uniform1f(U1.uOut,0);gl.uniform1f(U1.uPulse,.5+.5*Math.sin(performance.now()/260));
+  gl.uniform1f(U1.uMode,0);gl.uniform1f(U1.uOut,0);gl.uniform1f(U1.uPulse,.5+.5*Math.sin(performance.now()/260));gl.uniform4f(U1.uLA,lg.a[0],lg.a[1],lg.a[2],lg.a[3]);gl.uniform4f(U1.uLB,lg.b[0],lg.b[1],lg.b[2],lg.b[3]);
   for(const s of list)if(s.al>.999)drawP(U1,s,0);
   const sel=list.find(s=>s.sel);if(sel&&sel.al>.999){gl.cullFace(gl.FRONT);gl.uniform1f(U1.uMode,2);gl.uniform1f(U1.uOut,.03);drawP(U1,sel,0);gl.uniform1f(U1.uMode,0);gl.uniform1f(U1.uOut,0);gl.cullFace(gl.BACK)}
   const tl=list.filter(s=>s.al<=.999);if(tl.length){const cs=Math.cos(S.ry),ss=Math.sin(S.ry),cx=Math.cos(S.rx),sx=Math.sin(S.rx);const zz=s=>{const q=s.P.cen;const x=q[0]+s.off[0],y=q[1]+s.off[1]-1.5-S.t*.45,z=q[2]+s.off[2];const z1=-x*ss+z*cs;return y*sx+z1*cx};tl.sort((a,b)=>zz(a)-zz(b));
@@ -1981,8 +2103,11 @@ function exProjG(S,p,off){const cy=Math.cos(S.ry),sy=Math.sin(S.ry),cx=Math.cos(
  const x=p[0]+off[0],y=p[1]+off[1]-CY,z=p[2]+off[2],x1=x*cy+z*sy,z1=-x*sy+z*cy,y2=y*cx-z1*sx,z2=y*sx+z1*cx,k=F/(D-z2);return [W/2+x1*k,H*.52-y2*k,k]}
 function exOverlay(S){const c=S.ovc;if(!c)return;const W=S.W,H=S.H,dp=Math.min(S.dpr,1.5);const ow=Math.round(W*dp),oh=Math.round(H*dp);if(S.ov.width!==ow||S.ov.height!==oh){S.ov.width=ow;S.ov.height=oh}
  c.setTransform(dp,0,0,dp,0,0);c.clearRect(0,0,W,H);const t=S.t;
+ {const lg=exLights();if(!S.pt&&t<.05){const cx=Math.cos(S.rx),sx=Math.sin(S.rx),sy=Math.sin(S.ry),cy=Math.cos(S.ry),V=[-cx*sy,sx,cx*cy];let on=0;c.globalCompositeOperation='lighter';
+  for(const L of EXLAMP){const it=lg.k[L.k];if(it<.03)continue;let fc=1;if(L.n){fc=L.n[0]*V[0]+L.n[1]*V[1]+L.n[2]*V[2];if(fc<.12)continue;fc=Math.min(1,fc*1.5)}const q=exProjG(S,L.p,[0,0,0]),r=Math.max(4,L.r*q[2]*(.7+.5*it)),g=c.createRadialGradient(q[0],q[1],0,q[0],q[1],r);const al=.62*it*fc;g.addColorStop(0,`rgba(${L.c},${al})`);g.addColorStop(.35,`rgba(${L.c},${al*.35})`);g.addColorStop(1,`rgba(${L.c},0)`);c.fillStyle=g;c.beginPath();c.arc(q[0],q[1],r,0,7);c.fill()}
+  c.globalCompositeOperation='source-over'}}
  const exh=EXP.find(p=>p.n==='Kipufogó');const showSm=exh&&!S.hid.has(exh.i)&&!S.pt&&ENG.sm.length;
- if(showSm){const off=[exh.ex[0]*t,exh.ex[1]*t,exh.ex[2]*t];for(const p of ENG.sm){const q=exProjG(S,[p.x,p.y,p.z],off),f=p.a/p.L,r=Math.max(1,p.s*q[2]*(1+f*3.2)),al=(1-f)*(1-f)*.5;const g=p.d>.7?30:p.d>.3?78:150;c.fillStyle=`rgba(${g},${g},${g+4},${al})`;c.beginPath();c.arc(q[0],q[1],r,0,7);c.fill()}}
+ if(showSm){const off=[exh.ex[0]*t,exh.ex[1]*t,exh.ex[2]*t];for(const p of ENG.sm){const q=exProjG(S,[p.x,p.y,p.z],off),f=p.a/p.L,r=Math.max(1.5,p.s*q[2]*(1+f*2.2)),al=(1-f)*(1-f)*.34;const g=p.d>.7?30:p.d>.3?78:150;const gr=c.createRadialGradient(q[0],q[1],0,q[0],q[1],r);gr.addColorStop(0,`rgba(${g},${g},${g+4},${al})`);gr.addColorStop(1,`rgba(${g},${g},${g+4},0)`);c.fillStyle=gr;c.beginPath();c.arc(q[0],q[1],r,0,7);c.fill()}}
  if(S.sel>=0&&!S.hid.has(S.sel)&&!S.mini){const P=EXP[S.sel],off=[P.ex[0]*t,P.ex[1]*t,P.ex[2]*t];const q=exProjG(S,P.cen,off);c.font='700 12px system-ui';const w=c.measureText(P.n).width+14,x=Math.max(4,Math.min(W-w-4,q[0]-w/2)),y=Math.max(18,q[1]-34);c.fillStyle='rgba(0,0,0,.72)';c.fillRect(x,y-14,w,20);c.strokeStyle='#ffd23f';c.lineWidth=1;c.strokeRect(x+.5,y-13.5,w-1,19);c.fillStyle='#ffe08a';c.textAlign='left';c.fillText(P.n,x+7,y);c.strokeStyle='#ffd23f';c.beginPath();c.moveTo(q[0],y+6);c.lineTo(q[0],q[1]);c.stroke();c.beginPath();c.arc(q[0],q[1],3,0,7);c.fillStyle='#ffd23f';c.fill()}}
 function exPickAny(x,y){if(EX.gl){const i=EX.gl.pick(EX,x,y);if(i>=0)exSelect(i);else{EX.sel=-1;exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'))}
   if(i>=0){const ch=document.querySelector(`.exchip[data-i="${i}"]`);if(ch&&EX.sel===i)ch.scrollIntoView({block:'nearest',inline:'nearest'})}}else exPick(x,y)}
@@ -2001,7 +2126,7 @@ function exFrame(S,dt,now,raw){const rr=S.cv.getBoundingClientRect();S.W=rr.widt
 function exMiniMount(box){if(!box||box.dataset.mn)return;box.dataset.mn=1;
  box.innerHTML=`<div class="mnh"><b>🪖 Gidrán – élő 3D</b><small>Indítsd be a motort, és nézd, hogyan dolgozik a hajtáslánc</small></div>
  <div class="mnsc"><canvas id="mnCv" aria-label="Gidrán 3D modell"></canvas><canvas id="mnOv"></canvas><div class="mnhud"><span class="dHud">Motor leállítva · 0 km/h · N</span></div></div>${exDrvHTML()}
- <div class="mnbt"><button type="button" class="btn line sm" id="mnPt" aria-pressed="false">⚙ Hajtáslánc</button><button type="button" class="btn pri sm" id="mnFull">⤢ Teljes 3D nézet</button></div>`;
+ <div class="mnbt"><button type="button" class="btn line sm" data-lt="cycle" aria-pressed="false">💡 Fény: ki</button><button type="button" class="btn line sm" id="mnPt" aria-pressed="false">⚙ Hajtáslánc</button><button type="button" class="btn pri sm" id="mnFull">⤢ Teljes 3D nézet</button></div>`;
  const cv=box.querySelector('#mnCv');MN.cv=cv;MN.ov=box.querySelector('#mnOv');MN.ovc=MN.ov.getContext('2d');MN.W=cv.clientWidth||300;MN.H=cv.clientHeight||190;MN.dpr=Math.min(2,devicePixelRatio||1);
  MN.gl=exGLNew(cv);
  if(!MN.gl){box.querySelector('.mnsc').innerHTML='<div class="mnno">A 3D nézet ezen az eszközön a teljes képernyős módban érhető el.</div>';box.querySelector('.exdv').style.display='none';const pb=box.querySelector('#mnPt');if(pb)pb.style.display='none'}
@@ -2015,7 +2140,7 @@ function exMiniMount(box){if(!box||box.dataset.mn)return;box.dataset.mn=1;
   const vis=()=>{const r=box.getBoundingClientRect(),on=!document.hidden&&r.height>0&&r.bottom>0&&r.top<innerHeight&&!document.body.classList.contains('harcon');if(on&&!MN.run){MN.run=true;exKick()}else if(!on&&MN.run)MN.run=false};
   if('IntersectionObserver' in window){new IntersectionObserver(vis,{threshold:.01}).observe(box)}
   document.addEventListener('visibilitychange',vis);addEventListener('scroll',vis,{passive:true});setInterval(vis,700);vis()}
- addEventListener('keydown',e=>{if(MN.run&&!EX.run&&!/INPUT|TEXTAREA/.test((e.target||{}).tagName||''))exKeys(e)});addEventListener('keyup',e=>{if(MN.run||EX.run)exKeys(e)})}
+}
 /* ===== FIÓK + ÉLŐ RANGLISTA (Firebase, a M.E.D.V.E. Arcade közös fiókjaival) ===== */
 const RANKS=['','honvéd','őrvezető','tizedes','szakaszvezető','őrmester','törzsőrmester','főtörzsőrmester','zászlós','törzszászlós','főtörzszászlós','hadnagy','főhadnagy','százados','őrnagy','alezredes','ezredes','dandártábornok','civil'];
 const RANKG=[['terep','Gidrán Terep','gmBest','medve-gm-best',true,v=>gtFmt(v/1000),'🏔️','Terep-maraton 16 km: CTIS, mocsár, hó, jég, csörlő, autópálya + konvoj.'],
