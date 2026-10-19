@@ -71,7 +71,7 @@ function gidGlass(c,dark){
   if(!dark){c.strokeStyle='rgba(255,255,255,.35)';c.lineWidth=.7;[[-44,-38.5,-40,-42.3],[-28,-38.5,-23,-42.3],[-7,-38.5,-2,-42.3],[16.6,-41.2,22,-34]].forEach(([a,b,cc,d])=>{c.beginPath();c.moveTo(a,b);c.lineTo(cc,d);c.stroke()})}}
 function gidFullSet(){const go=()=>document.querySelectorAll('img.gidfull').forEach(i=>{i.src=GID_FULL});if(GID_FULL)return go();const im=gidImg();const mk=()=>{try{const S=3,x0=-GOX*GK-2,x1=(im.naturalWidth-GOX)*GK+2,y0=-GOY*GK-2,y1=GWR+3;const cv=document.createElement('canvas');cv.width=Math.round((x1-x0)*S);cv.height=Math.round((y1-y0)*S);const c=cv.getContext('2d');c.scale(S,S);c.translate(-x0,-y0);gidDraw(c,0,0,0,null,0);GID_FULL=cv.toDataURL('image/png');go()}catch(e){}};if(im.complete&&im.naturalWidth)mk();else im.addEventListener('load',mk,{once:true})}
 function gCanvas(id){const cv=$(id);const dpr=Math.min(2,devicePixelRatio||1);const r=cv.getBoundingClientRect();cv.width=r.width*dpr;cv.height=r.height*dpr;return {cv,W:r.width,H:r.height,dpr}}
-function gHold(id,obj,k){const b=$(id);if(!b)return;const on=e=>{e.preventDefault();b.setPointerCapture?.(e.pointerId);obj[k]=1;b.classList.add('on')},off=()=>{obj[k]=0;b.classList.remove('on')};b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointercancel',off);b.addEventListener('pointerleave',off)}
+function gHold(id,obj,k){const b=$(id);if(!b)return;const on=e=>{e.preventDefault();try{b.setPointerCapture?.(e.pointerId)}catch(_){}obj[k]=1;b.classList.add('on')},off=()=>{obj[k]=0;b.classList.remove('on')};b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointercancel',off);b.addEventListener('pointerleave',off)}
 function gBoard(field,asc,fmt){const us=arr('users').filter(u=>u[field]>0).sort((a,b)=>asc?a[field]-b[field]:b[field]-a[field]).slice(0,5);if(!us.length)return '';
   return `<div class="hboard"><div class="lbl">Ranglista</div>${us.map((u,i)=>`<div><span>${['🥇','🥈','🥉','4.','5.'][i]} ${esc((u.rank?u.rank+' ':'')+u.name)}</span><b>${fmt?fmt(u[field]):n0(u[field])}</b></div>`).join('')}</div>`}
 function gSave(field,val,lsKey,lower){let best=0;try{best=Number(localStorage.getItem(lsKey)||0)}catch(e){}const rec=!best||(lower?val<best:val>best);if(rec){best=val;try{localStorage.setItem(lsKey,String(val))}catch(e){}}
@@ -436,7 +436,7 @@ function gvOpen(){const el=$('#harc');el.hidden=false;document.body.classList.ad
   $('#gvClose').onclick=()=>gClose(GV);$('#gvGo').onclick=gvStart;gidFullSet();gvSetup()}
 function gvSetup(){Object.assign(GV,gCanvas('#gvCv'));const m=$('#gvMap');const r=m.getBoundingClientRect();m.width=r.width*GV.dpr;m.height=r.height*GV.dpr;GV.mw=r.width;GV.mh=r.height;gvRabaImg();GV.gas=0;GV.brake=0;GV.hand=false;{const hb=$('#gvHand');if(hb)hb.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();GV.hand=!GV.hand;hb.setAttribute('aria-pressed',GV.hand);if(SOUND&&ac())snare(AC.currentTime,.15);gvMsg(GV.hand?'(P) Kézifék behúzva':'Kézifék kiengedve',1.4)})}gHold('#gvGas',GV,'gas');gHold('#gvBrake',GV,'brake');$('#gvNv').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();gvNvToggle()});$('#gvDr').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();gvMyBtn()});
   const cv=GV.cv;const toW=e=>{const r=cv.getBoundingClientRect();return {x:(e.clientX-r.left)/GV.sc+GV.camX,y:(e.clientY-r.top)/GV.sc+GV.camY,sx:e.clientX-r.left,sy:e.clientY-r.top}};
-  cv.addEventListener('pointerdown',e=>{const p=toW(e);$('#gvHint')&&($('#gvHint').hidden=true);if(GV.run){const o=GV.objs.find(o=>!o.mk&&!o.gone&&Math.abs(o.x-p.x)<26/GV.sc*1.4+14&&Math.abs(gvG(o.x)-10-p.y)<40);if(o){gvMark(o);return}}cv.setPointerCapture(e.pointerId);GV.aimId=e.pointerId;GV.aim=p});
+  cv.addEventListener('pointerdown',e=>{const p=toW(e);$('#gvHint')&&($('#gvHint').hidden=true);if(GV.run){const o=GV.objs.find(o=>!o.mk&&!o.gone&&Math.abs(o.x-p.x)<26/GV.sc*1.4+14&&Math.abs(gvG(o.x)-10-p.y)<40);if(o){gvMark(o);return}}try{cv.setPointerCapture(e.pointerId)}catch(_){}GV.aimId=e.pointerId;GV.aim=p});
   cv.addEventListener('pointermove',e=>{if(e.pointerId===GV.aimId&&GV.aim)GV.aim=toW(e)});const up=e=>{if(e.pointerId===GV.aimId){GV.aim=null;GV.aimId=null}};cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
   GV.key=e=>{const d=e.type==='keydown'?1:0;if(e.key==='ArrowRight'||e.key==='d')GV.gas=d;if(e.key==='ArrowLeft'||e.key==='a')GV.brake=d;if(d&&(e.key==='n'||e.key==='N'))gvNvToggle();if(d&&(e.key==='q'||e.key==='Q'))gvMyBtn()};addEventListener('keydown',GV.key);addEventListener('keyup',GV.key);
   gvReset();GV.last=performance.now();GV.raf=requestAnimationFrame(gvLoop)}
@@ -927,10 +927,10 @@ function ghReset(){const W=GH.W,H=GH.H;const rw=Math.min(W-26,340);Object.assign
   for(let i=0;i<9;i++)ghSpawn(GH.y-80-i*130-Math.random()*70,true)}
 function ghStart(){$('#ghStart').hidden=true;$('#ghOver').hidden=true;ghReset();GH.run=true;GH.last=performance.now();gEngStart(GH);rockStart('harc');playCount('highway');ghMsg('Indulj! Szirénát be, és vágj át a forgalmon',2.4)}
 const GH_COL=['#c0392b','#2e6fb5','#e8e8e8','#3d3d44','#d4a017','#2f8f5b','#7b4ea3','#b8bcc4','#e67e22'];
-function ghSpawn(y,init){const lw=GH.lw;const tp=Math.random();const type=tp<.62?'car':tp<.84?'van':'truck';const wf=type==='car'?.58:type==='van'?.62:.72,hf=type==='car'?1.02:type==='van'?1.28:2.3;
+function ghSpawn(y,init){const lw=GH.lw;const tp=Math.random();const type=tp<.62?'car':tp<.84?'van':'truck';const sub=type==='car'?['sedan','sedan','hatch','suv','wagon'][Math.floor(Math.random()*5)]:type==='truck'?['box','box','tank','flat','semi'][Math.floor(Math.random()*5)]:Math.random()<.3?'bus':'van';const wf=type==='car'?(sub==='suv'?.6:.56):type==='van'?(sub==='bus'?.66:.62):.7,hf=type==='car'?(sub==='suv'?1.4:sub==='hatch'?1.2:1.32):type==='van'?(sub==='bus'?1.9:1.6):(sub==='semi'?3.5:3.0);
   const w=lw*wf,h=lw*hf;let tries=0,lane;const zc=GH.z+(GH.y-y);while(tries++<8){lane=Math.floor(Math.random()*GH_L);if(!GH.cars.some(c=>Math.abs(c.lane-lane)<.7&&Math.abs(c.z-zc)<(c.h+h)/2+lw*1.5))break;if(tries===8)return null}
   const base=type==='truck'?48+Math.random()*16:48+Math.random()*44;const vk=init?base:base;
-  const c={id:++GH.cid,lane,type,w,h,z:zc,vk,v0:vk,col:type==='truck'?['#e9e5d8','#5b7aa5','#a33'][Math.floor(Math.random()*3)]:GH_COL[Math.floor(Math.random()*GH_COL.length)],tl:null,lcT:Math.random()*8+3,blink:0,yT:0,react:.3+Math.random()*1.0,deaf:Math.random()<.12,hit:0,passed:0,minGap:99,brk:0,spin:0,vxs:0,wreck:0};GH.cars.push(c);return c}
+  const c={id:++GH.cid,lane,type,sub,seed:Math.random(),w,h,z:zc,vk,v0:vk,col:type==='truck'?['#e9e5d8','#5b7aa5','#a33'][Math.floor(Math.random()*3)]:GH_COL[Math.floor(Math.random()*GH_COL.length)],tl:null,lcT:Math.random()*8+3,blink:0,yT:0,react:.3+Math.random()*1.0,deaf:Math.random()<.12,hit:0,passed:0,minGap:99,brk:0,spin:0,vxs:0,wreck:0};GH.cars.push(c);return c}
 function ghCarX(c){return GH.x0+(c.lane+.5)*GH.lw+(c.vxs||0)}
 function ghLaneFree(lane,c,tight){for(const o of GH.cars){if(o===c||o.wreck)continue;const ol=o.tl!=null?o.tl:o.lane;if(Math.abs(ol-lane)<.75&&Math.abs(o.z-c.z)<(o.h+c.h)/2+GH.lw*(tight?.4:.9))return false}
   if(Math.abs(c.z-GH.z)<(c.h+GH.lw*1.45)/2+GH.lw*.7){const pl=(GH.px-GH.x0)/GH.lw-.5;if(Math.abs(pl-lane)<.8)return false}return true}
@@ -1029,6 +1029,89 @@ function ghDrawGid(c,x,y,pw,ph,tilt,now){c.save();c.translate(x,y);c.rotate(tilt
   const on=GH.siren?((now/170|0)%2):-1;c.fillStyle=on===1?'#3d8bff':'#243a66';c.fillRect(-pw*.3,-ph*.3,pw*.28,3);c.fillStyle=on===0?'#ff3b3b':'#5a2020';c.fillRect(pw*.02,-ph*.3,pw*.28,3);
   if(GH.siren){c.globalCompositeOperation='lighter';const g=c.createRadialGradient(on===1?-pw*.16:pw*.16,-ph*.3,0,on===1?-pw*.16:pw*.16,-ph*.3,pw*1.1);g.addColorStop(0,on===1?'rgba(70,150,255,.7)':'rgba(255,60,60,.65)');g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.fillRect(-pw*1.4,-ph*.9,pw*2.8,ph*1.1)}
   c.restore()}
+/* ===== Autópálya 2: valósághű felülnézet (Gidrán + járművek) ===== */
+function ghWheelsTop(c,xs,w,h,ww,wh){c.fillStyle='#0b0b0b';for(const y of xs){c.fillRect(-w/2-ww*.45,y-wh/2,ww,wh);c.fillRect(w/2-ww*.55,y-wh/2,ww,wh)}}
+function ghDrawGid(c,x,y,pw,ph,tilt,now){c.save();c.translate(x,y);c.rotate(tilt);if(GH.hitCd>0&&((now/90|0)%2)){c.globalAlpha=.55}
+ c.fillStyle='rgba(0,0,0,.32)';ghRR(c,-pw/2+3,-ph/2+4,pw,ph,pw*.14);c.fill();
+ c.rotate(Math.PI/2);/* a hossztengely: x (elöl balra), szélesség: y */
+ const L=ph,B=pw,X=u=>-L/2+u*L,Y=v=>v*B;
+ const G='#4b5320',G2='#5a6428',D='#2c3314',R='#767d58',K='#1a1d0d';
+ /* kerekek */
+ c.fillStyle='#0a0a0a';for(const u of [.2,.72])for(const sd of [-1,1]){const wy=sd>0?Y(.5)-B*.03:Y(-.5)-B*.17;c.fillRect(X(u)-L*.075,wy,L*.15,B*.2)}
+ /* spare wheel hátul jobbra (a képen felül) */
+ c.fillStyle='#111';ghRR(c,X(.86),Y(.5)-B*.02,L*.15,B*.19,B*.05);c.fill();c.fillStyle='#2a2a2a';c.fillRect(X(.9),Y(.5)+B*.02,L*.07,B*.11);
+ /* APU hátul balra, kilóg */
+ c.fillStyle=D;ghRR(c,X(.93),Y(-.5)+B*.04,L*.1,B*.3,2);c.fill();c.fillStyle=G2;c.fillRect(X(.95),Y(-.5)+B*.08,L*.05,B*.22);
+ /* törzs: letört orr, egyenes oldal */
+ c.fillStyle=G;c.beginPath();c.moveTo(X(0),Y(-.3));c.lineTo(X(.07),Y(-.5));c.lineTo(X(.97),Y(-.5));c.lineTo(X(1),Y(-.46));c.lineTo(X(1),Y(.46));c.lineTo(X(.97),Y(.5));c.lineTo(X(.07),Y(.5));c.lineTo(X(0),Y(.3));c.closePath();c.fill();c.strokeStyle=K;c.lineWidth=1.1;c.stroke();
+ /* terepminta */
+ c.fillStyle='rgba(30,36,14,.65)';for(const [u,v,rx,ry,a] of [[.15,-.2,.1,.12,.5],[.5,.3,.14,.1,-.4],[.78,-.25,.1,.1,.2],[.35,.05,.08,.09,1],[.9,.15,.07,.09,0]]){c.beginPath();c.ellipse(X(u),Y(v),L*rx,B*ry,a,0,7);c.fill()}
+ c.fillStyle='rgba(120,95,52,.5)';for(const [u,v,rx,ry,a] of [[.05,.12,.05,.1,0],[.58,-.38,.12,.08,.3],[.68,.38,.1,.07,-.2],[.25,.42,.09,.07,.1]]){c.beginPath();c.ellipse(X(u),Y(v),L*rx,B*ry,a,0,7);c.fill()}
+ /* motorfedél: légszűrő borítás + szellőzők */
+ c.fillStyle=R;c.beginPath();c.moveTo(X(.04),Y(-.3));c.lineTo(X(.27),Y(-.46));c.lineTo(X(.27),Y(-.2));c.lineTo(X(.04),Y(-.14));c.closePath();c.fill();c.strokeStyle=K;c.lineWidth=.8;c.stroke();
+ c.fillStyle='rgba(20,22,10,.7)';for(let i=0;i<5;i++)c.fillRect(X(.09+i*.03),Y(.06),L*.015,B*.34);
+ /* szélvédő + oldalüveg */
+ c.fillStyle='#1a2733';c.beginPath();c.moveTo(X(.28),Y(-.4));c.lineTo(X(.33),Y(-.42));c.lineTo(X(.33),Y(.42));c.lineTo(X(.28),Y(.4));c.closePath();c.fill();c.fillStyle='rgba(190,225,255,.28)';c.fillRect(X(.29),Y(-.34),L*.02,B*.22);
+ /* tető */
+ c.fillStyle=G2;ghRR(c,X(.34),Y(-.45),L*.6,B*.9,3);c.fill();c.strokeStyle=K;c.stroke();
+ c.fillStyle=R;c.fillRect(X(.36),Y(-.41),L*.55,B*.06);c.fillRect(X(.36),Y(.35),L*.55,B*.06);/* lépcsőlemez */
+ c.fillStyle='rgba(0,0,0,.35)';for(let i=0;i<14;i++){c.fillRect(X(.38+i*.037),Y(-.39),1.2,1.2);c.fillRect(X(.38+i*.037),Y(.38),1.2,1.2)}
+ c.fillStyle=K;c.fillRect(X(.36),Y(-.01),L*.5,B*.03);/* gerinc */
+ /* vészkijárat + kupola */
+ c.fillStyle=G;ghRR(c,X(.62),Y(-.27),L*.12,B*.38,B*.06);c.fill();c.strokeStyle=K;c.lineWidth=.8;c.stroke();c.fillStyle=D;c.fillRect(X(.67),Y(-.1),L*.03,B*.05);
+ c.beginPath();c.arc(X(.8),Y(.12),B*.18,0,7);c.fillStyle=G;c.fill();c.stroke();c.fillStyle=D;c.beginPath();c.arc(X(.8),Y(.12),B*.09,0,7);c.fill();
+ /* SARP II távirányított fegyverplatform: torony + cső elöre */
+ c.fillStyle='#363c20';ghRR(c,X(.44),Y(-.09),L*.17,B*.3,B*.05);c.fill();c.strokeStyle=K;c.stroke();c.fillStyle='#4a5126';c.fillRect(X(.46),Y(-.05),L*.1,B*.14);c.fillStyle='#0d0f06';c.fillRect(X(.28),Y(.045),L*.2,B*.035);c.fillRect(X(.265),Y(.035),L*.02,B*.055);c.fillStyle='#161a0a';c.fillRect(X(.58),Y(-.06),L*.05,B*.24);
+ /* keresőlámpák */
+ c.fillStyle='#222';c.beginPath();c.arc(X(.34),Y(-.46),B*.065,0,7);c.fill();c.beginPath();c.arc(X(.92),Y(.46),B*.065,0,7);c.fill();
+ /* fényszórók / féklámpák */
+ c.fillStyle='#fff6c8';c.fillRect(X(0)-1,Y(-.27),3,B*.14);c.fillRect(X(0)-1,Y(.13),3,B*.14);
+ c.fillStyle=GH.brake?'#ff3030':'#7a1a14';c.fillRect(X(1)-2,Y(-.44),3,B*.16);c.fillRect(X(1)-2,Y(.28),3,B*.16);
+ /* villogó + sziréna */
+ const on=GH.siren?((now/170|0)%2):-1;c.fillStyle=on===1?'#3d8bff':'#243a66';c.fillRect(X(.3),Y(-.34),3,B*.2);c.fillStyle=on===0?'#ff3b3b':'#5a2020';c.fillRect(X(.3),Y(.14),3,B*.2);
+ if(GH.siren){c.globalCompositeOperation='lighter';const gx=X(.3),gy=on===1?Y(-.24):Y(.24);const g=c.createRadialGradient(gx,gy,0,gx,gy,B*1.1);g.addColorStop(0,on===1?'rgba(70,150,255,.7)':'rgba(255,60,60,.65)');g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.fillRect(gx-B*1.2,gy-B*1.2,B*2.4,B*2.4)}
+ c.restore()}
+/* járművek */
+function ghDrawCar(c,car,x,y,now){const w=car.w,h=car.h,sd=car.seed||0;c.save();c.translate(x,y);if(car.wreck)c.rotate(car.spin*.5*(car.dirx||1));
+ c.fillStyle='rgba(0,0,0,.28)';ghRR(c,-w/2+2,-h/2+3,w,h,w*.18);c.fill();
+ const dark='rgba(0,0,0,.22)',gl='#16202c',tail=car.brk?'#ff3a2a':'#7a1a14',lamp=(xx,yy,ww,hh,col)=>{c.fillStyle=col;c.fillRect(xx,yy,ww,hh)};
+ const mirror=yy=>{c.fillStyle=car.col;c.fillRect(-w/2-3,yy,3.5,3);c.fillRect(w/2-.5,yy,3.5,3)};
+ const tires=(ys,ww,hh)=>{c.fillStyle='#0b0b0b';for(const yy of ys){c.fillRect(-w/2-1.5,yy,ww,hh);c.fillRect(w/2-ww+1.5,yy,ww,hh)}};
+ const sub=car.sub||car.type;
+ if(car.type==='car'){
+  tires([-h*.34,h*.22],3.5,h*.15);
+  c.fillStyle=car.col;ghRR(c,-w/2,-h/2,w,h,w*.28);c.fill();c.strokeStyle='rgba(0,0,0,.3)';c.lineWidth=1;c.stroke();
+  c.fillStyle='rgba(255,255,255,.13)';ghRR(c,-w*.3,-h*.5+h*.03,w*.6,h*.24,w*.1);c.fill();/* motorháztető fény */
+  const rt=sub==='suv'?.30:sub==='wagon'?.38:sub==='hatch'?.28:.22;/* tető hossza */
+  c.fillStyle=gl;c.beginPath();c.moveTo(-w*.4,-h*.2);c.lineTo(w*.4,-h*.2);c.lineTo(w*.44,-h*.2+h*.12);c.lineTo(-w*.44,-h*.2+h*.12);c.closePath();c.fill();/* szélvédő */
+  c.fillStyle=car.col;ghRR(c,-w*.4,-h*.08,w*.8,h*(rt+.1),w*.08);c.fill();c.fillStyle='rgba(255,255,255,.16)';ghRR(c,-w*.32,-h*.04,w*.64,h*(rt+.02),w*.06);c.fill();
+  if(sub==='suv'||sub==='wagon'){c.fillStyle='rgba(0,0,0,.45)';c.fillRect(-w*.34,-h*.06,1.2,h*(rt+.08));c.fillRect(w*.34,-h*.06,1.2,h*(rt+.08))}
+  c.fillStyle=gl;c.beginPath();c.moveTo(-w*.4,h*(rt+.02));c.lineTo(w*.4,h*(rt+.02));c.lineTo(w*.34,h*(rt+.12));c.lineTo(-w*.34,h*(rt+.12));c.closePath();c.fill();/* hátsó ablak */
+  mirror(-h*.16);
+  lamp(-w/2+2,-h/2,w*.24,2.4,'#fff3b8');lamp(w/2-2-w*.24,-h/2,w*.24,2.4,'#fff3b8');lamp(-w*.14,-h/2+.5,w*.28,1.6,'rgba(30,30,30,.8)');
+  lamp(-w/2+1.5,h/2-3,w*.26,3,tail);lamp(w/2-1.5-w*.26,h/2-3,w*.26,3,tail)}
+ else if(car.type==='van'){
+  tires([-h*.3,h*.25],3.6,h*.13);
+  c.fillStyle=car.col;ghRR(c,-w/2,-h/2,w,h,w*.16);c.fill();c.strokeStyle='rgba(0,0,0,.3)';c.lineWidth=1;c.stroke();
+  c.fillStyle=gl;c.beginPath();c.moveTo(-w*.4,-h*.36);c.lineTo(w*.4,-h*.36);c.lineTo(w*.43,-h*.24);c.lineTo(-w*.43,-h*.24);c.closePath();c.fill();
+  c.fillStyle='rgba(255,255,255,.18)';ghRR(c,-w*.4,-h*.2,w*.8,h*.66,w*.08);c.fill();c.fillStyle=dark;for(let i=1;i<(sub==='bus'?7:4);i++)c.fillRect(-w*.4,-h*.2+i*h*(sub==='bus'?.09:.13),w*.8,1.2);
+  if(sub==='bus'){c.fillStyle=gl;for(let i=0;i<5;i++){c.fillRect(-w/2+1,-h*.16+i*h*.15,2.4,h*.1);c.fillRect(w/2-3.4,-h*.16+i*h*.15,2.4,h*.1)}}
+  mirror(-h*.3);lamp(-w/2+2,-h/2,w*.22,2.4,'#fff3b8');lamp(w/2-2-w*.22,-h/2,w*.22,2.4,'#fff3b8');lamp(-w/2+1.5,h/2-3,w*.2,3,tail);lamp(w/2-1.5-w*.2,h/2-3,w*.2,3,tail)}
+ else{/* kamion */
+  const cab=h*.26,gap=h*.025,tr=h-cab-gap,ty=-h/2+cab+gap;
+  tires([-h/2+cab*.15,-h/2+cab*.6,h/2-h*.2,h/2-h*.1],3.6,h*.07);
+  /* pótkocsi */
+  c.fillStyle='#2b2b30';c.fillRect(-w*.3,-h/2+cab-1,w*.6,gap+3);
+  if(sub==='tank'){const g=c.createLinearGradient(-w/2,0,w/2,0);g.addColorStop(0,'#7c8590');g.addColorStop(.35,'#e9edf1');g.addColorStop(1,'#6d7580');c.fillStyle=g;ghRR(c,-w*.46,ty,w*.92,tr,w*.3);c.fill();c.strokeStyle='rgba(0,0,0,.35)';c.lineWidth=1;c.stroke();c.fillStyle='rgba(0,0,0,.35)';c.fillRect(-w*.14,ty+tr*.45,w*.28,3);c.fillStyle=car.col;c.fillRect(-w*.46,ty+tr*.2,w*.92,3)}
+  else if(sub==='flat'){c.fillStyle='#5b4a35';c.fillRect(-w/2,ty,w,tr);c.fillStyle='rgba(0,0,0,.15)';for(let i=1;i<9;i++)c.fillRect(-w/2,ty+i*tr/9,w,1);const cc=[car.col,'#aa3a2a','#2e6fb5'];for(let i=0;i<2;i++){c.fillStyle=cc[(i+((sd*3)|0))%3];c.fillRect(-w*.43,ty+tr*(.04+i*.48),w*.86,tr*.44);c.fillStyle='rgba(0,0,0,.25)';for(let j=1;j<7;j++)c.fillRect(-w*.43+j*w*.123,ty+tr*(.04+i*.48),1,tr*.44)}}
+  else{c.fillStyle=car.col;ghRR(c,-w/2,ty,w,tr,3);c.fill();c.strokeStyle='rgba(0,0,0,.3)';c.lineWidth=1;c.stroke();c.fillStyle='rgba(255,255,255,.12)';c.fillRect(-w*.46,ty+2,w*.92,tr*.3);c.fillStyle='rgba(0,0,0,.14)';for(let i=1;i<9;i++)c.fillRect(-w/2+1,ty+i*tr/9,w-2,1);c.fillStyle='rgba(0,0,0,.2)';c.fillRect(-1,ty,2,tr);if(sub==='semi'){c.fillStyle='rgba(255,255,255,.7)';c.fillRect(-w*.3,ty+tr*.4,w*.6,tr*.14)}}
+  /* vontató */
+  c.fillStyle='#d8d8d0';ghRR(c,-w/2+1,-h/2,w-2,cab,5);c.fill();c.strokeStyle='rgba(0,0,0,.3)';c.stroke();
+  c.fillStyle=gl;c.beginPath();c.moveTo(-w*.4,-h/2+cab*.2);c.lineTo(w*.4,-h/2+cab*.2);c.lineTo(w*.44,-h/2+cab*.4);c.lineTo(-w*.44,-h/2+cab*.4);c.closePath();c.fill();
+  c.fillStyle=sub==='box'||sub==='semi'?car.col:'#c8c8c0';ghRR(c,-w*.4,-h/2+cab*.5,w*.8,cab*.42,3);c.fill();c.fillStyle='rgba(0,0,0,.2)';c.fillRect(-w*.4,-h/2+cab*.9,w*.8,1.4);
+  mirror(-h/2+cab*.25);c.fillStyle='#e5e5d8';lamp(-w/2+3,-h/2,w*.2,2.4,'#fff3b8');lamp(w/2-3-w*.2,-h/2,w*.2,2.4,'#fff3b8');lamp(-w/2+1.5,h/2-3,w*.2,3,tail);lamp(w/2-1.5-w*.2,h/2-3,w*.2,3,tail);c.fillStyle='#ffb000';c.fillRect(-w*.3,-h/2+cab*.5-3,w*.6,1.6)}
+ if((car.tl!=null||car.wreck)&&((now/280|0)%2)){c.fillStyle='#ffa500';const side=car.tl!=null?Math.sign(car.tl-car.lane)||1:0;if(side<=0||car.wreck){c.fillRect(-w/2-1.5,-h/2+2,2.5,4);c.fillRect(-w/2-1.5,h/2-6,2.5,4)}if(side>=0||car.wreck){c.fillRect(w/2-1,-h/2+2,2.5,4);c.fillRect(w/2-1,h/2-6,2.5,4)}}
+ c.restore()}
 /* ===== GIDRÁN BEMUTATÓ: kiállított Gidrán, látogatók kérdései, szabad szöveges válasz ===== */
 const GB={};
 const gbN=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]/g,'');
