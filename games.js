@@ -1755,11 +1755,14 @@ exSwap('Kipufogó',{pt:1});exSwap('Hidraulika (tartály, szivattyú, vezetékek)
   const mh=[exProf([[1.3,-.95],[2.5,-.95],[2.93,-.52],[2.93,.52],[2.5,.95],[1.3,.95]],1.15,1.86,'y',{col:OLV}),exBox(2.0,.86,0,1.4,.6,1.5,{col:'#4a5733'})];
   /* felső terepszín foltok (krém + sötétzöld) */
   mh.push(exProf(blob(2.05,.35,.5,.3,1.3),1.862,1.872,'y',{col:CREAM}),exProf(blob(1.6,-.5,.4,.3,2.1),1.862,1.872,'y',{col:CREAM}),exProf(blob(2.5,-.4,.3,.25,4.4),1.862,1.872,'y',{col:DKG}),exProf(blob(1.7,.5,.25,.22,5.2),1.862,1.872,'y',{col:DKG}));
-  /* hűtőmaszk: széles keret + 11 ferde állású lamella, 3 szegmensben (homok / olíva / sötétzöld terepszín) */
-  mh.push(exBox(2.95,1.38,0,.03,.9,1.2,{col:BLK}));
-  for(let i=0;i<11;i++){const y=1.0+i*.08;for(let sg=0;sg<3;sg++){const z0=-.57+sg*.38;let col=i%2?OLV:CREAM;if((sg===0&&i>5)||(sg===1&&i>8)||(sg===2&&i<2))col=DKG;
-    mh.push(exProf([[2.93,y-.03],[3.0,y-.012],[3.0,y+.028],[2.93,y+.036]],z0,z0+.38,'z',{col}))}}
-  mh.push(exBox(2.995,1.55,-.38,.02,.15,.18,{col:'#2b3025'}),exBox(3.0,1.55,-.38,.01,.09,.11,{col:'#9a8a5a'}),exBox(2.9,1.9,.4,.1,.04,.34,{col:CREAM}));
+  /* hűtőmaszk (3.9.0): sík, függőleges lemez szorosan tartott vízszintes bordákkal; keret + terepszín sávok */
+  mh.push(exBox(2.945,1.42,0,.03,.8,1.34,{col:BLK}));
+  mh.push(exBox(2.97,1.84,0,.05,.05,1.34,{col:DKG}),exBox(2.97,1.0,0,.05,.05,1.34,{col:DKG}),exBox(2.97,1.42,-.68,.05,.86,.05,{col:DKG}),exBox(2.97,1.42,.68,.05,.86,.05,{col:DKG}));
+  for(let i=0;i<10;i++){const y=1.065+i*.073;const base=i%3===0?'#b8a878':(i%3===1?'#8a8654':'#a89a68');const zc=-.62+1.24*(((i*.19)+.12)%1);const zc2=Math.min(.62,zc+.45);
+   if(zc>-.6)mh.push(exBox(2.975,y,(-.62+zc)/2,.035,.058,zc+.62,{col:DKG}));
+   mh.push(exBox(2.975,y,(zc+zc2)/2,.035,.058,zc2-zc,{col:base}));
+   if(zc2<.6)mh.push(exBox(2.975,y,(zc2+.62)/2,.035,.058,.62-zc2,{col:i%2?'#7a7a4a':'#b0a070'}))}
+  mh.push(exBox(3.0,1.2,0,.02,.12,.18,{col:'#2b3025'}),exBox(3.012,1.2,0,.01,.08,.12,{col:'#a9915a'}),exBox(2.9,1.9,.4,.1,.04,.34,{col:CREAM}));
   /* sarokpajzsok: felül a fényszóró (két sárga sáv rácsos védővel), alul jelzőlámpák + szellőzőrács */
   for(const s of[-1,1]){const cx=2.715,cz=s*.735,a=Math.atan2(s*.43,-.43),nx=.7,nz=s*.714,tx=Math.cos(a),tz=Math.sin(a);
    const E=(u,w,y0,y1,col,d,em)=>{const o=exProf(exRot(cx+nx*d+tx*u,cz+nz*d+tz*u,a,w,.012),y0,y1,'y',{col});if(em)o.em=em;mh.push(o)};
@@ -1810,7 +1813,10 @@ exSwap('Kipufogó',{pt:1});exSwap('Hidraulika (tartály, szivattyú, vezetékek)
     const n=14,a0=Math.PI*.14,a1=Math.PI*.86;for(let k=0;k<n;k++){const A=a0+(a1-a0)*k/n,B=a0+(a1-a0)*(k+1)/n;const q=(a,r)=>[X+Math.cos(a)*r,WR+Math.sin(a)*r];o.push(exProf([q(A,.76),q(B,.76),q(B,.86),q(A,.86)],z0,z1,'z',{col:'#56653a'}))}
     /* felső lemez: elöl ferdén lejt, hátul rövid */
     const f=front?1:-1;const top=front?[[X-.85,1.32],[X-.3,1.46],[X+.95,1.46],[X+1.17,1.08],[X+.9,1.08],[X-.3,1.3]]:[[X+.9,1.28],[X+.4,1.46],[X-.7,1.46],[X-.95,1.2],[X-.7,1.2],[X+.4,1.3]];
-    o.push(exProf(top.slice(0,4),z0,z1,'z',{col:'#56653a'}));
+    const X0=X;const plate=front?[[X0-.88,1.24],[X0-.62,1.5],[X0+.3,1.54],[X0+.72,1.46],[X0+.92,1.3],[X0+.92,1.25],[X0+.72,1.4],[X0+.3,1.48],[X0-.62,1.44],[X0-.88,1.19]]:[[X0+.9,1.24],[X0+.66,1.5],[X0-.3,1.52],[X0-.78,1.44],[X0-.95,1.28],[X0-.95,1.22],[X0-.78,1.38],[X0-.3,1.46],[X0+.66,1.44],[X0+.9,1.18]];
+    o.push(exProf(plate,z0,z1,'z',{col:'#56653a'}));
+    /* külső szögletes oldallemez (a sárvédő külső síkja) */
+    const za=s>0?z1-.04:z0-.012,zb=s>0?z1+.012:z0+.04;o.push(exProf(front?[[X0-.88,1.0],[X0-.88,1.44],[X0-.62,1.5],[X0+.3,1.54],[X0+.72,1.46],[X0+.92,1.3],[X0+.92,1.0],[X0+.78,1.0],[X0+.7,1.18],[X0-.7,1.18],[X0-.8,1.0]]:[[X0+.9,1.0],[X0+.9,1.3],[X0+.66,1.5],[X0-.3,1.52],[X0-.78,1.44],[X0-.95,1.28],[X0-.95,1.0],[X0-.8,1.0],[X0-.7,1.18],[X0+.7,1.18],[X0+.78,1.0]],za,zb,'z',{col:'#4f5d36'}));
     /* oldalsó előtét: a perem két végén */
     o.push(exProf([[X-.86,1.32],[X-.7,1.32],[X-.7,1.0],[X-.86,1.0]],z0,z1,'z',{col:'#4a5733'}),exProf([[X+.7,1.08],[X+.86,1.08],[X+1.17,1.08],[X+.86,1.0]],z0,z1,'z',{col:'#4a5733'}))}return o}
   fender(AF,true).forEach(q=>p.push(q));fender(AR,false).forEach(q=>p.push(q));
@@ -1819,7 +1825,7 @@ exSwap('Kipufogó',{pt:1});exSwap('Hidraulika (tartály, szivattyú, vezetékek)
  (function(){const R=by('Hűtőradiátorok (tömbösített hűtő, ventilátor)');for(const pr of R.p){if(pr&&pr.c&&pr.c[0]>2.7&&Math.abs(Math.abs(pr.c[2])-.64)<.02){for(const f of pr.f)for(const v of f)v[0]-=.18;pr.c[0]-=.18}}})();
  /* ---- szerelőnyílások: a valóságban a motorházzal egyszínűek; első alsó lemez a hűtő előtt ---- */
  (function(){const P=by('Motor szerelőnyílásai');P.col='#52603a';for(const pr of P.p)pr.col='#52603a';
-  const H=by('Motorház (motorháztető és előlap)');H.p.push(exBox(2.9,.9,0,.1,.5,1.72,{col:'#4a5733'}),exBox(2.945,.9,0,.02,.3,1.3,{col:BLK}));for(let i=0;i<4;i++)H.p.push(exBox(2.96,.78+i*.08,0,.015,.03,1.2,{col:'#2b3025'}))})();
+  const H=by('Motorház (motorháztető és előlap)');H.p.push(exBox(2.9,.9,0,.1,.5,1.72,{col:'#4a5733'}),exBox(2.945,.9,0,.02,.3,1.3,{col:BLK}));})();
  by('Szélvédő').spc=.45;
  /* ---- finom részletek a fotók alapján: csörlő a lökhárító alatt, fényszóró-keret, tetőperem, ajtó-zsanérok, kerékjárat-élek ---- */
  (function(){const B=by('Első lökhárító, vonószemek, lánc');B.p.push(exBox(2.9,.55,0,.2,.2,.62,{col:'#2b2e33'}),exCyl(2.93,.55,0,.07,.5,'z',{col:'#70757c',n:12}),exBox(3.0,.55,0,.05,.12,.24,{col:'#b9bec6'}),exBox(2.97,.45,-.34,.06,.05,.1,{col:BLK}),exBox(2.97,.45,.34,.06,.05,.1,{col:BLK}));
@@ -1850,6 +1856,33 @@ exSwap('Kipufogó',{pt:1});exSwap('Hidraulika (tartály, szivattyú, vezetékek)
   P.p.push(exCyl(-.5,2.9,.15,.06,.8,'y',{col:OLV,n:12}),exCyl(-.5,3.31,.15,.075,.04,'y',{col:'#2b3025',n:12}),exCyl(.86,2.78,-.8,.012,.55,'y',{col:'#1c1f18',n:6}),exCyl(.86,2.52,-.8,.04,.08,'y',{col:'#2b3025',n:8}),exBox(-.6,2.54,.2,.2,.06,.5,{col:BLK2}))})();
  (function(){const P=by('SARP II fegyverplatform (RWS)');const tarp=exProf([[-.15,2.62],[.85,2.62],[.8,3.0],[.55,3.32],[.28,3.5],[.05,3.45],[-.12,3.1]],-.45,.45,'z',{col:'#5d6c40'});
   P.p=P.p.map(pr=>pr&&pr.col==='#3a4226'?tarp:pr);P.p.push(exBox(.3,3.52,0,.16,.12,.22,{col:'#4d5a35'}))})();
+
+ /* ===== 3.9.0: valósághűbb ajtók (nagyobb, lekerekített sarkú, felül ablakos, zsanérokkal), küszöb-lemez, motorház alsó lemez ===== */
+ (function(){
+  const CMD=['#6b5a3a','#38422a','#c9bb8d'];
+  const door=(P,xc,s)=>{const a=Math.min(s*.99,s*1.09),b=Math.max(s*.99,s*1.09),zo=s*1.09;const p=[];
+   p.push(exProf([[xc-.42,1.05],[xc+.42,1.05],[xc+.42,2.2],[xc+.3,2.33],[xc-.3,2.33],[xc-.42,2.2]],a,b,'z',{col:EXC.arm2}));
+   /* mélyített alsó panel + szegélyek */
+   p.push(exBox(xc,1.4,zo+s*.006,.7,.58,.012,{col:'#56653a'}),exBox(xc,1.07,zo+s*.01,.84,.04,.03,{col:DKG}));
+   /* ablak: lekerekített sarkú, sötét üveg + keret */
+   const w=[[xc-.28,1.93],[xc+.28,1.93],[xc+.28,2.17],[xc+.2,2.26],[xc-.2,2.26],[xc-.28,2.17]];
+   p.push(exProf(w,Math.min(s*1.085,s*1.1),Math.max(s*1.085,s*1.1),'z',{col:GL}));
+   p.push(exBox(xc,1.915,s*1.105,.62,.045,.04,{col:DKG}),exBox(xc,2.27,s*1.105,.42,.045,.04,{col:DKG}),exBox(xc-.3,2.1,s*1.105,.045,.34,.04,{col:DKG}),exBox(xc+.3,2.1,s*1.105,.045,.34,.04,{col:DKG}));
+   /* tüzelőnyílás, fogantyú, aknazár kar */
+   p.push(exCyl(xc+.08,1.62,s*1.1,.075,.04,'z',{col:'#1c1f18',n:12}),exCyl(xc+.08,1.62,s*1.115,.045,.03,'z',{col:'#0d0f0b',n:10}));
+   p.push(exBox(xc-.3,1.6,s*1.115,.05,.5,.05,{col:BLK}),exBox(xc-.22,1.74,s*1.115,.16,.04,.05,{col:BLK}),exBox(xc+.18,1.3,s*1.1,.22,.035,.04,{col:'#20241a'}));
+   /* zsanérok az első élen, szegecsek */
+   for(const hy of[1.2,1.7,2.15])p.push(exBox(xc+.44,hy,s*1.1,.07,.16,.1,{col:'#2b2e29'}),exBox(xc+.44,hy,s*1.17,.05,.1,.05,{col:'#17191c'}));
+   for(let k=0;k<5;k++)p.push(exBox(xc-.34+k*.17,1.1,s*1.105,.035,.035,.02,{col:'#262c1e'}));
+   /* terepszín folt */
+   p.push(exBox(xc+.1,1.45,s*1.1,.45,.26,.012,{col:CMD[(s>0?0:1)]}),exBox(xc-.15,1.2,s*1.1,.3,.14,.012,{col:CMD[2]}));
+   return p};
+  for(const [n,xc,s] of[['Ajtó – bal első',.5,-1],['Ajtó – bal hátsó',-.4,-1],['Ajtó – jobb első',.5,1],['Ajtó – jobb hátsó',-.4,1]])by(n).p=door(by(n),xc,s);
+  /* küszöb-lemez az ajtók alatt (a kerékjáratok között) */
+  const H=by('Páncéltest (küzdőtér)');for(const s of[-1,1])H.p.push(exBox(.17,.86,s*.93,1.72,.6,.1,{col:'#4a5733'}),exBox(.17,.58,s*.99,1.72,.05,.06,{col:DKG}));
+  /* motorház alsó oldallemezei az elülső kerékjáratok között */
+  const M=by('Motorház (motorháztető és előlap)');M.p.push(exProf([[1.3,-.9],[2.5,-.9],[2.9,-.5],[2.9,.5],[2.5,.9],[1.3,.9]],.92,1.15,'y',{col:'#4a5733'}));
+ })();
 })();
 
 const EXSUB=['Haspáncél (V-alakú padlópáncél)','Páncéltest (küzdőtér)','Tető (páncél)','Motorház (motorháztető és előlap)'];
