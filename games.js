@@ -2196,7 +2196,7 @@ const RANKS=['','honvéd','őrvezető','tizedes','szakaszvezető','őrmester','t
 const RANKG=[['terep','Gidrán Terep','gmBest','medve-gm-best',true,v=>gtFmt(v/1000),'🏔️','Terep-maraton 16 km: CTIS, mocsár, hó, jég, csörlő, autópálya + konvoj.'],
  ['konvoj','Gidrán Konvoj','gkBest','medve-gk-best',false,v=>n0(v)+' p','🚛','Kísérd a Rába-konvojt: IED, les, drón, helikopter.'],
  ['highway','Gidrán Autópálya','ghBest','medve-gh-best',false,v=>n0(v)+' p','🚨','Szirénával, végsebességgel a forgalomban – kerüld ki őket!']];
-let FB_BOOT=0,FB_ON=false,FB_FAIL=false,AUTH=null,AUTHREADY=false,UNSUB=null,FB_SYNCED=false,AUTHTAB='login',AUTHBUSY=false,HUB=false;
+let FB_BOOT=0,FB_ON=false,FB_FAIL=false,AUTH=null,AUTHREADY=false,UNSUB=null,FB_SYNCED=false,AUTHTAB='login',AUTHBUSY=false,HUB=false,JOINREG=0;
 const nickId=n=>String(n||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'.').replace(/^\.+|\.+$/g,'');
 const nickMail=n=>nickId(n)+'@medve.invalid';
 function fbErr(e){const c=(e&&e.code)||'';return ({'auth/email-already-in-use':'Ez a becenév már foglalt.','auth/invalid-credential':'Hibás becenév vagy jelszó.','auth/wrong-password':'Hibás becenév vagy jelszó.','auth/user-not-found':'Nincs ilyen becenév. Regisztrálj!','auth/invalid-email':'A becenév csak betűt, számot, szóközt tartalmazzon.','auth/weak-password':'A jelszó legalább 6 karakter legyen.','auth/too-many-requests':'Túl sok próbálkozás. Várj pár percet.','auth/network-request-failed':'Nincs internetkapcsolat.','auth/operation-not-allowed':'A becenév+jelszó belépés nincs bekapcsolva a Firebase-ben.','auth/unauthorized-domain':'Ez a weboldal-cím nincs engedélyezve a Firebase-ben (Authorized domains).'})[c]||('Hiba: '+(c||e?.message||e))}
@@ -2208,7 +2208,7 @@ async function fbBoot(){if(FB_BOOT)return;FB_BOOT=1;
     const FBC=window.MEDVE_FB;if(!FBC||!FBC.apiKey)throw new Error('nincs config');
     firebase.initializeApp(FBC);AUTH=firebase.auth();DB=firebase.firestore();try{DB.enablePersistence({synchronizeTabs:true}).catch(()=>{})}catch(e){}
     FB_ON=true;
-    AUTH.onAuthStateChanged(u=>{AUTHREADY=true;AUTHTAB='login';
+    AUTH.onAuthStateChanged(u=>{AUTHREADY=true;AUTHTAB=JOINREG?'reg':'login';JOINREG=0;
       if(u){UID=u.uid;MODE='fb';fbOwnLocal(u.uid);fbListen()}
       else{if(UNSUB){UNSUB();UNSUB=null}UID=null;USERDOC=null;MODE='local';S.users={}}
       hubRefresh()})}
@@ -2226,7 +2226,7 @@ function authInner(){
   if(UID){const nm=USERDOC?uname(USERDOC):(AUTH.currentUser?.displayName||'…');
     return `<h3>👤 ${esc(nm)}</h3><label class="authf"><span>Rendfokozat</span><select id="auRankEd">${RANKS.map(r=>`<option value="${esc(r)}" ${r===(USERDOC?.rank||'')?'selected':''}>${r||'— nincs megadva —'}</option>`).join('')}</select></label><button type="button" class="btn line sm" id="auOut" style="margin-top:10px">Kijelentkezés</button>`}
   const reg=AUTHTAB==='reg';
-  return `<h3>🔐 ${reg?'Regisztráció':'Belépés a ranglistához'}</h3><p class="hint" style="margin:0 0 10px">Ugyanaz a fiók, mint a M.E.D.V.E. Arcade-ban – a rekordjaid élőben felkerülnek a közös listára.</p>
+  return `<h3>🔐 ${reg?'Regisztráció':'Belépés a ranglistához'}</h3>${reg&&window.GK_INV?`<p class="hint" style="margin:0 0 8px">🎖️ Meghívót kaptál: <b>${esc(window.GK_INV)}</b></p>`:''}<p class="hint" style="margin:0 0 10px">Ugyanaz a fiók, mint a M.E.D.V.E. Arcade-ban – a rekordjaid élőben felkerülnek a közös listára.</p>
    <div class="autabs"><button type="button" data-autab="login" class="${reg?'':'on'}">Belépés</button><button type="button" data-autab="reg" class="${reg?'on':''}">Regisztráció</button></div>
    <form id="auForm" autocomplete="on" novalidate>
     <label class="authf"><span>Becenév</span><input id="auNick" name="username" autocomplete="username" maxlength="20" required placeholder="pl. Medve21"></label>
@@ -2297,7 +2297,7 @@ document.addEventListener('click',e=>{const t=e.target.closest?e.target:null;if(
   if(b=t.closest('[data-tf]')){tipsAll(b.dataset.tf);return}});
 document.addEventListener('change',e=>{if(e.target.id==='auRankEd'&&UID){const r=e.target.value;if(RANKS.includes(r))DB.doc('users/'+UID).update({rank:r}).then(()=>toast('Rendfokozat mentve')).catch(()=>toast('Nem sikerült menteni'))}});
 addEventListener('online',()=>{if(HUB&&!FB_ON){FB_BOOT=0;FB_FAIL=false;fbBoot()}});
-window.GIDGAMES={bemutato:gbOpen,explode:exOpen,mini:exMiniMount,open:hubOpen,close:hubClose,tips:()=>{hubOpen();tipsAll('*')},ver:GAMES_VER};
+window.GIDGAMES={join:()=>{if(AUTHREADY){if(!UID)AUTHTAB='reg'}else JOINREG=1;hubOpen()},bemutato:gbOpen,explode:exOpen,mini:exMiniMount,open:hubOpen,close:hubClose,tips:()=>{hubOpen();tipsAll('*')},ver:GAMES_VER};
 if(!document.getElementById('harc')){const h=document.createElement('div');h.id='harc';h.hidden=true;document.body.appendChild(h)}
 if(!document.getElementById('gdToast')){const h=document.createElement('div');h.id='gdToast';document.body.appendChild(h)}
 
