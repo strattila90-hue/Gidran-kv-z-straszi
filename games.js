@@ -1,6 +1,6 @@
 /* Gidrán Játékterem – a Gidrán Milliomos kvíz játékmodulja (Terep, Konvoj, Autópálya). Lustán töltődik be, offline is működik. */
 (function(){
-var GAMES_VER='2.9.0';
+var GAMES_VER='2.9.1';
 const SET={music:true,vol:70};
 let SOUND=true;try{SOUND=localStorage.getItem('gd-snd')!=='0'}catch(e){}
 let MODE='local',DB=null,UID=null,USERDOC=null,FS=null;
@@ -2275,41 +2275,47 @@ function qzClick(e){const t=e.target.closest?e.target:null;if(!t)return;let b;
  if(a==='end')qzEnd();else if(a==='next')qzNext();
  else if(a==='skip'){qzMiss(P);QZ.lock=true;QZ.pick=-1;QZ.hide=false;EX.sel=P.i;qzLook(P);qzRender({k:'bad',h:`<b>➡ ${esc(P.n)}</b><p class="qzd">${esc(P.d)}</p>`})}
  else if(a==='hint'&&!QZ.lock){qzMiss(P);qzLook(P);QZ.hide=true;EX.sel=P.i;clearTimeout(QZ.ht);QZ.ht=setTimeout(()=>{if(QZ.on&&!QZ.lock&&QZ.cur===P.i){EX.sel=-1;QZ.hide=false}},1100);const f=document.getElementById('qzF');if(f){f.className='qzf';f.innerHTML=`💡 Rendszer: <b>${esc(P.g)}</b> – felvillantottam a modellen, most bökj rá!`}}}
-/* ===== NAPI TEENDŐK: kipipálható listák (menet előtt · MEÁ-zás · visszameázás). A tételek a tananyag adataiból készült tervezet –
+/* ===== NAPI TEENDŐK: kipipálható listák (kimeázás · visszameázás · átmeázás · okosságok). A menet a felhasználó leírása, a műszaki adatok a tananyag szerint –
    a lista elemei: [azonosító, teendő, okosság/indoklás, a 3D-modell alkatrészének neve (elhagyható)]. Itt bővíthető, pontosítható. ===== */
 const NAPI=[
- {id:'elott',ic:'🚦',t:'Menet előtt',s:'Indulás előtti teendők',it:[
-  ['e1','Védőfelszerelés az ellenőrzéshez, karbantartáshoz','Védőszemüveg, füldugó, bakancs, kesztyű – és ismételd át a balesetvédelmi szabályokat.'],
-  ['e2','Motorolajszint ellenőrzése','Hideg motornál, vízszintes talajon mérd, különben hamis értéket kapsz.','Motor (Cummins ISL9E3)'],
-  ['e3','Hűtőfolyadék szintje a kiegyenlítő tartályban','Ha teljesen eltűnt a folyadék: a motort tilos indítani, értesítsd a javítóműhelyt. A tartályt csak visszahűlt motornál nyisd ki.','Kiegyenlítő tartály'],
-  ['e4','Nyomatékváltó olajszintje','A folyadékszinteket üzemeltetés előtt és után is ellenőrizni kell.','Automata nyomatékváltó (Allison 3200 SP)'],
-  ['e5','Hidraulikaolaj szintje','Vízszintes felületen ellenőrizd; alacsony szintnél figyelmeztető lámpa jelez a műszerfalon.','Hidraulika (tartály, szivattyú, vezetékek)'],
-  ['e6','Ablakmosó folyadék szintje','Használat előtt ellenőrizd, szükség esetén pótold.'],
-  ['e7','Ablakok tisztasága','Csak nem vegyszeres, nedves ruhával tisztítsd – a belső felület polikarbonát bevonatú.','Szélvédő'],
-  ['e8','Motorindítás: váltó „N” állásban','Indításkor a nyomatékváltó üresben (N) legyen.','Műszerfal (kijelzők, kapcsolók)'],
-  ['e9','Levegőnyomás: S1, S2, P és A tartály legalább 6 bar','6 bar alatt tilos működtetni a járművet – a fékek nem megbízhatók.','Levegőtartályok (S1, S2, P, A)'],
-  ['e10','CTIS-mód az útviszonyoknak megfelelően','Közúton HIGHWAY mód: 6,5 bar (94 psi).','Kerék – bal első'],
-  ['e11','Elindulás: fékpedál fel, utána gázpedál','A kettő együtt egyszerre fékezne és hajtana.']]},
- {id:'mea',ic:'🔎',t:'MEÁ-zás',s:'Átvizsgálási, ellenőrzési pontok',it:[
-  ['m1','Folyadékszintek: motorolaj, váltóolaj, hűtőfolyadék','Üzemeltetés előtt és után is ellenőrizendők.','Motor (Cummins ISL9E3)'],
+ {id:'elott',ic:'🚦',t:'Kimeázás',s:'Feladat előtt: menetlevél → 1TK → MEÁ → indulás',it:[
+  ['k1','Friss menetlevél – lepecsételve, aláírva','Enélkül nincs kimeázás: a menetlevél legyen friss, pecséttel és aláírással.'],
+  ['k2','Gép 1TK – védőfelszerelésben','Védőszemüveg, füldugó, bakancs, kesztyű – és ismételd át a balesetvédelmi szabályokat.'],
+  ['e2','1TK: motorolajszint','Hideg motornál, vízszintes talajon mérd, különben hamis értéket kapsz.','Motor (Cummins ISL9E3)'],
+  ['e3','1TK: hűtőfolyadék a kiegyenlítő tartályban','Ha teljesen eltűnt a folyadék: a motort tilos indítani, értesítsd a javítóműhelyt. A tartályt csak visszahűlt motornál nyisd ki.','Kiegyenlítő tartály'],
+  ['e4','1TK: nyomatékváltó olajszintje','A folyadékszinteket üzemeltetés előtt és után is ellenőrizni kell.','Automata nyomatékváltó (Allison 3200 SP)'],
+  ['e5','1TK: hidraulikaolaj szintje','Vízszintes felületen ellenőrizd; alacsony szintnél figyelmeztető lámpa jelez a műszerfalon.','Hidraulika (tartály, szivattyú, vezetékek)'],
+  ['e6','1TK: ablakmosó folyadék, tiszta ablakok','A szintet használat előtt ellenőrizd. Az ablakot csak nem vegyszeres, nedves ruhával tisztítsd – a belső felület polikarbonát bevonatú.','Szélvédő'],
+  ['e9','1TK: levegőnyomás – S1, S2, P és A tartály legalább 6 bar','6 bar alatt tilos működtetni a járművet – a fékek nem megbízhatók. Indításkor a váltó „N” állásban legyen.','Levegőtartályok (S1, S2, P, A)'],
+  ['k3','MEÁ: meás pecsét a menetlevélre','A MEÁ-n a gép átvizsgálása után kerül rá a pecsét – csak ezután indulhatsz a feladatra.'],
+  ['e10','Indulás: CTIS-mód az útviszonyoknak megfelelően','Közúton HIGHWAY mód: 6,5 bar (94 psi). Elinduláskor előbb fékpedál fel, utána gázpedál.','Kerék – bal első']]},
+ {id:'utan',ic:'🏁',t:'Visszameázás',s:'Feladat után: mosás → MEÁ → tankolás → telephely',it:[
+  ['v1','Gép mosása (alakulattól, feladattól függően kihagyható)','Az alakulatok eltérő szabályok szerint dolgoznak, de alapvetően tiszta géppel állunk a MEÁ-ra. Az ablakot csak nem vegyszeres, nedves ruhával töröld.','Szélvédő'],
+  ['v2','Tiszta, rendezett, kívül-belül kitakarított gép','Így állj a MEÁ-ra – a belső tér is legyen rendben.'],
+  ['v3','MEÁ: visszamea pecsét a menetlevélre','A menetlevél megkapja a visszamea pecsétet.'],
+  ['v4','Visszaírás a füzetbe','A MEÁ-n visszaírják a gépet a füzetbe.'],
+  ['v5','TANKOLÁS: a kúton a leellenőrzött, lezárt menetlevél alapján','A visszatankolás a lezárt menetlevél adatai szerint történik (a kút rendje alakulattól függ).','Üzemanyagtartályok (2×100 l)'],
+  ['v6','Lezárt menetlevél lefotózása, majd leadása a kutasnak','A lezárt menetlevél a kutashoz kerül – érdemes előtte lefotózni, ezzel a technikus munkáját is könnyíted.'],
+  ['v7','Visszaállás a telephelyre','Leállítás sorrendje: jármű megállítása → kézifék → váltó „N” → motor leállítása.','Műszerfal (kijelzők, kapcsolók)'],
+  ['v8','Folyadékszintek ellenőrzése, rendellenesség jelentése','Motor, nyomatékváltó, hűtőrendszer – üzemeltetés után is. Amit észleltél, jelezd a javítóműhelynek.','Motor (Cummins ISL9E3)']]},
+ {id:'at',ic:'🔁',t:'Átmeázás',s:'Új feladat a régi után – a sorrend változik',it:[
+  ['a1','Elszámolás a régi menetlevéllel','Átmeázásnál előbb a régi menetlevelet zárjuk le és számoljuk el.'],
+  ['a2','Új menetlevél megkezdése az új adatokkal','Az új menetlevelet az új adatokkal kezdjük vezetni.'],
+  ['a3','MEÁ: pecsét az új menetlevélre','A gép átvizsgálása után.'],
+  ['a4','Mosás – a feladat függvényében kimaradhat','Átmeázásnál egyes lépések kimaradhatnak; bemutató előtt például érdemes tiszta géppel menni.'],
+  ['a5','Tankolás – a feladat függvényében kimaradhat','Ha kell, a lezárt (régi) menetlevél alapján.','Üzemanyagtartályok (2×100 l)'],
+  ['a6','Gyors ellenőrzés indulás előtt','Folyadékszintek, levegőnyomás legalább 6 bar, CTIS-mód az útviszonyokhoz.','Levegőtartályok (S1, S2, P, A)']]},
+ {id:'idosz',ic:'🔧',t:'Okosságok',s:'Időszakos teendők, esedékességek',it:[
   ['m2','Váltóolajszint elektronikus mérése','71–93 °C olajhőmérséklet, vízszintes talaj, kézifék behúzva, „N” állás, a fel-le nyilak egyszerre megnyomva.','Automata nyomatékváltó (Allison 3200 SP)'],
   ['m3','Hidraulikanyomás','Normál üzemi érték 0,30–0,40 bar (minimum 0,1 – maximum 0,7 bar).','Hidraulika (tartály, szivattyú, vezetékek)'],
-  ['m4','Levegőtartályok nyomása','S1 hátsó fékkör, S2 első fékkör, P kézifék, A segédrendszerek – mind legalább 6 bar.','Levegőtartályok (S1, S2, P, A)'],
+  ['m4','Levegőtartályok','S1 hátsó fékkör, S2 első fékkör, P kézifék, A segédrendszerek – mind legalább 6 bar.','Levegőtartályok (S1, S2, P, A)'],
   ['m5','Gumiabroncsok állapota (395/85 R20)','Defekt esetén Run-Flat gyűrűvel legfeljebb 30 km/h és legfeljebb 50 km.','Kerék – jobb első'],
   ['m6','Zsírzási pontok esedékessége','3 havonta; a felfüggesztés és a kardánok 4800 km-enként vagy 3 havonta. Zsírzógomb: ajtózsanérok, pótkeréktartó, motor szerelőnyílás-fedél zsanérjai.','Felfüggesztés – első'],
   ['m7','Motorolajcsere esedékessége','15 000 km, 6 hónap vagy 500 üzemóra – amelyik előbb letelik.','Motor (Cummins ISL9E3)'],
-  ['m8','APU olajcseréje','Első csere 50 üzemóra után, utána 75 óránként vagy 12 havonta.','APU (fedélzeti áramforrás)'],
+  ['m8','APU','Indítás előtt a jármű álljon, a főmotor legyen leállítva; a főkapcsoló után várd meg az öntesztet. Olajcsere: először 50 üzemóra után, utána 75 óránként vagy 12 havonta.','APU (fedélzeti áramforrás)'],
   ['m9','Szerszámzat megléte','12 tonnás hidraulikus emelő toldattal, 2 db aknazárnyitó négyszögkulcs.','Szerszámosláda és sáncszerszámok'],
   ['m10','Szerelőnyílások, karbantartó fedelek zárva','Speciális (négyszög) kulccsal nyithatók és zárhatók.','Motor szerelőnyílásai'],
-  ['m11','A jármű gyári állapotú','A harcjármű átalakítása szigorúan tilos.']]},
- {id:'utan',ic:'🏁',t:'Visszameázás',s:'Menet utáni teendők',it:[
-  ['u1','Leállítás sorrendje','Jármű megállítása → kézifék → váltó „N” → motor leállítása.','Műszerfal (kijelzők, kapcsolók)'],
-  ['u2','Folyadékszintek ellenőrzése üzemeltetés után','Motor, nyomatékváltó és hűtőrendszer – menet után is.','Motor (Cummins ISL9E3)'],
-  ['u3','Kiegyenlítő tartályt csak visszahűlt motornál nyisd ki','Üzemmeleg motornál nyomás alatt van – a forró gőz égési sérülést okozhat.','Kiegyenlítő tartály'],
-  ['u4','Ablakmosó folyadék pótlása, ha fogyott','A szint használat közben csökken.'],
-  ['u5','Ablakok letörlése','Nem vegyszeres, nedves ruhával.','Szélvédő'],
-  ['u6','APU használata előtt','A jármű álljon, a főmotor legyen leállítva; a főkapcsoló után várd meg, amíg az APU önteszteli magát.','APU (fedélzeti áramforrás)'],
-  ['u7','Rendellenesség jelentése','Amit menet közben vagy az átvizsgáláskor észleltél, jelezd a javítóműhelynek.']]}];
+  ['m11','A jármű gyári állapotú','A harcjármű átalakítása szigorúan tilos.']]}];
 const npDay=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 function npLoad(){let o={};try{o=JSON.parse(localStorage.getItem('gid-napi')||'{}')||{}}catch(e){}if(typeof o!=='object'||!o)o={};if(o.d!==npDay()){o.d=npDay();o.c={}}o.c=o.c||{};o.x=o.x||{};return o}
 function npSave(o){try{localStorage.setItem('gid-napi',JSON.stringify(o))}catch(e){}}
@@ -2324,7 +2330,7 @@ function napiOpen(tab){const el=$('#harc');let ov=document.getElementById('npOv'
  ${it.map(i=>`<div class="npi${c.includes(i.id)?' done':''}"><label><input type="checkbox" data-nc="${esc(i.id)}"${c.includes(i.id)?' checked':''}><span><b>${esc(i.x)}</b>${i.h?`<small>💡 ${esc(i.h)}</small>`:''}</span></label>${i.p?`<button type="button" class="np3" data-n3="${esc(i.p)}" aria-label="Mutasd a 3D-modellen">📍 3D</button>`:''}${i.own?`<button type="button" class="np3 del" data-nd="${esc(i.x)}" aria-label="Saját tétel törlése">🗑</button>`:''}</div>`).join('')}
  <div class="npadd"><input type="text" id="npNew" maxlength="120" placeholder="Saját tétel hozzáadása…" autocomplete="off" enterkeyhint="done"><button type="button" class="btn pri sm" data-na="1">＋</button></div>
  <div class="npft"><button type="button" class="btn line sm" data-nr="1">↺ Pipák törlése</button></div>
- <p class="hint npnote">A pipák naponta maguktól törlődnek, a saját tételeid megmaradnak. A lista a tananyag adataiból készült tervezet – a helyi rend szerint bővítsd; mindig a hivatalos kezelési utasítás és a parancsnoki intézkedés az irányadó.</p></div>`;
+ <p class="hint npnote">A pipák naponta maguktól törlődnek, a saját tételeid megmaradnak. Az alakulatok rendje eltérhet – a helyi szabályok szerint bővítsd saját tétellel; mindig a hivatalos kezelési utasítás és a parancsnoki intézkedés az irányadó.</p></div>`;
  ov.hidden=false;npProg();const ni=ov.querySelector('#npNew');if(ni)ni.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();napiAdd()}}}
 function npProg(){const o=npLoad(),L=NAPI.find(l=>l.id===NPT)||NAPI[0],[a,b]=npCount(L,o),bar=document.getElementById('npBar'),sub=document.getElementById('npSub');if(bar)bar.style.width=(b?a/b*100:0)+'%';if(sub){sub.textContent=a>=b&&b?'Minden kész ✅':a+' / '+b+' kész';sub.classList.toggle('ok',a>=b&&b>0)}
  document.querySelectorAll('#npOv [data-np]').forEach(bt=>{const l=NAPI.find(x=>x.id===bt.dataset.np);if(!l)return;const [x,y]=npCount(l,o),n=bt.querySelector('.npn');if(n)n.textContent=x+'/'+y})}
@@ -2403,7 +2409,7 @@ function hubHTML(){if(TIPI<0)tipNext();
    <div class="hgames" id="hubGames">${RANKG.map(hubCard).join('')}</div>
    <div class="hgame"><button type="button" class="hgbtn" data-play="bemutato"><span class="hgic">🎪</span><span class="hgt"><b>Gidrán bemutató</b><small>Válaszolj a látogatók kérdéseire – bácsik, gyerekek, leendő katonák</small></span><span class="hggo">▶</span></button></div>
    <div class="hgame"><button type="button" class="hgbtn" data-play="explode"><span class="hgic">🔧</span><span class="hgt"><b>Gidrán 3D – szétszedhető</b><small>Forgasd körbe, szedd szét, érints meg egy alkatrészt – és gyakorold a 🎯 Feladat fülön</small></span><span class="hggo">▶</span></button></div>
-   <div class="hgame"><button type="button" class="hgbtn" id="hubNapi"><span class="hgic">📋</span><span class="hgt"><b>Napi teendők</b><small>Menet előtt · MEÁ-zás · visszameázás – kipipálható lista okosságokkal</small></span><span class="hggo">▶</span></button></div>
+   <div class="hgame"><button type="button" class="hgbtn" id="hubNapi"><span class="hgic">📋</span><span class="hgt"><b>Napi teendők</b><small>Kimeázás · visszameázás · átmeázás – kipipálható lista okosságokkal</small></span><span class="hggo">▶</span></button></div>
    <div class="hcard tipbox" id="tipBox"><div class="tiph"><b>💡 Tudtad-e?</b><span class="tipn" id="tipN"></span></div><div id="tipBody">${tipHTML(TIPI)}</div><div class="tipbtns"><button type="button" class="btn line sm" id="tipNext">Következő ▶</button><button type="button" class="btn line sm" id="tipAll">Összes (${TIPS.length})</button></div></div>
    <div class="hcard" id="authBox">${authInner()}</div></div>`}
 function gHubShow(){const el=$('#harc');el.hidden=false;document.body.classList.add('harcon');el.innerHTML=hubHTML()}
