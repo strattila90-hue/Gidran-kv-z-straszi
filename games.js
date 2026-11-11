@@ -1,6 +1,6 @@
 /* Gidrán Játékterem – a Gidrán Milliomos kvíz játékmodulja (Terep, Konvoj, Autópálya). Lustán töltődik be, offline is működik. */
 (function(){
-var GAMES_VER='2.8.0';
+var GAMES_VER='2.9.1';
 const SET={music:true,vol:70};
 let SOUND=true;try{SOUND=localStorage.getItem('gd-snd')!=='0'}catch(e){}
 let MODE='local',DB=null,UID=null,USERDOC=null,FS=null;
@@ -1892,16 +1892,19 @@ function exSubdiv(fs,m){const out=[],L=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2
   for(let i=0;i<nu;i++)for(let j=0;j<nv;j++)out.push([P(i/nu,j/nv),P((i+1)/nu,j/nv),P((i+1)/nu,(j+1)/nv),P(i/nu,(j+1)/nv)])}return out}
 EXP.forEach((p,i)=>{p.i=i;p.f=[];p.cen=[0,0,0];let n=0;for(const pr of p.p){if(!pr||!pr.f)continue;pr.pcol=pr.col||p.col;if(EXSUB.includes(p.n)&&!pr.subd){pr.f=exSubdiv(pr.f,.8);pr.subd=1}pr.tn=.94+((i*7+n*3)%11)/90;for(let k=0;k<pr.f.length;k++){const ff=pr.f[k];let wy=0;for(const q of ff)wy+=q[1];p.f.push({v:ff,wy:wy/ff.length,pr,sm:(!!pr.cyl&&k<pr.f.length-2)||!!pr.subd});n++}p.cen[0]+=pr.c[0];p.cen[1]+=pr.c[1];p.cen[2]+=pr.c[2]}const m=p.p.filter(x=>x&&x.f).length||1;p.cen=p.cen.map(v=>v/m)});
 /* megjelenítés */
+const EXMAX=Math.max(...EXP.map(p=>Math.hypot(p.ex[0],p.ex[1],p.ex[2])))||1;EXP.forEach(p=>{p.exd=(1-Math.hypot(p.ex[0],p.ex[1],p.ex[2])/EXMAX)*.32});
+/* lépcsőzetes szétszedés: a külső elemek indulnak előbb, lágy gyorsítással */
+function exOf(P,t){if(t<=.0005)return [0,0,0];let u=(t-P.exd)/.68;u=u<0?0:u>1?1:u;const e=u*u*(3-2*u);return [P.ex[0]*e,P.ex[1]*e,P.ex[2]*e]}
 function exHex(h){return [parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)]}
 function exOpen(){const el=$('#harc');el.hidden=false;document.body.classList.add('harcon');
  el.innerHTML=`<div class="hbar"><div class="htitle">Gidrán <b>3D – szétszedhető</b></div><button class="hx" id="exClose" aria-label="Bezárás">✕</button></div>
  <div class="exwrap"><div class="exscene"><canvas id="exCv"></canvas><canvas id="exOv"></canvas><div class="mnhud"><span class="dHud">Motor leállítva · 0 km/h · N</span></div><div class="expanel" id="exPanel" hidden></div><div class="exhint" id="exHint">Húzd el a forgatáshoz · csípd össze a nagyításhoz · érints meg egy alkatrészt</div></div>
- <div class="excp" id="exCp"><div class="extabs" role="tablist"><button type="button" role="tab" data-tab="drive" class="on">🚙 Vezetés</button><button type="button" role="tab" data-tab="light">💡 Fények</button><button type="button" role="tab" data-tab="view">🔧 Szétszedés</button><button type="button" role="tab" data-tab="parts">📋 Alkatrészek</button></div>
- <div class="extp" data-p="drive">${exDrvHTML()}</div><div class="extp" data-p="light" hidden>${exLtHTML()}</div><div class="extp" data-p="parts" hidden><div class="exlist" id="exList"></div></div><div class="extp" data-p="view" hidden><div class="exctl"><label class="exsl"><span>🔧 Szétszedés</span><input type="range" id="exSl" min="0" max="100" value="0" aria-label="Szétszedés mértéke"></label>
-  <div class="exbt"><button type="button" class="btn line sm" id="exAuto" aria-pressed="true">⟳ Forgás</button><button type="button" class="btn line sm" id="exGh" aria-pressed="false">👻 Páncél átlátszó</button><button type="button" class="btn line sm" id="exV1">Elöl</button><button type="button" class="btn line sm" id="exV2">Oldal</button><button type="button" class="btn line sm" id="exV3">Felül</button><button type="button" class="btn line sm" id="exPt" aria-pressed="false">⚙ Hajtáslánc</button><button type="button" class="btn line sm" id="exRst">↺ Alaphelyzet</button></div></div></div></div>
+ <div class="excp" id="exCp"><div class="extabs" role="tablist"><button type="button" role="tab" data-tab="drive" class="on">🚙 Vezetés</button><button type="button" role="tab" data-tab="light">💡 Fények</button><button type="button" role="tab" data-tab="view">🔧 Bontás</button><button type="button" role="tab" data-tab="parts">📋 Lista</button><button type="button" role="tab" data-tab="quiz">🎯 Feladat</button></div>
+ <div class="extp" data-p="drive">${exDrvHTML()}</div><div class="extp" data-p="light" hidden>${exLtHTML()}</div><div class="extp" data-p="parts" hidden><div class="exlist" id="exList"></div></div><div class="extp" data-p="view" hidden><div class="exctl"><label class="exsl"><span>🔧 Szétszedés</span><input type="range" id="exSl" class="exslr" min="0" max="100" value="0" aria-label="Szétszedés mértéke"></label>
+  <div class="exbt"><button type="button" class="btn pri sm" id="exPlay">▶ Szétszedés</button><button type="button" class="btn line sm" id="exLb" aria-pressed="false">🏷 Feliratok</button><button type="button" class="btn line sm" id="exAuto" aria-pressed="true">⟳ Forgás</button><button type="button" class="btn line sm" id="exGh" aria-pressed="false">👻 Páncél átlátszó</button><button type="button" class="btn line sm" id="exV1">Elöl</button><button type="button" class="btn line sm" id="exV2">Oldal</button><button type="button" class="btn line sm" id="exV3">Felül</button><button type="button" class="btn line sm" id="exPt" aria-pressed="false">⚙ Hajtáslánc</button><button type="button" class="btn line sm" id="exRst">↺ Alaphelyzet</button></div></div></div><div class="extp" data-p="quiz" hidden><div class="qz" id="qzBox"></div></div></div>
  </div>`;
  $('#exClose').onclick=exClose;exDrvWire($('#exCp'));exTabs($('#exCp'));exSetup();exInfo(-1);exChips()}
-function exClose(){ENG.gasK=0;ENG.brkK=0;ENG.satK=0;gClose(EX);exKick()}
+function exClose(){QZ.on=false;QZ.hide=false;ENG.gasK=0;ENG.brkK=0;ENG.satK=0;gClose(EX);exKick()}
 function exChips(){const L=$('#exList');if(!L)return;const gs=[];EXP.forEach(p=>{if(!gs.includes(p.g))gs.push(p.g)});L.innerHTML=gs.map(g=>`<div class="exg"><b>${g}</b>${EXP.filter(p=>p.g===g).map(p=>`<button type="button" class="exchip" data-i="${p.i}">${esc(p.n)}</button>`).join('')}</div>`).join('');
  L.onclick=e=>{const b=e.target.closest('.exchip');if(!b)return;exSelect(+b.dataset.i)}}
 function exSelect(i){EX.sel=EX.sel===i?-1:i;exInfo(EX.sel);document.querySelectorAll('.exchip').forEach(b=>b.classList.toggle('on',+b.dataset.i===EX.sel));EX.auto=false;const a=$('#exAuto');if(a)a.setAttribute('aria-pressed','false')}
@@ -1909,8 +1912,10 @@ function exInfo(i){const P=$('#exPanel');if(!P)return;if(i<0){P.innerHTML='';P.h
  const p=EXP[i],hid=EX.hid.has(i);P.innerHTML=`<div class="exh"><span class="exg1">${esc(p.g)}</span><h4>${esc(p.n)}</h4><button type="button" class="exxb" id="exInfoX" aria-label="Bezár">✕</button></div><p class="exd" id="exD">${esc(p.d)}</p><div class="exact"><button type="button" class="btn line sm" id="exMore">▾ Több</button><button type="button" class="btn line sm" id="exHide">${hid?'👁 Megjelenít':'🙈 Elrejt'}</button><button type="button" class="btn line sm" id="exShowAll">Mind látszik</button></div>`;
  const D=$('#exD'),M=$('#exMore');M.onclick=()=>{const o=D.classList.toggle('open');M.textContent=o?'▴ Kevesebb':'▾ Több'};D.onclick=M.onclick;
  $('#exInfoX').onpointerdown=e=>{e.preventDefault();e.stopPropagation();EX.sel=-1;exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'))};$('#exHide').onclick=()=>{if(EX.hid.has(i))EX.hid.delete(i);else EX.hid.add(i);exInfo(i)};$('#exShowAll').onclick=()=>{EX.hid.clear();exInfo(i)}}
+function exSetT(v,src){EX.tt=v;document.querySelectorAll('.exslr').forEach(x=>{if(x!==src)x.value=Math.round(v*100)});const b=document.getElementById('exPlay');if(b)b.textContent=v>.5?'⏪ Összerakás':'▶ Szétszedés'}
+function exGhostSet(v){EX.ghost=!!v;const b=document.getElementById('exGh');if(b)b.setAttribute('aria-pressed',EX.ghost)}
 function exView(ry,rx){EX.tv={ry,rx};EX.auto=false;const a=$('#exAuto');if(a)a.setAttribute('aria-pressed','false')}
-function exSetup(){Object.assign(EX,gCanvas('#exCv'));EX.ov=$('#exOv');EX.ovc=EX.ov.getContext('2d');EX.gl=exGLNew(EX.cv);if(!EX.gl){const nc=EX.cv.cloneNode(false);EX.cv.replaceWith(nc);EX.cv=nc;EX.cv.width=Math.round(EX.W*EX.dpr);EX.cv.height=Math.round(EX.H*EX.dpr);EX.c=nc.getContext('2d')}EX.rs=1;EX.fe=0;EX.fn=0;EX.bd=0;EX.cap=0;EX.run=true;EX.last=performance.now();EX.sel=-1;EX.hid=new Set();EX.t=0;EX.tt=0;EX.ry=.75;EX.rx=.34;EX.zm=1;EX.auto=true;EX.ghost=false;EX.pt=false;EX.ptr=new Map();EX.tv=null;
+function exSetup(){Object.assign(EX,gCanvas('#exCv'));EX.ov=$('#exOv');EX.ovc=EX.ov.getContext('2d');EX.gl=exGLNew(EX.cv);if(!EX.gl){const nc=EX.cv.cloneNode(false);EX.cv.replaceWith(nc);EX.cv=nc;EX.cv.width=Math.round(EX.W*EX.dpr);EX.cv.height=Math.round(EX.H*EX.dpr);EX.c=nc.getContext('2d')}EX.rs=1;EX.fe=0;EX.fn=0;EX.bd=0;EX.cap=0;EX.run=true;EX.last=performance.now();EX.sel=-1;EX.hid=new Set();EX.t=0;EX.tt=0;EX.ry=.75;EX.rx=.34;EX.zm=1;EX.auto=true;EX.ghost=false;EX.pt=false;EX.ptr=new Map();EX.tv=null;EX.lb=false;EX.noSh=false;EX.qz=QZ;QZ.on=false;QZ.hide=false;
  const cv=EX.cv;
  cv.addEventListener('pointerdown',e=>{try{cv.setPointerCapture(e.pointerId)}catch(_){}EX.ptr.set(e.pointerId,{x:e.clientX,y:e.clientY,x0:e.clientX,y0:e.clientY,mv:0});EX.tv=null;if(EX.ptr.size===2){const [a,b]=[...EX.ptr.values()];EX.pd=Math.hypot(a.x-b.x,a.y-b.y);EX.pz=EX.zm}});
  cv.addEventListener('pointermove',e=>{const p=EX.ptr.get(e.pointerId);if(!p)return;const dx=e.clientX-p.x,dy=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;p.mv+=Math.abs(dx)+Math.abs(dy);
@@ -1919,12 +1924,13 @@ function exSetup(){Object.assign(EX,gCanvas('#exCv'));EX.ov=$('#exOv');EX.ovc=EX
  const up=e=>{const p=EX.ptr.get(e.pointerId);EX.ptr.delete(e.pointerId);if(p&&p.mv<=6&&EX.ptr.size===0&&e.type==='pointerup'){const r=cv.getBoundingClientRect();exPickAny(e.clientX-r.left,e.clientY-r.top)}};
  cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
  cv.addEventListener('wheel',e=>{e.preventDefault();EX.zm=Math.max(.5,Math.min(3,EX.zm*(e.deltaY<0?1.1:.91)))},{passive:false});
- $('#exSl').oninput=e=>{EX.tt=e.target.value/100};
+ $('#exCp').addEventListener('input',e=>{if(e.target.classList&&e.target.classList.contains('exslr'))exSetT(e.target.value/100,e.target)});$('#exCp').addEventListener('click',qzClick);$('#exCp').addEventListener('change',e=>{if(e.target.id==='qzG'){QZ.grp=e.target.value}});
+ $('#exPlay').onclick=()=>exSetT(EX.tt>.5?0:1);$('#exLb').onclick=()=>{EX.lb=!EX.lb;$('#exLb').setAttribute('aria-pressed',EX.lb)};
  $('#exAuto').onclick=()=>{EX.auto=!EX.auto;$('#exAuto').setAttribute('aria-pressed',EX.auto)};
  $('#exGh').onclick=()=>{EX.ghost=!EX.ghost;$('#exGh').setAttribute('aria-pressed',EX.ghost)};
  $('#exV1').onclick=()=>exView(-Math.PI/2,.1);$('#exV2').onclick=()=>exView(0,.05);$('#exV3').onclick=()=>exView(0,1.4);
  $('#exPt').onclick=()=>{EX.pt=!EX.pt;$('#exPt').setAttribute('aria-pressed',EX.pt);if(EX.pt){EX.zm=1.12;exView(Math.PI-.62,.42);EX.sel=-1;exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'))}else exView(.75,.34)};
- $('#exRst').onclick=()=>{EX.pt=false;$('#exPt').setAttribute('aria-pressed','false');EX.tt=0;$('#exSl').value=0;EX.zm=1;EX.sel=-1;EX.hid.clear();exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'));exView(.75,.34);EX.auto=true;$('#exAuto').setAttribute('aria-pressed','true')};
+ $('#exRst').onclick=()=>{EX.pt=false;$('#exPt').setAttribute('aria-pressed','false');exSetT(0);exGhostSet(false);EX.lb=false;$('#exLb').setAttribute('aria-pressed','false');EX.zm=1;EX.sel=-1;EX.hid.clear();exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'));exView(.75,.34);EX.auto=true;$('#exAuto').setAttribute('aria-pressed','true')};
  EX.key=e=>{if(e.type==='keydown'&&e.key==='Escape'){const x=document.getElementById('exInfoX');if(x&&!document.getElementById('exPanel').hidden)x.dispatchEvent(new PointerEvent('pointerdown',{cancelable:true}));else exClose()}else exKeys(e)};addEventListener('keydown',EX.key);addEventListener('keyup',EX.key);
  exKick()}
 function exDraw(){const rr=EX.cv.getBoundingClientRect();if(Math.abs(rr.width-EX.W)>1||Math.abs(rr.height-EX.H)>1){EX.W=rr.width;EX.H=rr.height;EX.cv.width=rr.width*EX.dpr;EX.cv.height=rr.height*EX.dpr}const c=EX.c,W=EX.W,H=EX.H;c.setTransform(EX.dpr,0,0,EX.dpr,0,0);
@@ -1938,7 +1944,7 @@ function exDraw(){const rr=EX.cv.getBoundingClientRect();if(Math.abs(rr.width-EX
  {const q=proj([0,0,0],off0),rx=F/D*3.5,ry=rx*(.18+.55*Math.abs(Math.sin(EX.rx)))*1.0;c.save();c.translate(q[0],q[1]);c.scale(1,ry/rx);const sg=c.createRadialGradient(0,0,rx*.1,0,0,rx);sg.addColorStop(0,'rgba(0,0,0,'+(.62*(1-EX.t*.5))+')');sg.addColorStop(.6,'rgba(0,0,0,'+(.3*(1-EX.t*.5))+')');sg.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=sg;c.beginPath();c.arc(0,0,rx,0,7);c.fill();c.restore()}
  const faces=[],t=EX.t,L=[.45,.75,.5],ln=Math.hypot(...L);const Ln=L.map(v=>v/ln);const H0=[Ln[0],Ln[1],Ln[2]+1],hn=Math.hypot(...H0),HV=H0.map(v=>v/hn);const ghAmt=EX.ghost?1:Math.min(1,t*1.6);
  const eye=[0,0,D];
- for(const P of EXP){if(EX.hid.has(P.i))continue;if(EX.pt&&!P.pt)continue;const off=[P.ex[0]*t,P.ex[1]*t,P.ex[2]*t];const gh=P.ghost?Math.max(ghAmt,0):0;const isSel=P.i===EX.sel;
+ for(const P of EXP){if(EX.hid.has(P.i))continue;if(EX.pt&&!P.pt)continue;const off=exOf(P,t);const gh=P.ghost?Math.max(ghAmt,0):0;const isSel=P.i===EX.sel;
   const alpha=P.glass?(.35+.3*(1-gh)):P.ghost?(isSel?.9:1-.78*gh):1;
   for(const f of P.f){const pv=f.v.map(v=>proj(v,off));
    /* kifelé mutató normális a kamera-térben */
@@ -1953,7 +1959,7 @@ function exDraw(){const rr=EX.cv.getBoundingClientRect();if(Math.abs(rr.width-EX
   const R=Math.min(255,col[0]*sh*k+spec*140)|0,G=Math.min(255,col[1]*sh*k+spec*140)|0,B=Math.min(255,col[2]*sh*k+spec*140)|0;const fc=`rgb(${R},${G},${B})`;c.globalAlpha=f.al;c.fillStyle=fc;c.beginPath();f.pv.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath();c.fill();
   if(f.sel){c.lineWidth=1.8;c.strokeStyle='#ffd23f';c.stroke()}else if(ar<(lq?90:26)){}else if(f.sm){c.lineWidth=.8;c.strokeStyle=fc;c.stroke()}else{c.lineWidth=.6;c.strokeStyle=`rgba(${R*.42|0},${G*.42|0},${B*.42|0},.7)`;c.stroke()}}
  c.globalAlpha=1;
- if(EX.sel>=0&&!EX.hid.has(EX.sel)){const P=EXP[EX.sel],off=[P.ex[0]*t,P.ex[1]*t,P.ex[2]*t];const q=proj(P.cen,off);c.font='700 12px system-ui';const w=c.measureText(P.n).width+14,x=Math.max(4,Math.min(W-w-4,q[0]-w/2)),y=Math.max(18,q[1]-34);c.fillStyle='rgba(0,0,0,.72)';c.fillRect(x,y-14,w,20);c.strokeStyle='#ffd23f';c.lineWidth=1;c.strokeRect(x+.5,y-13.5,w-1,19);c.fillStyle='#ffe08a';c.textAlign='left';c.fillText(P.n,x+7,y);c.strokeStyle='#ffd23f';c.beginPath();c.moveTo(q[0],y+6);c.lineTo(q[0],q[1]);c.stroke();c.beginPath();c.arc(q[0],q[1],3,0,7);c.fillStyle='#ffd23f';c.fill()}}
+ if(EX.sel>=0&&!EX.hid.has(EX.sel)){const P=EXP[EX.sel],off=exOf(P,t);const q=proj(P.cen,off);c.font='700 12px system-ui';const w=c.measureText(P.n).width+14,x=Math.max(4,Math.min(W-w-4,q[0]-w/2)),y=Math.max(18,q[1]-34);c.fillStyle='rgba(0,0,0,.72)';c.fillRect(x,y-14,w,20);c.strokeStyle='#ffd23f';c.lineWidth=1;c.strokeRect(x+.5,y-13.5,w-1,19);c.fillStyle='#ffe08a';c.textAlign='left';c.fillText(P.n,x+7,y);c.strokeStyle='#ffd23f';c.beginPath();c.moveTo(q[0],y+6);c.lineTo(q[0],q[1]);c.stroke();c.beginPath();c.arc(q[0],q[1],3,0,7);c.fillStyle='#ffd23f';c.fill()}}
 function exPick(x,y){const F=EX.faces;const inP=(pv)=>{let ins=false;for(let i=0,j=pv.length-1;i<pv.length;j=i++){const a=pv[i],b=pv[j];if((a[1]>y)!==(b[1]>y)&&x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0])ins=!ins}return ins};
  let hit=-1,ghostHit=-1;for(let i=F.length-1;i>=0;i--){const f=F[i];if(!inP(f.pv))continue;if(f.al<.5){if(ghostHit<0)ghostHit=f.P.i;continue}hit=f.P.i;break}
  if(hit<0)hit=ghostHit;if(hit>=0)exSelect(hit);else{EX.sel=-1;exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'))}
@@ -2037,7 +2043,7 @@ function exDrvHTML(){return `<div class="exdv"><div class="xhn dHint"></div>
 function exLtHTML(){const B=(k,ic,t)=>`<button type="button" class="ltb" data-lt="${k}" aria-pressed="false"><i aria-hidden="true">${ic}</i><b>${t}</b></button>`;
  return `<div class="exdv exlt"><div class="xhn">A fék- és a tolatólámpa magától világít. A fényeket a vezetés közben is bekapcsolhatod.</div><div class="ltg">${B('dip','💡','Tompított')}${B('high','🔆','Távolsági')}${B('search','🔦','Keresőlámpa')}${B('beacon','🔵','Kék-piros villogó')}${B('hazard','⚠️','Vészvillogó')}${B('off','⏻','Mind ki')}</div></div>`}
 function exLt(k){if(k==='dip')LT.mode=LT.mode===1?0:1;else if(k==='high')LT.mode=LT.mode===2?0:2;else if(k==='search')LT.search=!LT.search;else if(k==='beacon')LT.beacon=!LT.beacon;else if(k==='hazard')LT.hazard=!LT.hazard;else if(k==='off'){LT.mode=0;LT.search=LT.beacon=LT.hazard=false}else if(k==='cycle')LT.mode=(LT.mode+1)%3;exHudUpd(1)}
-function exTabs(root){const set=t=>{root.querySelectorAll('.extabs button').forEach(b=>{const on=b.dataset.tab===t;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});root.querySelectorAll('.extp').forEach(p=>{p.hidden=p.dataset.p!==t});EX.tab=t};
+function exTabs(root){const set=t=>{root.querySelectorAll('.extabs button').forEach(b=>{const on=b.dataset.tab===t;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});root.querySelectorAll('.extp').forEach(p=>{p.hidden=p.dataset.p!==t});EX.tab=t;qzTab(t)};
  root.querySelector('.extabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)set(b.dataset.tab)});set(EX.tab||'drive')}
 function exDrvWire(root){
  root.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
@@ -2076,44 +2082,68 @@ function exBuildGeo(){if(EXGEO)return EXGEO;const out=[],parts=[];
   parts.push({o:start,n:out.length/10-start})});
  EXGEO={buf:new Float32Array(out),parts};window.__EXV=out.length/10;return EXGEO}
 /* ---------- WebGL ---------- */
-const EXVS=`attribute vec3 aP;attribute vec3 aN;attribute vec3 aC;attribute float aE;varying float vE;uniform vec3 uOff,uRc;uniform float uAng,uAx,uOut,uPit,uSpr;uniform vec4 uR,uS;uniform vec2 uK;varying vec3 vN,vV,vC;varying float vWy;
-void main(){vec3 p=aP,n=aN;if(uAx>.5){vec3 q=p-uRc;float c=cos(uAng),s=sin(uAng);if(uAx<1.5){q=vec3(q.x,q.y*c-q.z*s,q.y*s+q.z*c);n=vec3(n.x,n.y*c-n.z*s,n.y*s+n.z*c);}else{q=vec3(q.x*c-q.y*s,q.x*s+q.y*c,q.z);n=vec3(n.x*c-n.y*s,n.x*s+n.y*c,n.z);}p=q+uRc;}
-p+=uOff+n*uOut;if(uSpr>.5){float c2=cos(uPit),s2=sin(uPit);vec3 q2=p-vec3(.2,.6,0.);p=vec3(q2.x*c2-q2.y*s2,q2.x*s2+q2.y*c2,q2.z)+vec3(.2,.6,0.);n=vec3(n.x*c2-n.y*s2,n.x*s2+n.y*c2,n.z);}vWy=p.y;vec3 w=p;w.y-=uS.z;float x1=w.x*uR.x+w.z*uR.y,z1=-w.x*uR.y+w.z*uR.x,y2=w.y*uR.z-z1*uR.w,z2=w.y*uR.w+z1*uR.z,d=uS.w-z2;
-gl_Position=vec4(x1*uS.x,y2*uS.y-.04*d,uK.x*d+uK.y,d);float nx=n.x*uR.x+n.z*uR.y,nz=-n.x*uR.y+n.z*uR.x;vN=vec3(nx,n.y*uR.z-nz*uR.w,n.y*uR.w+nz*uR.z);vV=vec3(-x1,-y2,uS.w-z2);vC=aC;vE=aE;}`;
-const EXFS=`precision mediump float;varying vec3 vN,vV,vC;varying float vWy,vE;uniform vec4 uLA,uLB;uniform float uAlpha,uSel,uSpec,uMode,uPulse;uniform vec3 uId;
-void main(){if(uMode>.5&&uMode<1.5){gl_FragColor=vec4(uId,1.);return;}if(uMode>1.5){gl_FragColor=vec4(1.,.82,.25,1.);return;}
-vec3 n=normalize(vN);vec3 V=normalize(vV);if(dot(n,V)<0.)n=-n;vec3 L=normalize(vec3(.45,.75,.5)),L2=normalize(vec3(-.65,.25,.45));float dif=max(dot(n,L),0.),fil=max(dot(n,L2),0.);
-vec3 amb=mix(vec3(.17,.15,.13),vec3(.27,.31,.38),n.y*.5+.5);float ao=.7+.3*clamp(vWy/1.7,0.,1.);vec3 H=normalize(L+V);float sp=pow(max(dot(n,H),0.),34.)*uSpec;float fr=pow(1.-max(dot(n,V),0.),3.);
-vec3 r=reflect(-V,n);vec3 env=mix(vec3(.10,.09,.08),vec3(.55,.65,.78),smoothstep(-.3,.7,r.y));
-vec3 col=vC*(amb+dif*.8*vec3(1.,.96,.9)+fil*.15*vec3(.6,.7,1.))*ao+sp*vec3(1.,.97,.9)+env*fr*uSpec*.8+vec3(.5,.6,.8)*fr*.07;
+const EXVS=`attribute vec3 aP;attribute vec3 aN;attribute vec3 aC;attribute float aE;varying float vE;uniform vec3 uOff,uRc;uniform float uAng,uAx,uOut,uPit,uSpr;uniform vec4 uR,uS;uniform vec2 uK;varying vec3 vN,vV,vC,vLP,vM;varying float vWy;uniform vec3 uLr,uLu,uLd;uniform vec4 uLc;uniform float uSh;
+void main(){vec3 p=aP,n=aN;vM=aP;if(uAx>.5){vec3 q=p-uRc;float c=cos(uAng),s=sin(uAng);if(uAx<1.5){q=vec3(q.x,q.y*c-q.z*s,q.y*s+q.z*c);n=vec3(n.x,n.y*c-n.z*s,n.y*s+n.z*c);}else{q=vec3(q.x*c-q.y*s,q.x*s+q.y*c,q.z);n=vec3(n.x*c-n.y*s,n.x*s+n.y*c,n.z);}p=q+uRc;}
+p+=uOff+n*uOut;if(uSpr>.5){float c2=cos(uPit),s2=sin(uPit);vec3 q2=p-vec3(.2,.6,0.);p=vec3(q2.x*c2-q2.y*s2,q2.x*s2+q2.y*c2,q2.z)+vec3(.2,.6,0.);n=vec3(n.x*c2-n.y*s2,n.x*s2+n.y*c2,n.z);}vWy=p.y;vec3 lp=p-uLc.xyz;vLP=vec3(dot(lp,uLr),dot(lp,uLu),-dot(lp,uLd)*.8)*uLc.w*.5+.5;vec3 w=p;w.y-=uS.z;float x1=w.x*uR.x+w.z*uR.y,z1=-w.x*uR.y+w.z*uR.x,y2=w.y*uR.z-z1*uR.w,z2=w.y*uR.w+z1*uR.z,d=uS.w-z2;
+gl_Position=vec4(x1*uS.x,y2*uS.y-.04*d,uK.x*d+uK.y,d);float nx=n.x*uR.x+n.z*uR.y,nz=-n.x*uR.y+n.z*uR.x;vN=vec3(nx,n.y*uR.z-nz*uR.w,n.y*uR.w+nz*uR.z);vV=vec3(-x1,-y2,uS.w-z2);vC=aC;vE=aE;if(uSh>.5)gl_Position=vec4(vLP*2.-1.,1.);}`;
+const EXSHG=`float unp(vec4 c){return dot(c,vec4(1.,1./255.,1./65025.,1./16581375.));}
+float shs(sampler2D m,vec2 uv,float z){return step(z,unp(texture2D(m,uv)));}
+float h2(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
+float vn2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h2(i),h2(i+vec2(1.,0.)),f.x),mix(h2(i+vec2(0.,1.)),h2(i+vec2(1.,1.)),f.x),f.y);}
+`;
+const EXPREC=`#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+`;
+const EXFS=EXPREC+`varying vec3 vN,vV,vC,vLP,vM;varying float vWy,vE;uniform vec4 uLA,uLB;uniform float uAlpha,uSel,uSpec,uMode,uPulse,uShOn;uniform vec3 uId,uKL;uniform sampler2D uSM;
+`+EXSHG+`void main(){if(uMode>2.5){float d=clamp(vLP.z,0.,.9999);vec4 e=fract(d*vec4(1.,255.,65025.,16581375.));e-=e.yzww*vec4(1./255.,1./255.,1./255.,0.);gl_FragColor=e;return;}
+if(uMode>.5&&uMode<1.5){gl_FragColor=vec4(uId,1.);return;}if(uMode>1.5){gl_FragColor=vec4(1.,.82,.25,1.);return;}
+vec3 n=normalize(vN);vec3 V=normalize(vV);if(dot(n,V)<0.)n=-n;vec3 L=uKL,L2=normalize(vec3(-.65,.25,.45));float ndl=dot(n,L),dif=max(ndl,0.),fil=max(dot(n,L2),0.);
+float sh=1.;if(uShOn>.5&&vLP.x>.002&&vLP.x<.998&&vLP.y>.002&&vLP.y<.998){float z=vLP.z-.0022-.0075*(1.-clamp(ndl,0.,1.));float t=1.3/1024.;sh=(shs(uSM,vLP.xy,z)*2.+shs(uSM,vLP.xy+vec2(t,t*.4),z)+shs(uSM,vLP.xy+vec2(-t*.4,t),z)+shs(uSM,vLP.xy+vec2(-t,-t*.4),z)+shs(uSM,vLP.xy+vec2(t*.4,-t),z))/6.;sh=mix(1.,sh,smoothstep(0.,.25,ndl+.12));}
+float nz=vn2(vM.xz*7.+vM.y*5.3)*.6+vn2(vM.xy*23.+vM.z*17.)*.4;vec3 alb=pow(vC,vec3(2.2))*(.93+.14*nz);float dust=smoothstep(1.3,.2,vWy)*(.3+.5*nz)*(1.-min(1.,uSpec*1.8));alb=mix(alb,vec3(.15,.13,.105),dust*.34);
+vec3 amb=mix(vec3(.10,.09,.08),vec3(.30,.36,.46),n.y*.5+.5);float ao=.62+.38*clamp(vWy/1.7,0.,1.);vec3 H=normalize(L+V);float sp=pow(max(dot(n,H),0.),40.)*uSpec*sh;float fr=pow(1.-max(dot(n,V),0.),3.);
+vec3 r=reflect(-V,n);vec3 env=mix(vec3(.05,.045,.04),vec3(.45,.56,.72),smoothstep(-.3,.7,r.y));
+vec3 col=alb*(amb*ao*(.55+.45*sh)+dif*sh*1.3*vec3(1.,.95,.86)+fil*.2*vec3(.6,.7,1.))+sp*vec3(1.,.97,.9)*.8+env*fr*uSpec*.55+vec3(.5,.6,.8)*fr*.02;
+col=col*(1.+.6*col)/(1.+col);col=pow(col*1.5/(1.+.5*col),vec3(1./2.2));
 col=col*(1.+uSel*.18)+vec3(.9,.65,.1)*uSel*(.10+.12*uPulse);float LE=vE<.5?0.:vE<1.5?uLA.x:vE<2.5?uLA.y:vE<3.5?uLA.z:vE<4.5?uLA.w:vE<5.5?uLB.x:vE<6.5?uLB.y:vE<7.5?uLB.z:uLB.w;col=mix(col,vC*1.5+vec3(.25),clamp(LE,0.,1.))*(1.+LE*.6);gl_FragColor=vec4(col,uAlpha);}`;
-const EXGVS=`attribute vec2 aP;uniform vec4 uR,uS;uniform vec2 uK;varying vec2 vX;void main(){vX=aP;vec3 w=vec3(aP.x,-uS.z,aP.y);float x1=w.x*uR.x+w.z*uR.y,z1=-w.x*uR.y+w.z*uR.x,y2=w.y*uR.z-z1*uR.w,z2=w.y*uR.w+z1*uR.z,d=uS.w-z2;gl_Position=vec4(x1*uS.x,y2*uS.y-.04*d,uK.x*d+uK.y,d);}`;
-const EXGFS=`precision mediump float;varying vec2 vX;uniform float uScroll,uFade;uniform vec3 uBm,uBm2,uSk;
-float sdb(vec2 p,vec2 b,float r){vec2 q=abs(p)-b+r;return length(max(q,0.))+min(max(q.x,q.y),0.)-r;}
-void main(){float sd=sdb(vX-vec2(.1,0.),vec2(3.15,1.2),.7);float sh=(1.-smoothstep(-.2,1.5,sd))*.62*uFade;float rr=length(vX);float fade=1.-smoothstep(2.5,9.,rr);float fade2=1.-smoothstep(5.,9.,rr);
+const EXGVS=`attribute vec2 aP;uniform vec4 uR,uS;uniform vec2 uK;varying vec2 vX;varying vec3 vLP;uniform vec3 uLr,uLu,uLd;uniform vec4 uLc;void main(){vX=aP;vec3 lp=vec3(aP.x,0.,aP.y)-uLc.xyz;vLP=vec3(dot(lp,uLr),dot(lp,uLu),-dot(lp,uLd)*.8)*uLc.w*.5+.5;vec3 w=vec3(aP.x,-uS.z,aP.y);float x1=w.x*uR.x+w.z*uR.y,z1=-w.x*uR.y+w.z*uR.x,y2=w.y*uR.z-z1*uR.w,z2=w.y*uR.w+z1*uR.z,d=uS.w-z2;gl_Position=vec4(x1*uS.x,y2*uS.y-.04*d,uK.x*d+uK.y,d);}`;
+const EXGFS=EXPREC+`varying vec2 vX;varying vec3 vLP;uniform float uScroll,uFade,uShOn;uniform vec3 uBm,uBm2,uSk;uniform sampler2D uSM;
+`+EXSHG+`float sdb(vec2 p,vec2 b,float r){vec2 q=abs(p)-b+r;return length(max(q,0.))+min(max(q.x,q.y),0.)-r;}
+void main(){float sd=sdb(vX-vec2(.1,0.),vec2(3.15,1.2),.7);float sh=(1.-smoothstep(-.2,1.5,sd))*.62*uFade;if(uShOn>.5){sh*=.5;if(vLP.x>.002&&vLP.x<.998&&vLP.y>.002&&vLP.y<.998){float z=vLP.z-.003,t=1.6/1024.,m=0.;for(int i=-1;i<=1;i++)for(int j=-1;j<=1;j++)m+=shs(uSM,vLP.xy+vec2(float(i),float(j))*t,z);sh=1.-(1.-sh)*(1.-(1.-m/9.)*.6);}}float rr=length(vX);float fade=1.-smoothstep(2.5,9.,rr);float fade2=1.-smoothstep(5.,9.,rr);
 vec2 q=vec2(vX.x+uScroll,vX.y);float gx=abs(fract(q.x)-.5),gz=abs(fract(q.y+.5)-.5);float ln=(1.-smoothstep(.0,.035,.5-gx))*.5+(1.-smoothstep(.0,.035,.5-gz))*.5;
 vec2 cq=floor(q*7.);float hs=fract(sin(dot(cq,vec2(12.9898,78.233)))*43758.5453);vec2 lf=fract(q*7.)-.5-(vec2(hs,fract(hs*7.3))-.5)*.4;float sp=step(.8,hs)*(1.-smoothstep(.04,.2,length(lf)))*fade*.1;float rut=(1.-smoothstep(.0,.2,abs(abs(vX.y)-.9)))*.07*fade;
 float glow=(1.-smoothstep(0.,7.,rr))*.13;vec3 c=vec3(.47,.59,.75);float a=clamp(sh+ln*.05*fade+glow+sp+rut,0.,1.);vec3 col=mix(c,vec3(0.),sh/max(a,.001));float bx=vX.x-2.95,bm=0.;if(bx>0.){float len=2.6+uBm.y*5.4;float fd=smoothstep(0.,.6,bx)*(1.-smoothstep(len*.35,len,bx));float w=.32+bx*.2;float d1=(vX.y-.72)/w,d2=(vX.y+.72)/w;bm=(exp(-d1*d1*1.4)+exp(-d2*d2*1.4))*fd*uBm.x*.34;}
 float rx=-2.95-vX.x,rb=0.;vec3 rc=vec3(0.);if(rx>0.){float f=smoothstep(0.,.5,rx)*(1.-smoothstep(.4,2.2,rx));float zz=abs(vX.y)-.9;float g=exp(-zz*zz*3.5)*f;rc=vec3(1.,.12,.08)*g*uBm2.x*.38+vec3(1.,.97,.85)*g*uBm2.y*.4;rb=max(g*uBm2.x*.38,g*uBm2.y*.4);}
 float skm=0.;{float L=uSk.x,off=uSk.y;if(L>0.){for(int i=0;i<2;i++){float ax=i==0?1.8:-1.455;float x0=ax-off;float inx=step(x0-L,vX.x)*step(vX.x,x0);float lane=1.-smoothstep(.1,.2,abs(abs(vX.y)-1.0545));skm+=inx*lane;}}}skm=min(skm,1.)*.4*fade2;
-float a2=clamp(a+bm+rb+skm,0.,1.);vec3 rgb=col*a+vec3(1.,.93,.7)*bm+rc-vec3(skm);rgb=max(rgb,vec3(0.));gl_FragColor=vec4(min(rgb,vec3(a2)),a2);}`;
+float a2=clamp(a+bm+rb+skm,0.,1.);vec3 rgb=col*a+vec3(1.,.93,.7)*bm+rc-vec3(skm);rgb=max(rgb,vec3(0.));rgb=min(rgb,vec3(a2));float fa=(1.-smoothstep(3.5,9.5,rr))*.85;vec3 fc=vec3(.33,.36,.41)*(.9+.12*vn2(q*2.3)+.07*vn2(q*23.))+vec3(.13,.14,.16)*(1.-smoothstep(0.,6.5,rr));gl_FragColor=vec4(rgb+fc*fa*(1.-a2),a2+fa*(1.-a2));}`;
 function exGLNew(cv){const ctxOpt={antialias:!window.__EXNOAA&&(devicePixelRatio||1)<2,alpha:true,premultipliedAlpha:true,powerPreference:'high-performance',failIfMajorPerformanceCaveat:!window.__EXGL_ANY};
  let gl=null;try{gl=cv.getContext('webgl',ctxOpt)||cv.getContext('experimental-webgl',ctxOpt)}catch(_){}if(!gl)return null;
  const mk=(t,s)=>{const h=gl.createShader(t);gl.shaderSource(h,s);gl.compileShader(h);if(!gl.getShaderParameter(h,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(h));return h};
  const prog=(v,f)=>{const p=gl.createProgram();gl.attachShader(p,mk(gl.VERTEX_SHADER,v));gl.attachShader(p,mk(gl.FRAGMENT_SHADER,f));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(p));return p};
  const uni=(p,names)=>{const o={};names.split(',').forEach(n=>{o[n]=gl.getUniformLocation(p,n)});return o};
  let P1,P2,U1,U2,vb,gb,G,fbo=null,ft=null,fd=null,fw=0,fh=0;
- try{P1=prog(EXVS,EXFS);P2=prog(EXGVS,EXGFS);U1=uni(P1,'uOff,uRc,uAng,uAx,uOut,uPit,uSpr,uR,uS,uK,uAlpha,uSel,uSpec,uMode,uPulse,uId,uLA,uLB');U2=uni(P2,'uR,uS,uK,uScroll,uFade,uBm,uBm2,uSk');
+ try{P1=prog(EXVS,EXFS);P2=prog(EXGVS,EXGFS);U1=uni(P1,'uOff,uRc,uAng,uAx,uOut,uPit,uSpr,uR,uS,uK,uAlpha,uSel,uSpec,uMode,uPulse,uId,uLA,uLB,uLr,uLu,uLd,uLc,uSh,uShOn,uKL,uSM');U2=uni(P2,'uR,uS,uK,uScroll,uFade,uBm,uBm2,uSk,uLr,uLu,uLd,uLc,uShOn,uSM');
   G=exBuildGeo();vb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,vb);gl.bufferData(gl.ARRAY_BUFFER,G.buf,gl.STATIC_DRAW);gb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,gb);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-10,-10,10,-10,-10,10,10,10]),gl.STATIC_DRAW)}catch(err){try{console.warn('GL',err)}catch(_){}return null}
  const A1={P:gl.getAttribLocation(P1,'aP'),N:gl.getAttribLocation(P1,'aN'),C:gl.getAttribLocation(P1,'aC'),E:gl.getAttribLocation(P1,'aE')},A2=gl.getAttribLocation(P2,'aP');
  const o={gl,lost:false};
+ /* árnyéktérkép: a fő fény felől nézett mélységkép (RGBA-ba csomagolva – minden WebGL1 eszközön megy) */
+ const SMN=1024;let smF=null,smT=null;try{smT=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,smT);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,SMN,SMN,0,gl.RGBA,gl.UNSIGNED_BYTE,null);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  const rb=gl.createRenderbuffer();gl.bindRenderbuffer(gl.RENDERBUFFER,rb);gl.renderbufferStorage(gl.RENDERBUFFER,gl.DEPTH_COMPONENT16,SMN,SMN);smF=gl.createFramebuffer();gl.bindFramebuffer(gl.FRAMEBUFFER,smF);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,smT,0);gl.framebufferRenderbuffer(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.RENDERBUFFER,rb);
+  if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE)smF=null;gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.bindTexture(gl.TEXTURE_2D,null)}catch(_){smF=null}
+ if(window.__EXNOSH)smF=null;
+ const light=(S,c)=>{const cy=c.R[0],sy=c.R[1],cx=c.R[2],sx=c.R[3];let d=[cy*.5-sy*.55,.85,sy*.5+cy*.55];const dl=Math.hypot(d[0],d[1],d[2]);d=d.map(v=>v/dl);
+  let r=[d[2],0,-d[0]];const rl=Math.hypot(r[0],r[2])||1;r=[r[0]/rl,0,r[2]/rl];const u=[d[1]*r[2]-d[2]*r[1],d[2]*r[0]-d[0]*r[2],d[0]*r[1]-d[1]*r[0]];
+  const nx=d[0]*cy+d[2]*sy,nz=-d[0]*sy+d[2]*cy;return {d,r,u,c:[.2,1.3+S.t*.45,0,1/(4.6+3.6*S.t)],k:[nx,d[1]*cx-nz*sx,d[1]*sx+nz*cx]}};
+ const setLight=(U,l,on)=>{gl.uniform3f(U.uLr,l.r[0],l.r[1],l.r[2]);gl.uniform3f(U.uLu,l.u[0],l.u[1],l.u[2]);gl.uniform3f(U.uLd,l.d[0],l.d[1],l.d[2]);gl.uniform4f(U.uLc,l.c[0],l.c[1],l.c[2],l.c[3]);gl.uniform1f(U.uShOn,on?1:0);gl.uniform1i(U.uSM,0);if(U.uKL)gl.uniform3f(U.uKL,l.k[0],l.k[1],l.k[2])};
  cv.addEventListener('webglcontextlost',e=>{e.preventDefault();o.lost=true});
  cv.addEventListener('webglcontextrestored',()=>{const n=exGLNew(cv);if(n){Object.assign(o,n);o.lost=false}});
  const cam=S=>{const cy=Math.cos(S.ry),sy=Math.sin(S.ry),cx=Math.cos(S.rx),sx=Math.sin(S.rx),D=12,W=S.W,H=S.H;const F=Math.min(W*1.5,H*2.0)*1.18*S.zm/(1+.55*S.t);return {R:[cy,sy,cx,sx],S:[F/(W/2),F/(H/2),1.5+S.t*.45,D],K:[41/39,-80/39]}};
  const bindMain=()=>{gl.useProgram(P1);gl.bindBuffer(gl.ARRAY_BUFFER,vb);gl.enableVertexAttribArray(A1.P);gl.enableVertexAttribArray(A1.N);gl.enableVertexAttribArray(A1.C);gl.enableVertexAttribArray(A1.E);gl.vertexAttribPointer(A1.P,3,gl.FLOAT,false,40,0);gl.vertexAttribPointer(A1.N,3,gl.FLOAT,false,40,12);gl.vertexAttribPointer(A1.C,3,gl.FLOAT,false,40,24);gl.vertexAttribPointer(A1.E,1,gl.FLOAT,false,40,36)};
  const setCam=(U,c)=>{gl.uniform4f(U.uR,c.R[0],c.R[1],c.R[2],c.R[3]);gl.uniform4f(U.uS,c.S[0],c.S[1],c.S[2],c.S[3]);gl.uniform2f(U.uK,c.K[0],c.K[1]);if(U.uPit)gl.uniform1f(U.uPit,ENG.pitch)};
  const pstate=S=>{const E=ENG,t=S.t,gh=S.ghost?1:Math.min(1,t*1.6),amp=E.st===1?.02:E.st===2?.012+.02*Math.min(1,E.rpm/2400)+.014*E.ped:0,list=[];
-  EXP.forEach(P=>{if(S.hid.has(P.i))return;if(S.pt&&!P.pt)return;const sel=P.i===S.sel;let ox=P.ex[0]*t,oy=P.ex[1]*t,oz=P.ex[2]*t;
+  EXP.forEach(P=>{if(S.hid.has(P.i))return;if(S.pt&&!P.pt)return;const sel=P.i===S.sel;let [ox,oy,oz]=exOf(P,t);
    if(amp&&P.shk){const a=amp*P.shk;ox+=(Math.random()-.5)*a*.6;oy+=(Math.random()-.5)*a;oz+=(Math.random()-.5)*a}
    let ang=0;if(P.sp){ang=P.sp.k==='w'?-E.wph:P.sp.k==='s'?-E.sph:E.fph}
    const al=P.glass?(.35+.3*(1-(P.ghost?gh:0))):P.ghost?(sel?.9:1-.78*gh):1;
@@ -2125,12 +2155,17 @@ function exGLNew(cv){const ctxOpt={antialias:!window.__EXNOAA&&(devicePixelRatio
  o.draw=function(S){if(o.lost)return;const W=S.W,H=S.H;if(W<2||H<2)return;const lim=Math.sqrt(2.3e6/(W*H*S.dpr*S.dpr)),rs=Math.min(S.rs||1,lim),pw=Math.max(2,Math.round(W*S.dpr*rs)),ph=Math.max(2,Math.round(H*S.dpr*rs));
   if(cv.width!==pw||cv.height!==ph){cv.width=pw;cv.height=ph}
   gl.viewport(0,0,pw,ph);gl.disable(gl.SCISSOR_TEST);gl.clearColor(0,0,0,0);gl.clearDepth(1);gl.depthMask(true);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
-  const c=cam(S),list=pstate(S);S.ps=list;
+  const c=cam(S),list=pstate(S);S.ps=list;const lt=light(S,c),shOn=!!smF&&!S.noSh;
+  /* árnyék-menet */
+  gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,null);
+  if(shOn){gl.bindFramebuffer(gl.FRAMEBUFFER,smF);gl.viewport(0,0,SMN,SMN);gl.clearColor(1,1,1,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.CULL_FACE);gl.disable(gl.BLEND);
+   bindMain();setCam(U1,c);setLight(U1,lt,false);gl.uniform1f(U1.uSh,1);gl.uniform1f(U1.uMode,3);gl.uniform1f(U1.uOut,0);for(const s of list)if(s.al>.999)drawP(U1,s,1);
+   gl.uniform1f(U1.uSh,0);gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.viewport(0,0,pw,ph);gl.clearColor(0,0,0,0);gl.bindTexture(gl.TEXTURE_2D,smT)}
   /* talaj + árnyék */
   gl.disable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
-  gl.useProgram(P2);setCam(U2,c);gl.uniform1f(U2.uScroll,ENG.dist);gl.uniform1f(U2.uFade,1-S.t*.5);const lg=exLights(),bf=1-Math.min(1,S.t*2);gl.uniform3f(U2.uSk,ENG.skL,ENG.skOff,0);gl.uniform3f(U2.uBm,lg.head*bf,lg.high,0);gl.uniform3f(U2.uBm2,lg.brk*bf,lg.rev*bf,0);gl.bindBuffer(gl.ARRAY_BUFFER,gb);gl.enableVertexAttribArray(A2);gl.vertexAttribPointer(A2,2,gl.FLOAT,false,0,0);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  gl.useProgram(P2);setCam(U2,c);setLight(U2,lt,shOn);gl.uniform1f(U2.uScroll,ENG.dist);gl.uniform1f(U2.uFade,1-S.t*.5);const lg=exLights(),bf=1-Math.min(1,S.t*2);gl.uniform3f(U2.uSk,ENG.skL,ENG.skOff,0);gl.uniform3f(U2.uBm,lg.head*bf,lg.high,0);gl.uniform3f(U2.uBm2,lg.brk*bf,lg.rev*bf,0);gl.bindBuffer(gl.ARRAY_BUFFER,gb);gl.enableVertexAttribArray(A2);gl.vertexAttribPointer(A2,2,gl.FLOAT,false,0,0);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
   /* járműtest */
-  bindMain();setCam(U1,c);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);gl.frontFace(gl.CCW);gl.disable(gl.BLEND);
+  bindMain();setCam(U1,c);setLight(U1,lt,shOn);gl.uniform1f(U1.uSh,0);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);gl.frontFace(gl.CCW);gl.disable(gl.BLEND);
   gl.uniform1f(U1.uMode,0);gl.uniform1f(U1.uOut,0);gl.uniform1f(U1.uPulse,.5+.5*Math.sin(performance.now()/260));gl.uniform4f(U1.uLA,lg.a[0],lg.a[1],lg.a[2],lg.a[3]);gl.uniform4f(U1.uLB,lg.b[0],lg.b[1],lg.b[2],lg.b[3]);
   for(const s of list)if(s.al>.999)drawP(U1,s,0);
   const sel=list.find(s=>s.sel);if(sel&&sel.al>.999){gl.cullFace(gl.FRONT);gl.uniform1f(U1.uMode,2);gl.uniform1f(U1.uOut,.03);drawP(U1,sel,0);gl.uniform1f(U1.uMode,0);gl.uniform1f(U1.uOut,0);gl.cullFace(gl.BACK)}
@@ -2143,7 +2178,7 @@ function exGLNew(cv){const ctxOpt={antialias:!window.__EXNOAA&&(devicePixelRatio
   if(!fbo||fw!==pw||fh!==ph){if(fbo){gl.deleteFramebuffer(fbo);gl.deleteTexture(ft);gl.deleteRenderbuffer(fd)}fw=pw;fh=ph;fbo=gl.createFramebuffer();ft=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,ft);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,pw,ph,0,gl.RGBA,gl.UNSIGNED_BYTE,null);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);fd=gl.createRenderbuffer();gl.bindRenderbuffer(gl.RENDERBUFFER,fd);gl.renderbufferStorage(gl.RENDERBUFFER,gl.DEPTH_COMPONENT16,pw,ph);gl.bindFramebuffer(gl.FRAMEBUFFER,fbo);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,ft,0);gl.framebufferRenderbuffer(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.RENDERBUFFER,fd)}
   const px=Math.floor(x/S.W*pw),py=Math.floor((S.H-y)/S.H*ph);if(px<0||py<0||px>=pw||py>=ph)return -1;
   gl.bindFramebuffer(gl.FRAMEBUFFER,fbo);gl.viewport(0,0,pw,ph);gl.enable(gl.SCISSOR_TEST);gl.scissor(px,py,1,1);gl.disable(gl.BLEND);gl.enable(gl.DEPTH_TEST);gl.depthMask(true);gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);
-  const c=cam(S);bindMain();setCam(U1,c);gl.uniform1f(U1.uMode,1);gl.uniform1f(U1.uOut,0);
+  const c=cam(S);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,null);bindMain();setCam(U1,c);gl.uniform1f(U1.uSh,0);gl.uniform1f(U1.uMode,1);gl.uniform1f(U1.uOut,0);
   const rd=sub=>{gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);for(const s of S.ps)if(sub(s))drawP(U1,s,1);const b=new Uint8Array(4);gl.readPixels(px,py,1,1,gl.RGBA,gl.UNSIGNED_BYTE,b);return b[0]};
   let id=rd(s=>s.al>=.5);if(!id)id=rd(s=>s.al<.5);
   gl.disable(gl.SCISSOR_TEST);gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.viewport(0,0,pw,ph);return id-1};
@@ -2157,9 +2192,15 @@ function exOverlay(S){const c=S.ovc;if(!c)return;const W=S.W,H=S.H,dp=Math.min(S
   for(const L of EXLAMP){const it=lg.k[L.k];if(it<.03)continue;let fc=1;if(L.n){fc=L.n[0]*V[0]+L.n[1]*V[1]+L.n[2]*V[2];if(fc<.12)continue;fc=Math.min(1,fc*1.5)}const q=exProjG(S,L.p,[0,0,0]),r=Math.max(4,L.r*q[2]*(.7+.5*it)),g=c.createRadialGradient(q[0],q[1],0,q[0],q[1],r);const al=.62*it*fc;g.addColorStop(0,`rgba(${L.c},${al})`);g.addColorStop(.35,`rgba(${L.c},${al*.35})`);g.addColorStop(1,`rgba(${L.c},0)`);c.fillStyle=g;c.beginPath();c.arc(q[0],q[1],r,0,7);c.fill()}
   c.globalCompositeOperation='source-over'}}
  const exh=EXP.find(p=>p.n==='Kipufogó');const showEx=exh&&!S.hid.has(exh.i),showSm=!S.pt&&ENG.sm.length;
- if(showSm){const off=[exh.ex[0]*t,exh.ex[1]*t,exh.ex[2]*t];for(const p of ENG.sm){if(!p.w&&!showEx)continue;const q=exProjG(S,[p.x,p.y,p.z],p.w?[0,0,0]:off),f=p.a/p.L,r=Math.max(1.5,p.s*q[2]*(1+f*2.2)),al=(1-f)*(1-f)*.34;const g=p.w?205:p.d>.7?30:p.d>.3?78:150;const gr=c.createRadialGradient(q[0],q[1],0,q[0],q[1],r);gr.addColorStop(0,`rgba(${g},${g},${g+4},${al})`);gr.addColorStop(1,`rgba(${g},${g},${g+4},0)`);c.fillStyle=gr;c.beginPath();c.arc(q[0],q[1],r,0,7);c.fill()}}
- if(S.sel>=0&&!S.hid.has(S.sel)&&!S.mini){const P=EXP[S.sel],off=[P.ex[0]*t,P.ex[1]*t,P.ex[2]*t];const q=exProjG(S,P.cen,off);c.font='700 12px system-ui';const w=c.measureText(P.n).width+14,x=Math.max(4,Math.min(W-w-4,q[0]-w/2)),y=Math.max(18,q[1]-34);c.fillStyle='rgba(0,0,0,.72)';c.fillRect(x,y-14,w,20);c.strokeStyle='#ffd23f';c.lineWidth=1;c.strokeRect(x+.5,y-13.5,w-1,19);c.fillStyle='#ffe08a';c.textAlign='left';c.fillText(P.n,x+7,y);c.strokeStyle='#ffd23f';c.beginPath();c.moveTo(q[0],y+6);c.lineTo(q[0],q[1]);c.stroke();c.beginPath();c.arc(q[0],q[1],3,0,7);c.fillStyle='#ffd23f';c.fill()}}
-function exPickAny(x,y){if(EX.gl){const i=EX.gl.pick(EX,x,y);if(i>=0)exSelect(i);else{EX.sel=-1;exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'))}
+ if(showSm){const off=exOf(exh,t);for(const p of ENG.sm){if(!p.w&&!showEx)continue;const q=exProjG(S,[p.x,p.y,p.z],p.w?[0,0,0]:off),f=p.a/p.L,r=Math.max(1.5,p.s*q[2]*(1+f*2.2)),al=(1-f)*(1-f)*.34;const g=p.w?205:p.d>.7?30:p.d>.3?78:150;const gr=c.createRadialGradient(q[0],q[1],0,q[0],q[1],r);gr.addColorStop(0,`rgba(${g},${g},${g+4},${al})`);gr.addColorStop(1,`rgba(${g},${g},${g+4},0)`);c.fillStyle=gr;c.beginPath();c.arc(q[0],q[1],r,0,7);c.fill()}}
+ if(!S.mini&&t>.05&&S.ps){/* robbantott ábra: szaggatott szerelési vonal az alkatrész eredeti helyétől */const al=Math.min(1,t*2.4);c.save();c.setLineDash([3,4]);c.lineWidth=1;c.strokeStyle=`rgba(255,216,140,${.36*al})`;c.beginPath();const ends=[];
+  for(const s of S.ps){const o=exOf(s.P,t);if(Math.abs(o[0])+Math.abs(o[1])+Math.abs(o[2])<.1)continue;const a=exProjG(S,s.P.cen,[0,0,0]),b=exProjG(S,s.P.cen,o);c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);ends.push(b)}
+  c.stroke();c.setLineDash([]);c.fillStyle=`rgba(255,216,140,${.7*al})`;for(const b of ends){c.beginPath();c.arc(b[0],b[1],1.7,0,7);c.fill()}c.restore()}
+ if(S.lb&&S.ps&&!S.mini&&!(S.qz&&S.qz.on)){c.save();c.font='600 10.5px system-ui,sans-serif';c.textBaseline='middle';c.textAlign='left';const pl=[],it=S.ps.filter(s=>s.P.i!==S.sel).map(s=>({s,q:exProjG(S,s.P.cen,exOf(s.P,t))})).sort((a,b)=>b.q[2]-a.q[2]);
+  for(const {s,q} of it){const nm=s.P.sn||(s.P.sn=s.P.n.replace(/\s*\(.*\)\s*$/,'')),w=c.measureText(nm).width+10,x=q[0]-w/2,y=q[1]-8;if(x<2||x+w>W-2||y<18||y+16>H-4)continue;if(pl.some(r=>x<r[0]+r[2]+4&&x+w+4>r[0]&&y<r[1]+20&&y+20>r[1]))continue;pl.push([x,y,w]);
+   c.fillStyle='rgba(8,12,18,.76)';c.beginPath();if(c.roundRect)c.roundRect(x,y,w,16,5);else c.rect(x,y,w,16);c.fill();c.fillStyle='#e8eef8';c.fillText(nm,x+5,y+8.5)}c.restore()}
+ if(S.sel>=0&&!S.hid.has(S.sel)&&!S.mini&&!(S.qz&&S.qz.on&&S.qz.hide)){const P=EXP[S.sel],off=exOf(P,t);const q=exProjG(S,P.cen,off);c.font='700 12px system-ui';c.textBaseline='alphabetic';const w=c.measureText(P.n).width+14,x=Math.max(4,Math.min(W-w-4,q[0]-w/2)),y=Math.max(18,q[1]-34);c.fillStyle='rgba(0,0,0,.72)';c.fillRect(x,y-14,w,20);c.strokeStyle='#ffd23f';c.lineWidth=1;c.strokeRect(x+.5,y-13.5,w-1,19);c.fillStyle='#ffe08a';c.textAlign='left';c.fillText(P.n,x+7,y);c.strokeStyle='#ffd23f';c.beginPath();c.moveTo(q[0],y+6);c.lineTo(q[0],q[1]);c.stroke();c.beginPath();c.arc(q[0],q[1],3,0,7);c.fillStyle='#ffd23f';c.fill()}}
+function exPickAny(x,y){if(QZ.on){if(QZ.mode==='find'&&!QZ.lock){let i=-1;if(EX.gl)i=EX.gl.pick(EX,x,y);else{exPick(x,y);i=EX.sel;EX.sel=-1;exInfo(-1)}if(i>=0)qzAnswer(i)}return}if(EX.gl){const i=EX.gl.pick(EX,x,y);if(i>=0)exSelect(i);else{EX.sel=-1;exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'))}
   if(i>=0){const ch=document.querySelector(`.exchip[data-i="${i}"]`);if(ch&&EX.sel===i)ch.scrollIntoView({block:'nearest',inline:'nearest'})}}else exPick(x,y)}
 /* ---------- fő ciklus ---------- */
 function exKick(){if(!ENG.raf){ENG.last=performance.now();ENG.raf=requestAnimationFrame(exTick)}}
@@ -2167,16 +2208,17 @@ function exTick(now){ENG.raf=0;const raw=Math.min(100,Math.max(0,now-(ENG.last||
  const S=EX.run?EX:MN.run?MN:null;if(!S){exSndSync(false);return}
  {let rem=Math.min(.15,raw/1000);while(rem>1e-4){const h=Math.min(rem,.034);exStep(h);rem-=h}}exFrame(S,dt,now,raw);exSndSync(true);ENG.raf=requestAnimationFrame(exTick)}
 function exFrame(S,dt,now,raw){const rr=S.cv.getBoundingClientRect();S.W=rr.width;S.H=rr.height;S.dpr=Math.min(2,devicePixelRatio||1);
- S.t+=(S.tt-S.t)*Math.min(1,dt*6);if(S.auto&&!S.ptr.size)S.ry+=dt*(S.mini?.22:.35);
+ S.t+=(S.tt-S.t)*Math.min(1,dt*3.6);if(Math.abs(S.tt-S.t)<.0008)S.t=S.tt;if(S.auto&&!S.ptr.size)S.ry+=dt*(S.mini?.22:.35);
  if(S.tv&&!S.ptr.size){let d=S.tv.ry-S.ry;d=Math.atan2(Math.sin(d),Math.cos(d));S.ry+=d*Math.min(1,dt*5);S.rx+=(S.tv.rx-S.rx)*Math.min(1,dt*5)}
  if(S.gl){S.fe=S.fe?S.fe*.93+raw*.07:raw;S.fn=(S.fn||0)+1;if(S.fn>45){S.bd=Math.min(S.bd||34,S.fe,34);if(now-(S.rsT||0)>900){if(S.fe>Math.max(21,S.bd*1.35)&&S.rs>.5){S.cap=S.rs;S.rs=Math.max(.5,S.rs-.12);S.rsT=now;S.fe=S.bd}else if(S.fe<S.bd*1.12&&S.rs<(S.cap?S.cap-.05:1)&&now-S.rsT>3500){S.rs=Math.min(1,S.rs+.06);S.rsT=now}}}
-  S.gl.draw(S);exOverlay(S)}
+  if(S.rs<=.62)S.noSh=true;S.gl.draw(S);exOverlay(S)}
  else if(S===EX){const t0=performance.now();exDraw();const dd=performance.now()-t0;EX.avg=(EX.avg||dd)*.9+dd*.1;if(EX.avg>26)EX.lq=true;else if(EX.avg<14)EX.lq=false;exOverlay(S)}}
 /* ---------- főképernyői kis nézet ---------- */
 function exMiniMount(box){if(!box||box.dataset.mn)return;box.dataset.mn=1;
  box.innerHTML=`<div class="mnh"><b>🪖 Gidrán – élő 3D</b><small>Indítsd be a motort, és nézd, hogyan dolgozik a hajtáslánc</small></div>
  <div class="mnsc"><canvas id="mnCv" aria-label="Gidrán 3D modell"></canvas><canvas id="mnOv"></canvas><div class="mnhud"><span class="dHud">Motor leállítva · 0 km/h · N</span></div></div>${exDrvHTML()}
- <div class="mnbt"><button type="button" class="btn line sm" data-lt="cycle" aria-pressed="false">💡 Fény: ki</button><button type="button" class="btn line sm" id="mnPt" aria-pressed="false">⚙ Hajtáslánc</button><button type="button" class="btn pri sm" id="mnFull">⤢ Teljes 3D nézet</button></div>`;
+ <div class="mnbt"><button type="button" class="btn line sm" data-lt="cycle" aria-pressed="false">💡 Fény: ki</button><button type="button" class="btn line sm" id="mnPt" aria-pressed="false">⚙ Hajtáslánc</button><button type="button" class="btn pri sm" id="mnFull">⤢ Teljes 3D nézet</button><button type="button" class="btn line sm" id="mnQuiz">🎯 Alkatrész-feladat</button><button type="button" class="btn line sm" id="mnNapi">📋 Napi teendők</button></div>`;
+ box.querySelector('#mnQuiz').onclick=()=>{EX.tab='quiz';exOpen()};box.querySelector('#mnNapi').onclick=()=>{hubOpen();napiOpen()};
  const cv=box.querySelector('#mnCv');MN.cv=cv;MN.ov=box.querySelector('#mnOv');MN.ovc=MN.ov.getContext('2d');MN.W=cv.clientWidth||300;MN.H=cv.clientHeight||190;MN.dpr=Math.min(2,devicePixelRatio||1);
  MN.gl=exGLNew(cv);
  if(!MN.gl){box.querySelector('.mnsc').innerHTML='<div class="mnno">A 3D nézet ezen az eszközön a teljes képernyős módban érhető el.</div>';box.querySelector('.exdv').style.display='none';const pb=box.querySelector('#mnPt');if(pb)pb.style.display='none'}
@@ -2191,6 +2233,116 @@ function exMiniMount(box){if(!box||box.dataset.mn)return;box.dataset.mn=1;
   if('IntersectionObserver' in window){new IntersectionObserver(vis,{threshold:.01}).observe(box)}
   document.addEventListener('visibilitychange',vis);addEventListener('scroll',vis,{passive:true});setInterval(vis,700);vis()}
 }
+/* ===== 3D FELADAT: alkatrész-felismerés a modellen (Keresd meg / Mi ez?) – a hibázott elemek gyakrabban jönnek elő ===== */
+const QZ={on:false,mode:'find',cur:-1,tries:0,pen:false,ok:0,n:0,run:0,lock:false,hide:false,last:-1,grp:'*',pg:false,st:(()=>{try{return JSON.parse(localStorage.getItem('gid-ex-stat')||'{}')||{}}catch(e){return {}}})()};
+const qzBox=()=>document.getElementById('qzBox');
+const qzStat=P=>QZ.st[P.n]||(QZ.st[P.n]={o:0,b:0});
+const qzSave=()=>{try{localStorage.setItem('gid-ex-stat',JSON.stringify(QZ.st))}catch(e){}};
+const qzKnown=()=>EXP.filter(p=>{const x=QZ.st[p.n];return x&&x.o>=2&&x.o>x.b}).length;
+const qzPool=()=>{const a=EXP.filter(p=>QZ.grp==='*'||p.g===QZ.grp);return a.length?a:EXP};
+function qzProg(){const k=qzKnown();return `<div class="qzp"><div class="qzpb"><i style="width:${(k/EXP.length*100).toFixed(1)}%"></i></div><small>Megtanult alkatrész: <b>${k}</b> / ${EXP.length} <em>(kétszer elsőre eltalálva)</em></small></div>`}
+function qzSlider(){return `<label class="exsl qzsl"><span>🔧 Szétszedés</span><input type="range" class="exslr" min="0" max="100" value="${Math.round(EX.tt*100)}" aria-label="Szétszedés mértéke"></label>`}
+function qzIntro(){const B=qzBox();if(!B)return;const gs=[];EXP.forEach(p=>{if(!gs.includes(p.g))gs.push(p.g)});
+ B.innerHTML=`<div class="qzi"><b>🎯 Alkatrész-felismerés</b><span>Gyakorold a modellen, mi hol van. A páncél áttetsző lesz, hogy a belső részek is látsszanak; a csúszkával szét is szedheted.</span></div>
+ <div class="qzm"><button type="button" class="qzb" data-qm="find"><i aria-hidden="true">👆</i><b>Keresd meg</b><small>Megmondom a nevét – bökj rá a modellen</small></button><button type="button" class="qzb" data-qm="name"><i aria-hidden="true">❓</i><b>Mi ez?</b><small>Kijelölök egy alkatrészt – válaszd ki a nevét</small></button></div>
+ <label class="qzg"><span>Rendszer</span><select id="qzG"><option value="*">Minden rendszer (${EXP.length})</option>${gs.map(g=>`<option value="${esc(g)}"${g===QZ.grp?' selected':''}>${esc(g)} (${EXP.filter(p=>p.g===g).length})</option>`).join('')}</select></label>${qzProg()}`}
+function qzTab(t){if(t==='quiz'){if(!QZ.on)qzIntro()}else if(QZ.on)qzEnd()}
+function qzStart(m){QZ.mode=m;QZ.on=true;QZ.ok=0;QZ.n=0;QZ.run=0;QZ.last=-1;QZ.pg=EX.ghost;exGhostSet(true);EX.pt=false;const pb=document.getElementById('exPt');if(pb)pb.setAttribute('aria-pressed','false');EX.hid.clear();EX.sel=-1;exInfo(-1);document.querySelectorAll('.exchip.on').forEach(b=>b.classList.remove('on'));EX.auto=false;const a=document.getElementById('exAuto');if(a)a.setAttribute('aria-pressed','false');qzNext()}
+function qzEnd(){if(QZ.on)exGhostSet(QZ.pg);QZ.on=false;QZ.hide=false;QZ.lock=false;EX.sel=-1;qzIntro()}
+function qzLook(P){const o=exOf(P,EX.tt),x=P.cen[0]+o[0],y=P.cen[1]+o[1],z=P.cen[2]+o[2];exView(Math.hypot(x,z)<.3?EX.ry:Math.atan2(-x,z)+.45,y<.75?.16:y>2.2?.7:.42)}
+function qzNext(){const pool=qzPool();let tot=0;const w=pool.map(p=>{const x=QZ.st[p.n]||{o:0,b:0};const v=(p.i===QZ.last&&pool.length>1)?0:Math.max(.25,1+2.5*x.b-.6*Math.min(x.o,4));tot+=v;return v});
+ let r=Math.random()*tot,k=0;for(;k<pool.length-1;k++){r-=w[k];if(r<=0)break}const P=pool[k];QZ.cur=P.i;QZ.last=P.i;QZ.tries=0;QZ.pen=false;QZ.lock=false;
+ if(QZ.mode==='find'){QZ.hide=false;EX.sel=-1;QZ.opts=[]}
+ else{QZ.hide=true;EX.sel=P.i;qzLook(P);const sh=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};const same=sh(EXP.filter(p=>p.g===P.g&&p.i!==P.i)),oth=sh(EXP.filter(p=>p.g!==P.g));QZ.opts=sh([P].concat(same.concat(oth).slice(0,3))).map(p=>p.i)}
+ qzRender()}
+function qzRender(fb){const B=qzBox();if(!B||!QZ.on)return;const P=EXP[QZ.cur];
+ B.innerHTML=`<div class="qzh"><span class="qzt">${QZ.mode==='find'?'👆 Keresd meg a modellen':'❓ Mi a kijelölt (sárga) alkatrész?'}</span><span class="qzsc" title="Elsőre eltalálva / összes · sorozat">✔ ${QZ.ok}/${QZ.n}${QZ.run>1?' · 🔥'+QZ.run:''}</span><button type="button" class="qzx" data-qa="end">Vége</button></div>
+ ${QZ.mode==='find'?`<div class="qzq"><span class="exg1">${esc(P.g)}</span><b>${esc(P.n)}</b></div>`:`<div class="qzo">${QZ.opts.map(i=>`<button type="button" class="qzop${QZ.lock?(i===QZ.cur?' ok':i===QZ.pick?' bad':''):''}" data-qo="${i}"${QZ.lock?' disabled':''}>${esc(EXP[i].n)}</button>`).join('')}</div>`}
+ ${QZ.lock?`<div class="qza"><button type="button" class="btn pri sm" data-qa="next">Tovább ▶</button></div>`:''}<div class="qzf${fb?' '+fb.k:''}" id="qzF" aria-live="polite">${fb?fb.h:''}</div>
+ ${QZ.lock?'':`<div class="qza">${QZ.mode==='find'?`<button type="button" class="btn line sm" data-qa="hint">💡 Segítség</button>`:''}<button type="button" class="btn line sm" data-qa="skip">⏭ Kihagyom</button></div>`}${qzSlider()}`;
+ if(QZ.lock){const nb=B.querySelector('[data-qa="next"]');if(nb)try{nb.focus({preventScroll:true})}catch(e){}}}
+function qzMiss(P){if(QZ.pen)return;QZ.pen=true;qzStat(P).b++;QZ.n++;QZ.run=0;qzSave()}
+function qzAnswer(i){if(!QZ.on||QZ.lock)return;const P=EXP[QZ.cur],d=`<p class="qzd">${esc(P.d)}</p>`;
+ if(i===QZ.cur){if(!QZ.pen){qzStat(P).o++;QZ.ok++;QZ.n++;QZ.run++;qzSave()}QZ.lock=true;QZ.pick=i;QZ.hide=false;EX.sel=P.i;qzRender({k:'ok',h:`<b>✅ Helyes${QZ.pen?' – most már megvan':QZ.run>2?' – '+QZ.run+' egymás után!':'!'}</b>${d}`});if(navigator.vibrate)try{navigator.vibrate(18)}catch(e){}return}
+ QZ.tries++;qzMiss(P);if(navigator.vibrate)try{navigator.vibrate([30,40,30])}catch(e){}
+ if(QZ.mode==='find'&&QZ.tries<2){qzRender({k:'bad',h:`<b>❌ Ez nem az.</b> Amire böktél: <u>${esc(EXP[i].n)}</u>. Próbáld még egyszer!`});return}
+ QZ.lock=true;QZ.pick=i;QZ.hide=false;EX.sel=P.i;qzLook(P);qzRender({k:'bad',h:`<b>❌ ${QZ.mode==='find'?'Megmutatom, hol van':'A helyes válasz'}: ${esc(P.n)}</b>${d}`})}
+function qzClick(e){const t=e.target.closest?e.target:null;if(!t)return;let b;
+ if(b=t.closest('[data-qm]')){const g=document.getElementById('qzG');if(g)QZ.grp=g.value;qzStart(b.dataset.qm);return}
+ if(b=t.closest('[data-qo]')){qzAnswer(+b.dataset.qo);return}
+ if(t.closest('.qzd')){t.closest('.qzd').classList.toggle('open');return}
+ if(!(b=t.closest('[data-qa]')))return;const a=b.dataset.qa,P=EXP[QZ.cur];
+ if(a==='end')qzEnd();else if(a==='next')qzNext();
+ else if(a==='skip'){qzMiss(P);QZ.lock=true;QZ.pick=-1;QZ.hide=false;EX.sel=P.i;qzLook(P);qzRender({k:'bad',h:`<b>➡ ${esc(P.n)}</b><p class="qzd">${esc(P.d)}</p>`})}
+ else if(a==='hint'&&!QZ.lock){qzMiss(P);qzLook(P);QZ.hide=true;EX.sel=P.i;clearTimeout(QZ.ht);QZ.ht=setTimeout(()=>{if(QZ.on&&!QZ.lock&&QZ.cur===P.i){EX.sel=-1;QZ.hide=false}},1100);const f=document.getElementById('qzF');if(f){f.className='qzf';f.innerHTML=`💡 Rendszer: <b>${esc(P.g)}</b> – felvillantottam a modellen, most bökj rá!`}}}
+/* ===== NAPI TEENDŐK: kipipálható listák (kimeázás · visszameázás · átmeázás · okosságok). A menet a felhasználó leírása, a műszaki adatok a tananyag szerint –
+   a lista elemei: [azonosító, teendő, okosság/indoklás, a 3D-modell alkatrészének neve (elhagyható)]. Itt bővíthető, pontosítható. ===== */
+const NAPI=[
+ {id:'elott',ic:'🚦',t:'Kimeázás',s:'Feladat előtt: menetlevél → 1TK → MEÁ → indulás',it:[
+  ['k1','Friss menetlevél – lepecsételve, aláírva','Enélkül nincs kimeázás: a menetlevél legyen friss, pecséttel és aláírással.'],
+  ['k2','Gép 1TK – védőfelszerelésben','Védőszemüveg, füldugó, bakancs, kesztyű – és ismételd át a balesetvédelmi szabályokat.'],
+  ['e2','1TK: motorolajszint','Hideg motornál, vízszintes talajon mérd, különben hamis értéket kapsz.','Motor (Cummins ISL9E3)'],
+  ['e3','1TK: hűtőfolyadék a kiegyenlítő tartályban','Ha teljesen eltűnt a folyadék: a motort tilos indítani, értesítsd a javítóműhelyt. A tartályt csak visszahűlt motornál nyisd ki.','Kiegyenlítő tartály'],
+  ['e4','1TK: nyomatékváltó olajszintje','A folyadékszinteket üzemeltetés előtt és után is ellenőrizni kell.','Automata nyomatékváltó (Allison 3200 SP)'],
+  ['e5','1TK: hidraulikaolaj szintje','Vízszintes felületen ellenőrizd; alacsony szintnél figyelmeztető lámpa jelez a műszerfalon.','Hidraulika (tartály, szivattyú, vezetékek)'],
+  ['e6','1TK: ablakmosó folyadék, tiszta ablakok','A szintet használat előtt ellenőrizd. Az ablakot csak nem vegyszeres, nedves ruhával tisztítsd – a belső felület polikarbonát bevonatú.','Szélvédő'],
+  ['e9','1TK: levegőnyomás – S1, S2, P és A tartály legalább 6 bar','6 bar alatt tilos működtetni a járművet – a fékek nem megbízhatók. Indításkor a váltó „N” állásban legyen.','Levegőtartályok (S1, S2, P, A)'],
+  ['k3','MEÁ: meás pecsét a menetlevélre','A MEÁ-n a gép átvizsgálása után kerül rá a pecsét – csak ezután indulhatsz a feladatra.'],
+  ['e10','Indulás: CTIS-mód az útviszonyoknak megfelelően','Közúton HIGHWAY mód: 6,5 bar (94 psi). Elinduláskor előbb fékpedál fel, utána gázpedál.','Kerék – bal első']]},
+ {id:'utan',ic:'🏁',t:'Visszameázás',s:'Feladat után: mosás → MEÁ → tankolás → telephely',it:[
+  ['v1','Gép mosása (alakulattól, feladattól függően kihagyható)','Az alakulatok eltérő szabályok szerint dolgoznak, de alapvetően tiszta géppel állunk a MEÁ-ra. Az ablakot csak nem vegyszeres, nedves ruhával töröld.','Szélvédő'],
+  ['v2','Tiszta, rendezett, kívül-belül kitakarított gép','Így állj a MEÁ-ra – a belső tér is legyen rendben.'],
+  ['v3','MEÁ: visszamea pecsét a menetlevélre','A menetlevél megkapja a visszamea pecsétet.'],
+  ['v4','Visszaírás a füzetbe','A MEÁ-n visszaírják a gépet a füzetbe.'],
+  ['v5','TANKOLÁS: a kúton a leellenőrzött, lezárt menetlevél alapján','A visszatankolás a lezárt menetlevél adatai szerint történik (a kút rendje alakulattól függ).','Üzemanyagtartályok (2×100 l)'],
+  ['v6','Lezárt menetlevél lefotózása, majd leadása a kutasnak','A lezárt menetlevél a kutashoz kerül – érdemes előtte lefotózni, ezzel a technikus munkáját is könnyíted.'],
+  ['v7','Visszaállás a telephelyre','Leállítás sorrendje: jármű megállítása → kézifék → váltó „N” → motor leállítása.','Műszerfal (kijelzők, kapcsolók)'],
+  ['v8','Folyadékszintek ellenőrzése, rendellenesség jelentése','Motor, nyomatékváltó, hűtőrendszer – üzemeltetés után is. Amit észleltél, jelezd a javítóműhelynek.','Motor (Cummins ISL9E3)']]},
+ {id:'at',ic:'🔁',t:'Átmeázás',s:'Új feladat a régi után – a sorrend változik',it:[
+  ['a1','Elszámolás a régi menetlevéllel','Átmeázásnál előbb a régi menetlevelet zárjuk le és számoljuk el.'],
+  ['a2','Új menetlevél megkezdése az új adatokkal','Az új menetlevelet az új adatokkal kezdjük vezetni.'],
+  ['a3','MEÁ: pecsét az új menetlevélre','A gép átvizsgálása után.'],
+  ['a4','Mosás – a feladat függvényében kimaradhat','Átmeázásnál egyes lépések kimaradhatnak; bemutató előtt például érdemes tiszta géppel menni.'],
+  ['a5','Tankolás – a feladat függvényében kimaradhat','Ha kell, a lezárt (régi) menetlevél alapján.','Üzemanyagtartályok (2×100 l)'],
+  ['a6','Gyors ellenőrzés indulás előtt','Folyadékszintek, levegőnyomás legalább 6 bar, CTIS-mód az útviszonyokhoz.','Levegőtartályok (S1, S2, P, A)']]},
+ {id:'idosz',ic:'🔧',t:'Okosságok',s:'Időszakos teendők, esedékességek',it:[
+  ['m2','Váltóolajszint elektronikus mérése','71–93 °C olajhőmérséklet, vízszintes talaj, kézifék behúzva, „N” állás, a fel-le nyilak egyszerre megnyomva.','Automata nyomatékváltó (Allison 3200 SP)'],
+  ['m3','Hidraulikanyomás','Normál üzemi érték 0,30–0,40 bar (minimum 0,1 – maximum 0,7 bar).','Hidraulika (tartály, szivattyú, vezetékek)'],
+  ['m4','Levegőtartályok','S1 hátsó fékkör, S2 első fékkör, P kézifék, A segédrendszerek – mind legalább 6 bar.','Levegőtartályok (S1, S2, P, A)'],
+  ['m5','Gumiabroncsok állapota (395/85 R20)','Defekt esetén Run-Flat gyűrűvel legfeljebb 30 km/h és legfeljebb 50 km.','Kerék – jobb első'],
+  ['m6','Zsírzási pontok esedékessége','3 havonta; a felfüggesztés és a kardánok 4800 km-enként vagy 3 havonta. Zsírzógomb: ajtózsanérok, pótkeréktartó, motor szerelőnyílás-fedél zsanérjai.','Felfüggesztés – első'],
+  ['m7','Motorolajcsere esedékessége','15 000 km, 6 hónap vagy 500 üzemóra – amelyik előbb letelik.','Motor (Cummins ISL9E3)'],
+  ['m8','APU','Indítás előtt a jármű álljon, a főmotor legyen leállítva; a főkapcsoló után várd meg az öntesztet. Olajcsere: először 50 üzemóra után, utána 75 óránként vagy 12 havonta.','APU (fedélzeti áramforrás)'],
+  ['m9','Szerszámzat megléte','12 tonnás hidraulikus emelő toldattal, 2 db aknazárnyitó négyszögkulcs.','Szerszámosláda és sáncszerszámok'],
+  ['m10','Szerelőnyílások, karbantartó fedelek zárva','Speciális (négyszög) kulccsal nyithatók és zárhatók.','Motor szerelőnyílásai'],
+  ['m11','A jármű gyári állapotú','A harcjármű átalakítása szigorúan tilos.']]}];
+const npDay=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+function npLoad(){let o={};try{o=JSON.parse(localStorage.getItem('gid-napi')||'{}')||{}}catch(e){}if(typeof o!=='object'||!o)o={};if(o.d!==npDay()){o.d=npDay();o.c={}}o.c=o.c||{};o.x=o.x||{};return o}
+function npSave(o){try{localStorage.setItem('gid-napi',JSON.stringify(o))}catch(e){}}
+let NPT='elott';
+const npItems=(L,o)=>L.it.map(a=>({id:a[0],x:a[1],h:a[2]||'',p:a[3]||''})).concat((o.x[L.id]||[]).map(x=>({id:'x:'+x,x,h:'',p:'',own:1})));
+const npCount=(L,o)=>{const it=npItems(L,o),c=o.c[L.id]||[];return [it.filter(i=>c.includes(i.id)).length,it.length]};
+function napiOpen(tab){const el=$('#harc');let ov=document.getElementById('npOv');if(!ov){ov=document.createElement('div');ov.id='npOv';ov.className='hov';el.appendChild(ov)}if(tab)NPT=tab;
+ const o=npLoad(),L=NAPI.find(l=>l.id===NPT)||NAPI[0],it=npItems(L,o),c=o.c[L.id]||[],[dn,all]=npCount(L,o);
+ ov.innerHTML=`<div class="hovbar"><b>📋 Napi teendők</b><button type="button" class="hx" data-close="npOv" aria-label="Bezárás">✕</button></div>
+ <div class="chips">${NAPI.map(l=>{const [a,b]=npCount(l,o);return `<button type="button" data-np="${l.id}" class="${l.id===L.id?'on':''}">${l.ic} ${esc(l.t)} <span class="npn">${a}/${b}</span></button>`}).join('')}</div>
+ <div class="tiplist nplist"><div class="nphd"><div><b>${L.ic} ${esc(L.s)}</b><small id="npSub"></small></div><div class="qzpb"><i id="npBar"></i></div></div>
+ ${it.map(i=>`<div class="npi${c.includes(i.id)?' done':''}"><label><input type="checkbox" data-nc="${esc(i.id)}"${c.includes(i.id)?' checked':''}><span><b>${esc(i.x)}</b>${i.h?`<small>💡 ${esc(i.h)}</small>`:''}</span></label>${i.p?`<button type="button" class="np3" data-n3="${esc(i.p)}" aria-label="Mutasd a 3D-modellen">📍 3D</button>`:''}${i.own?`<button type="button" class="np3 del" data-nd="${esc(i.x)}" aria-label="Saját tétel törlése">🗑</button>`:''}</div>`).join('')}
+ <div class="npadd"><input type="text" id="npNew" maxlength="120" placeholder="Saját tétel hozzáadása…" autocomplete="off" enterkeyhint="done"><button type="button" class="btn pri sm" data-na="1">＋</button></div>
+ <div class="npft"><button type="button" class="btn line sm" data-nr="1">↺ Pipák törlése</button></div>
+ <p class="hint npnote">A pipák naponta maguktól törlődnek, a saját tételeid megmaradnak. Az alakulatok rendje eltérhet – a helyi szabályok szerint bővítsd saját tétellel; mindig a hivatalos kezelési utasítás és a parancsnoki intézkedés az irányadó.</p></div>`;
+ ov.hidden=false;npProg();const ni=ov.querySelector('#npNew');if(ni)ni.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();napiAdd()}}}
+function npProg(){const o=npLoad(),L=NAPI.find(l=>l.id===NPT)||NAPI[0],[a,b]=npCount(L,o),bar=document.getElementById('npBar'),sub=document.getElementById('npSub');if(bar)bar.style.width=(b?a/b*100:0)+'%';if(sub){sub.textContent=a>=b&&b?'Minden kész ✅':a+' / '+b+' kész';sub.classList.toggle('ok',a>=b&&b>0)}
+ document.querySelectorAll('#npOv [data-np]').forEach(bt=>{const l=NAPI.find(x=>x.id===bt.dataset.np);if(!l)return;const [x,y]=npCount(l,o),n=bt.querySelector('.npn');if(n)n.textContent=x+'/'+y})}
+function napiCheck(inp){const o=npLoad(),id=inp.dataset.nc,a=o.c[NPT]||(o.c[NPT]=[]),k=a.indexOf(id);if(inp.checked){if(k<0)a.push(id)}else if(k>=0)a.splice(k,1);npSave(o);const r=inp.closest('.npi');if(r)r.classList.toggle('done',inp.checked);npProg();
+ const L=NAPI.find(l=>l.id===NPT),[x,y]=npCount(L,o);if(inp.checked&&x===y)toast(L.t+': minden tétel kész ✅')}
+function napiAdd(){const i=document.getElementById('npNew');if(!i)return;const v=i.value.trim().replace(/\s+/g,' ');if(!v)return;const o=npLoad(),a=o.x[NPT]||(o.x[NPT]=[]);if(a.includes(v)){toast('Ez a tétel már szerepel');return}if(a.length>=40){toast('Legfeljebb 40 saját tétel lehet');return}a.push(v);npSave(o);napiOpen()}
+function napiClick(t){let b;if(b=t.closest('[data-np]')){napiOpen(b.dataset.np);return true}
+ if(t.closest('[data-na]')){napiAdd();return true}
+ if(b=t.closest('[data-nd]')){const o=npLoad(),a=o.x[NPT]||[],k=a.indexOf(b.dataset.nd);if(k>=0)a.splice(k,1);const c=o.c[NPT]||[],j=c.indexOf('x:'+b.dataset.nd);if(j>=0)c.splice(j,1);npSave(o);napiOpen();return true}
+ if(t.closest('[data-nr]')){const o=npLoad();o.c[NPT]=[];npSave(o);napiOpen();return true}
+ if(b=t.closest('[data-n3]')){const i=EXP.findIndex(p=>p.n===b.dataset.n3);EX.tab='parts';exOpen();if(i>=0){exGhostSet(true);exSelect(i);qzLook(EXP[i])}return true}
+ return false}
 /* ===== FIÓK + ÉLŐ RANGLISTA (Firebase, a M.E.D.V.E. Arcade közös fiókjaival) ===== */
 const RANKS=['','honvéd','őrvezető','tizedes','szakaszvezető','őrmester','törzsőrmester','főtörzsőrmester','zászlós','törzszászlós','főtörzszászlós','hadnagy','főhadnagy','százados','őrnagy','alezredes','ezredes','dandártábornok','civil'];
 const RANKG=[['terep','Gidrán Terep','gmBest','medve-gm-best',true,v=>gtFmt(v/1000),'🏔️','Terep-maraton 16 km: CTIS, mocsár, hó, jég, csörlő, autópálya + konvoj.'],
@@ -2256,7 +2408,8 @@ function hubHTML(){if(TIPI<0)tipNext();
   <div class="hub"><p class="hubsub">Elfáradtál a tanulásban? Pihenj egyet – a Gidrán közben is a fejedben marad. 😉</p>
    <div class="hgames" id="hubGames">${RANKG.map(hubCard).join('')}</div>
    <div class="hgame"><button type="button" class="hgbtn" data-play="bemutato"><span class="hgic">🎪</span><span class="hgt"><b>Gidrán bemutató</b><small>Válaszolj a látogatók kérdéseire – bácsik, gyerekek, leendő katonák</small></span><span class="hggo">▶</span></button></div>
-   <div class="hgame"><button type="button" class="hgbtn" data-play="explode"><span class="hgic">🔧</span><span class="hgt"><b>Gidrán 3D – szétszedhető</b><small>Forgasd körbe, szedd szét, érints meg egy alkatrészt – leírás a tananyag alapján</small></span><span class="hggo">▶</span></button></div>
+   <div class="hgame"><button type="button" class="hgbtn" data-play="explode"><span class="hgic">🔧</span><span class="hgt"><b>Gidrán 3D – szétszedhető</b><small>Forgasd körbe, szedd szét, érints meg egy alkatrészt – és gyakorold a 🎯 Feladat fülön</small></span><span class="hggo">▶</span></button></div>
+   <div class="hgame"><button type="button" class="hgbtn" id="hubNapi"><span class="hgic">📋</span><span class="hgt"><b>Napi teendők</b><small>Kimeázás · visszameázás · átmeázás – kipipálható lista okosságokkal</small></span><span class="hggo">▶</span></button></div>
    <div class="hcard tipbox" id="tipBox"><div class="tiph"><b>💡 Tudtad-e?</b><span class="tipn" id="tipN"></span></div><div id="tipBody">${tipHTML(TIPI)}</div><div class="tipbtns"><button type="button" class="btn line sm" id="tipNext">Következő ▶</button><button type="button" class="btn line sm" id="tipAll">Összes (${TIPS.length})</button></div></div>
    <div class="hcard" id="authBox">${authInner()}</div></div>`}
 function gHubShow(){const el=$('#harc');el.hidden=false;document.body.classList.add('harcon');el.innerHTML=hubHTML()}
@@ -2294,12 +2447,14 @@ document.addEventListener('click',e=>{const t=e.target.closest?e.target:null;if(
   if(b=t.closest('[data-close]')){const o=document.getElementById(b.dataset.close);if(o)o.hidden=true;return}
   if(t.closest('#tipNext')){tipNext();const x=document.getElementById('tipBody');if(x)x.innerHTML=tipHTML(TIPI);return}
   if(t.closest('#tipAll')){tipsAll('*');return}
+  if(t.closest('#hubNapi')){napiOpen();return}
+  if(t.closest('#npOv')&&napiClick(t))return;
   if(b=t.closest('[data-tf]')){tipsAll(b.dataset.tf);return}});
-document.addEventListener('change',e=>{if(e.target.id==='auRankEd'&&UID){const r=e.target.value;if(RANKS.includes(r))DB.doc('users/'+UID).update({rank:r}).then(()=>toast('Rendfokozat mentve')).catch(()=>toast('Nem sikerült menteni'))}});
+document.addEventListener('change',e=>{if(e.target.dataset&&e.target.dataset.nc){napiCheck(e.target);return}if(e.target.id==='auRankEd'&&UID){const r=e.target.value;if(RANKS.includes(r))DB.doc('users/'+UID).update({rank:r}).then(()=>toast('Rendfokozat mentve')).catch(()=>toast('Nem sikerült menteni'))}});
 addEventListener('online',()=>{if(HUB&&!FB_ON){FB_BOOT=0;FB_FAIL=false;fbBoot()}});
-window.GIDGAMES={join:()=>{if(AUTHREADY){if(!UID)AUTHTAB='reg'}else JOINREG=1;hubOpen()},bemutato:gbOpen,explode:exOpen,mini:exMiniMount,open:hubOpen,close:hubClose,tips:()=>{hubOpen();tipsAll('*')},ver:GAMES_VER};
+window.GIDGAMES={join:()=>{if(AUTHREADY){if(!UID)AUTHTAB='reg'}else JOINREG=1;hubOpen()},bemutato:gbOpen,explode:exOpen,mini:exMiniMount,napi:()=>{hubOpen();napiOpen()},quiz:()=>{EX.tab='quiz';exOpen()},open:hubOpen,close:hubClose,tips:()=>{hubOpen();tipsAll('*')},ver:GAMES_VER};
 if(!document.getElementById('harc')){const h=document.createElement('div');h.id='harc';h.hidden=true;document.body.appendChild(h)}
 if(!document.getElementById('gdToast')){const h=document.createElement('div');h.id='gdToast';document.body.appendChild(h)}
 
-window.__G={exOpen,EX,EXP,exDraw,ENG,MN,exStep,exMiniMount,exGLNew,gtOpen,gvOpen,ghOpen,gbOpen,GB,gbEval,GB_Q,GT,GV,GH,gtG,gtPhys,gtSeg,gtWinch,gtSurf,gtGame,ghUpdate,ghSpawn,hubOpen,TIPS};
+window.__G={QZ,NAPI,napiOpen,exOf,exOpen,EX,EXP,exDraw,ENG,MN,exStep,exMiniMount,exGLNew,gtOpen,gvOpen,ghOpen,gbOpen,GB,gbEval,GB_Q,GT,GV,GH,gtG,gtPhys,gtSeg,gtWinch,gtSurf,gtGame,ghUpdate,ghSpawn,hubOpen,TIPS};
 })();
