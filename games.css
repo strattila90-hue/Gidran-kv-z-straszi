@@ -394,3 +394,58 @@ body.harcon{overflow:hidden}
 @media (prefers-reduced-motion:reduce){.extp:not([hidden]),#harc .expanel:not([hidden]),.qzf.ok,.qzf.bad{animation:none}#harc .btn,.qzpb i,.mn3 .btn{transition:none}}
 .mn3 .mnbt .btn{white-space:nowrap}.mn3 .mnbt #mnQuiz,.mn3 .mnbt #mnNapi{flex:1 1 40%}
 @media (orientation:landscape) and (min-width:700px){.extabs{flex-wrap:wrap}.extabs button{flex:1 1 30%;border-radius:10px;min-height:32px}}
+/* ===== 3.12.0: simább futás (nincs elmosás a 3D vászon fölött, csak transform/opacity animáció), szebb 3D kezelőfelület, Lista + Bemutató ===== */
+.mnhud{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(8,12,18,.78);font-variant-numeric:tabular-nums;letter-spacing:.01em;border-radius:999px;padding:4px 11px}
+#harc .expanel{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(11,15,22,.92);box-shadow:0 10px 30px rgba(0,0,0,.45)}
+@media (orientation:landscape) and (max-height:620px){#harc .expanel{background:rgba(11,15,22,.9)}}
+.dBar{height:6px}.dBar i{width:100%;transform:scaleX(0);transform-origin:0 50%;transition:transform .09s linear,background-color .25s linear;will-change:transform}
+#harc .exscene,.mn3 .mnsc{contain:layout paint;isolation:isolate;overflow:hidden}
+#harc .exscene canvas,.mn3 canvas{-webkit-tap-highlight-color:transparent;outline:0}
+#harc .exscene canvas:active,.mn3 canvas:active{cursor:grabbing}
+.exscene,.mn3 .mnsc{background:radial-gradient(120% 70% at 50% 108%,rgba(4,6,10,.85),rgba(4,6,10,0) 60%),radial-gradient(ellipse at 50% 60%,rgba(158,182,214,.24),rgba(120,150,190,0) 66%),linear-gradient(180deg,#141c2a,#2a3850 44%,#222d3f 62%,#0d1118)}
+.excp{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.22) transparent;overscroll-behavior:contain}
+.extabs{position:sticky;top:0;z-index:2;background:#0e131a}
+.extabs button{border-radius:11px 11px 0 0;background:#161d29}
+.extabs button.on{background:linear-gradient(180deg,#2c3a55,#232e44);box-shadow:inset 0 -3px 0 #ffb52e}
+.extp{background:linear-gradient(180deg,#151c29,#111722)}
+.dPed{box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 3px 0 rgba(0,0,0,.35);transition:transform .08s ease,filter .08s ease}
+.dPed.hold{transform:translateY(2px) scale(.985);box-shadow:inset 0 2px 6px rgba(0,0,0,.4)}
+.dgs button{transition:background-color .15s ease,color .15s ease}
+.exdv .xhn:empty{display:none}
+#harc .hx.hfs{margin-left:auto;font-size:17px}#harc .hx.hfs+.hx{margin-left:0}
+#harc .hx{transition:background-color .15s ease,transform .1s ease}#harc .hx:active{transform:scale(.92)}
+/* Lista fül */
+#harc .exlh{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+#harc .exlh input{flex:1;min-width:0;min-height:38px;border-radius:11px;border:1px solid rgba(255,255,255,.2);background:#0b1017;color:#eef2f8;padding:0 11px;font:500 14px system-ui,sans-serif;user-select:text;-webkit-user-select:text;touch-action:manipulation}
+#harc .exlh input::placeholder{color:#7f8da3}
+#harc .exlh .btn{min-height:38px;padding:6px 12px;font-size:12.5px;box-shadow:none;flex:none;max-width:52%;overflow:hidden;text-overflow:ellipsis}
+#harc .exsys{display:flex;gap:5px;overflow-x:auto;padding:1px 1px 7px;scrollbar-width:none;touch-action:pan-x;-webkit-overflow-scrolling:touch}
+#harc .exsys::-webkit-scrollbar{display:none}
+#harc .exsys button{flex:none;border:1px solid rgba(255,255,255,.18);background:#182030;color:#c9d4e6;border-radius:999px;padding:5px 11px;min-height:32px;font:700 11.5px system-ui,sans-serif;cursor:pointer;white-space:nowrap;transition:background-color .15s ease,color .15s ease,border-color .15s ease}
+#harc .exsys button i{font-style:normal;font-weight:600;opacity:.6;margin-left:5px}
+#harc .exsys button.on{background:#ffb52e;border-color:#ffb52e;color:#1a1204}
+#harc .exchip{min-height:30px}
+#harc .exchip.kn{border-color:rgba(52,211,153,.55)}#harc .exchip.kn::before{content:"✓ ";color:#34d399;font-weight:800}#harc .exchip.kn.on::before{color:#0c5a3c}
+#harc .exnone{color:#9fb0c8;font-size:12.5px;margin:8px 2px}
+/* Információs panel + bemutató */
+#harc .expanel .exk{display:inline-block;font-size:10.5px;font-weight:800;color:#ffd98a;background:rgba(255,181,46,.14);border-radius:6px;padding:1px 7px;margin-left:4px;font-variant-numeric:tabular-nums}
+#harc .expanel .exk.ok{color:#7be3b6;background:rgba(52,211,153,.14)}
+#harc .expanel .exh{flex-wrap:wrap;row-gap:2px}#harc .expanel .exh h4{flex:1 1 100%}
+#harc .expanel .exact{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;touch-action:pan-x}#harc .expanel .exact::-webkit-scrollbar{display:none}#harc .expanel .exact .btn{flex:none}
+#harc .expanel{max-height:none;overflow:visible}
+#harc .expanel .exd{-webkit-line-clamp:2}#harc .expanel .exd.open{max-height:20vh}
+#harc .expanel.tour .exd{-webkit-line-clamp:3}
+#harc .expanel .extn .btn{flex:1}
+#harc .expanel .extb{height:3px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:6px}
+#harc .expanel .extb i{display:block;height:100%;width:100%;background:#ffb52e;transform:scaleX(0);transform-origin:0 50%}
+#harc .expanel.tour{border-color:rgba(255,181,46,.45)}
+@media (orientation:landscape) and (min-width:700px){
+ #harc .exwrap{grid-template-columns:minmax(0,1fr) min(340px,42vw)}
+ .extabs{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;flex-wrap:nowrap}
+ .extabs button{flex:none;white-space:normal;line-height:1.15;font-size:11px;min-height:44px;padding:3px 2px;border-radius:10px 10px 0 0}
+ #harc .expanel.tour{width:min(430px,60%);font-size:14.5px;line-height:1.45}#harc .expanel.tour .exd.open{max-height:34vh}
+ #harc .expanel.tour h4{font-size:19px}
+}
+@media (min-width:1100px) and (min-height:700px){#harc .expanel.tour{width:min(520px,56%);font-size:16.5px}#harc .expanel.tour h4{font-size:23px}#harc .expanel.tour .exact .btn{min-height:40px;font-size:14px}}
+@media (prefers-reduced-motion:reduce){.dBar i,.dPed,#harc .hx,.dgs button,#harc .exsys button{transition:none}}
+
